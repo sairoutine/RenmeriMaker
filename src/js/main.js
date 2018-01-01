@@ -13,6 +13,8 @@ window.onload = function() {
 	game.setupEvents();
 	game.init();
 	game.startRun();
+
+	window.game = game;
 };
 
 // for electron
