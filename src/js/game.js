@@ -12,7 +12,7 @@ util.inherit(Game, core);
 Game.prototype.init = function () {
 	core.prototype.init.apply(this, arguments);
 	this.addScene("loading", new SceneLoading(this));
-	this.addScene("title", new SceneTalk(this));
+	this.addScene("talk", new SceneTalk(this));
 	this.changeScene("loading");
 };
 
