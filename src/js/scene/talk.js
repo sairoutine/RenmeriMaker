@@ -28,15 +28,16 @@ var SceneSerifBase = function(game) {
 
 util.inherit(SceneSerifBase, base_scene);
 
-SceneSerifBase.prototype.init = function(serif){
+SceneSerifBase.prototype.init = function(){
 	base_scene.prototype.init.apply(this, arguments);
-	this.serif.init(this.serifScript());
+	//this.serif.init(this.serifScript());
 
 	this.transition_count = 0;
 
 	// シーン遷移前の BGM 止める
-	this.core.stopBGM();
+	this.core.audio_loader.stopBGM();
 
+	/*
 	if (this.isPlayFadeIn()) {
 		this.setFadeIn(60);
 	}
@@ -44,6 +45,7 @@ SceneSerifBase.prototype.init = function(serif){
 	if (this.isPlayFadeOut()) {
 		this.setFadeOut(60);
 	}
+	*/
 };
 
 SceneSerifBase.prototype.beforeDraw = function(){
@@ -138,6 +140,8 @@ SceneSerifBase.prototype.draw = function(){
 
 // 背景画像表示
 SceneSerifBase.prototype._showBackground = function(){
+	if(1) return;
+
 	var ctx = this.core.ctx;
 	var background_name = this.serif.background_image() ? this.serif.background_image() : this.background();
 	var background = this.core.image_loader.getImage(background_name);
