@@ -10,6 +10,18 @@ var TRANSITION_COUNT = 100;
 // セリフウィンドウの縦の長さ
 var MESSAGE_WINDOW_HEIGHT = 100;
 
+var Serif= [
+	{"pos":"left","exp":"normal","chara":"renko","serif": "こんにちはメリー"},
+	{"pos":"right","exp":"normal","chara":"merry","serif": "こんにちは蓮子"},
+	{"pos":"left","exp":"smile","chara":"renko","serif": "今日もいい天気ね"},
+	{"pos":"right","exp":"smile","chara":"merry","serif": "そうね"},
+];
+
+
+
+
+
+
 
 var util = require('../hakurei').util;
 var CONSTANT = require('../constant');
@@ -30,7 +42,7 @@ util.inherit(SceneSerifBase, base_scene);
 
 SceneSerifBase.prototype.init = function(){
 	base_scene.prototype.init.apply(this, arguments);
-	//this.serif.init(this.serifScript());
+	this.serif.init(Serif);
 
 	this.transition_count = 0;
 
