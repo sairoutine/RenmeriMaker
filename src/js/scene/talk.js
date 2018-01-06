@@ -15,16 +15,6 @@ var TRANSITION_COUNT = 100;
 // セリフウィンドウの縦の長さ
 var MESSAGE_WINDOW_HEIGHT = 100;
 
-// サンプルセリフ
-var Serif= [
-	{"background":"nc4527"},
-	{"pos":"left","exp":"normal","chara":"merry"	, "option": {"bgm": "nc13447"} },
-	{"pos":"right","exp":"normal","chara":"renko"	, "option": {"bgm": "nc13447"},"serif": "こんにちはメリー"},
-	{"pos":"left","exp":"normal","chara":"merry"	, "option": {"bgm": "nc13447"} ,"serif": "こんにちは蓮子"},
-	{"pos":"right","exp":"smile","chara":"renko"	, "option": {"bgm": "nc13447"} ,"serif": "今日もいい天気ね"},
-	{"pos":"left","exp":"smile","chara":"merry"	, "option": {"bgm": "nc13447"}, "serif": "そうね"},
-];
-
 // pos_name -> pos number
 var LEFT_POS = 0;
 var RIGHT_POS = 1;
@@ -48,7 +38,7 @@ Util.inherit(SceneTalk, base_scene);
 
 SceneTalk.prototype.init = function(){
 	base_scene.prototype.init.apply(this, arguments);
-	this.serif.init(Serif);
+	this.serif.init(this.core.serif);
 
 	// 背景遷移時のトランジション
 	this.transition_count = 0;
