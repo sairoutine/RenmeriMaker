@@ -1,49 +1,56 @@
 'use strict';
 
-/* 立ち絵＆セリフ */
+// 画面に対するウィンドウの余白
 var MESSAGE_WINDOW_OUTLINE_MARGIN = 10;
+
+// 喋ってる方のキャラが動く距離
 var TALKER_MOVE_PX = 5;
+
+// キャラのサイズ
 var SCALE = 1;
 
+// 背景 遷移時のトランジション フレーム数
 var TRANSITION_COUNT = 100;
 
 // セリフウィンドウの縦の長さ
 var MESSAGE_WINDOW_HEIGHT = 100;
 
+// サンプルセリフ
 var Serif= [
+	{"background":"nc138477"},
 	{"pos":"left","exp":"normal","chara":"renko","serif": "こんにちはメリー"},
 	{"pos":"right","exp":"normal","chara":"merry","serif": "こんにちは蓮子"},
 	{"pos":"left","exp":"smile","chara":"renko","serif": "今日もいい天気ね"},
 	{"pos":"right","exp":"smile","chara":"merry","serif": "そうね"},
 ];
 
+// pos_name -> pos number
+var LEFT_POS = 0;
+var RIGHT_POS = 1;
 
 
 
-
-
-
-var util = require('../hakurei').util;
-var CONSTANT = require('../constant');
-var H_CONSTANT = require('../hakurei').constant;
+var Util = require('../hakurei').util;
+var CONSTANT = require('../hakurei').constant;
 var base_scene = require('../hakurei').scene.base;
 
 var SerifManager = require('../hakurei').serif_manager;
 
 //var CreateDarkerImage = require('../logic/create_darker_image');
 
-var SceneSerifBase = function(game) {
+var SceneTalk = function(game) {
 	base_scene.apply(this, arguments);
 
 	this.serif = new SerifManager();
 };
 
-util.inherit(SceneSerifBase, base_scene);
+Util.inherit(SceneTalk, base_scene);
 
-SceneSerifBase.prototype.init = function(){
+SceneTalk.prototype.init = function(){
 	base_scene.prototype.init.apply(this, arguments);
 	this.serif.init(Serif);
 
+	// 背景遷移時のトランジション
 	this.transition_count = 0;
 
 	// シーン遷移前の BGM 止める
@@ -53,21 +60,21 @@ SceneSerifBase.prototype.init = function(){
 	if (this.isPlayFadeIn()) {
 		this.setFadeIn(60);
 	}
-
-	if (this.isPlayFadeOut()) {
-		this.setFadeOut(60);
-	}
 	*/
+
+	// フェードアウトする
+	this.setFadeOut(60);
 };
 
-SceneSerifBase.prototype.beforeDraw = function(){
+SceneTalk.prototype.beforeDraw = function(){
 	base_scene.prototype.beforeDraw.apply(this, arguments);
 
+	/*
 	// BGM 再生
 	if (this.frame_count === 60 && this.bgm()) {
 		this.core.playBGM(this.bgm());
 	}
-
+	*/
 
 	if (this.isInTransition()) {
 		this.transition_count--;
@@ -79,8 +86,9 @@ SceneSerifBase.prototype.beforeDraw = function(){
 	}
 
 
-	if(this.core.isKeyPush(H_CONSTANT.BUTTON_Z)) {
-		if(this.serif.is_end()) {
+	if(this.core.isKeyPush(CONSTANT.BUTTON_Z)) {
+		if(this.serif.isEnd()) {
+			// 終了
 			this.notifySerifEnd();
 		}
 		else {
@@ -89,7 +97,7 @@ SceneSerifBase.prototype.beforeDraw = function(){
 				// セリフを送る
 				this.serif.next();
 
-				if (this.serif.is_background_changed()) {
+				if (this.serif.isBackgroundChanged()) {
 					// トランジション開始
 					this.transition_count = TRANSITION_COUNT;
 
@@ -105,20 +113,15 @@ SceneSerifBase.prototype.beforeDraw = function(){
 			}
 		}
 	}
-
-	// スキップ
-	if(this.core.isKeyPush(H_CONSTANT.BUTTON_X)) {
-		this.notifySerifEnd();
-	}
 };
 
 // 画面更新
-SceneSerifBase.prototype.draw = function(){
+SceneTalk.prototype.draw = function(){
 	base_scene.prototype.draw.apply(this, arguments);
 	var ctx = this.core.ctx;
 
 	if (this.isInTransition()) {
-		ctx.fillStyle = this.backgroundTransitionColor();
+		ctx.fillStyle = "white";
 		ctx.fillRect(0, 0, this.width, this.height);
 
 		// 背景表示
@@ -131,10 +134,10 @@ SceneSerifBase.prototype.draw = function(){
 		this._showBackground();
 
 		// キャラ表示
-		if(this.serif.right_image()) {
+		if(this.serif.getImageName(RIGHT_POS)) {
 			this._showRightChara();
 		}
-		if(this.serif.left_image()) {
+		if(this.serif.getImageName(LEFT_POS)) {
 			this._showLeftChara();
 		}
 
@@ -143,40 +146,26 @@ SceneSerifBase.prototype.draw = function(){
 
 		// メッセージ表示
 		this._showMessage();
-
-		// 操作説明 表示
-		this._showHowTo();
-
 	}
 };
 
 // 背景画像表示
-SceneSerifBase.prototype._showBackground = function(){
-	if(1) return;
-
+SceneTalk.prototype._showBackground = function(){
 	var ctx = this.core.ctx;
-	var background_name = this.serif.background_image() ? this.serif.background_image() : this.background();
+	var background_name = this.serif.getBackgroundImageName();
 	var background = this.core.image_loader.getImage(background_name);
-	ctx.drawImage(background,
-					0,
-					0,
-					background.width,
-					background.height,
-					0,
-					0,
-					this.core.width,
-					this.core.height);
+	ctx.drawImage(background, 0, 0);
 };
 
-SceneSerifBase.prototype._showRightChara = function(){
+SceneTalk.prototype._showRightChara = function(){
 	var ctx = this.core.ctx;
 	ctx.save();
 
 	var x = 400;
 	var y = 65;
 
-	var right_image = this.core.image_loader.getImage(this.serif.right_image());
-	if(!this.serif.is_right_talking()) {
+	var right_image = this.core.image_loader.getImage(this.serif.getImageName(RIGHT_POS));
+	if(!this.serif.isTalking(RIGHT_POS)) {
 		// 喋ってない方のキャラは暗くなる
 		//right_image = CreateDarkerImage.exec(right_image);
 	}
@@ -196,15 +185,15 @@ SceneSerifBase.prototype._showRightChara = function(){
 	ctx.restore();
 };
 
-SceneSerifBase.prototype._showLeftChara = function(){
+SceneTalk.prototype._showLeftChara = function(){
 	var ctx = this.core.ctx;
 	ctx.save();
 
 	var x = -50;
 	var y = 25;
 
-	var left_image = this.core.image_loader.getImage(this.serif.left_image());
-	if(!this.serif.is_left_talking()) {
+	var left_image = this.core.image_loader.getImage(this.serif.getImageName(LEFT_POS));
+	if(!this.serif.isTalking(LEFT_POS)) {
 		// 喋ってない方のキャラは暗くなる
 		//left_image = CreateDarkerImage.exec(left_image);
 	}
@@ -224,7 +213,7 @@ SceneSerifBase.prototype._showLeftChara = function(){
 	ctx.restore();
 };
 
-SceneSerifBase.prototype._showMessageWindow = function(){
+SceneTalk.prototype._showMessageWindow = function(){
 	var ctx = this.core.ctx;
 	// show message window
 	ctx.save();
@@ -233,8 +222,8 @@ SceneSerifBase.prototype._showMessageWindow = function(){
 	ctx.fillStyle = 'rgb( 0, 0, 0 )';
 	ctx.fillRect(
 		MESSAGE_WINDOW_OUTLINE_MARGIN,
-		this.core.height - 125,
-		this.core.width - MESSAGE_WINDOW_OUTLINE_MARGIN * 2,
+		this.height - 125,
+		this.width - MESSAGE_WINDOW_OUTLINE_MARGIN * 2,
 		MESSAGE_WINDOW_HEIGHT
 	);
 
@@ -242,14 +231,14 @@ SceneSerifBase.prototype._showMessageWindow = function(){
 };
 
 // セリフ表示
-SceneSerifBase.prototype._showMessage = function() {
+SceneTalk.prototype._showMessage = function() {
 	var ctx = this.core.ctx;
 	ctx.save();
 
 	// セリフの色
-	var font_color = this.serif.font_color();
+	var font_color = this.serif.getOption().font_color;
 	if(font_color) {
-		font_color = util.hexToRGBString(font_color);
+		font_color = Util.hexToRGBString(font_color);
 	}
 	else {
 		font_color = 'rgb(255, 255, 255)';
@@ -264,7 +253,7 @@ SceneSerifBase.prototype._showMessage = function() {
 	var lines = this.serif.lines();
 	if (lines.length) {
 		// セリフテキストの y 座標初期位置
-		y = this.core.height - 125 + 40;
+		y = this.height - 125 + 40;
 
 		for(var i = 0, len = lines.length; i < len; i++) {
 			ctx.fillStyle = 'rgb( 0, 0, 0 )';
@@ -281,70 +270,14 @@ SceneSerifBase.prototype._showMessage = function() {
 	ctx.restore();
 };
 
-// 操作説明 表示
-SceneSerifBase.prototype._showHowTo = function() {
-	var ctx = this.core.ctx;
-	ctx.save();
-
-	var text = "Xキー：スキップ";
-
-	ctx.font = "14px 'Migu'";
-	ctx.textAlign = 'left';
-	ctx.textBaseAlign = 'middle';
-
-	ctx.fillStyle = 'rgb( 0, 0, 0 )';
-	ctx.lineWidth = 4.0;
-	ctx.strokeText(text, this.core.width - 130, this.core.height - 10);
-
-	ctx.fillStyle = 'white';
-	ctx.fillText(text, this.core.width - 130, this.core.height - 10);
-
-	ctx.restore();
-};
-
-
-
-
 // 立ち絵＆セリフ終了後
-SceneSerifBase.prototype.notifySerifEnd = function() {
-	throw new Error("notifySerifEnd method must be defined.");
+SceneTalk.prototype.notifySerifEnd = function() {
+	this.core.changeScene("end");
 };
 
-// セリフスクリプト
-SceneSerifBase.prototype.serifScript = function() {
-	throw new Error("serifScript method must be defined.");
-};
-
-// 背景画像名
-SceneSerifBase.prototype.background = function() {
-	throw new Error("background method must be defined.");
-};
-// トランジションカラー
-SceneSerifBase.prototype.backgroundTransitionColor = function() {
-	return "white";
-};
-// BGM
-SceneSerifBase.prototype.bgm = function() {
-};
-
-// フェードインするかどうか
-SceneSerifBase.prototype.isPlayFadeIn = function() {
-	return false;
-};
-// フェードアウトするかどうか
-SceneSerifBase.prototype.isPlayFadeOut = function() {
-	return false;
-};
-
-
-
-
-
-SceneSerifBase.prototype.isInTransition = function() {
+// 遷移中かどうか
+SceneTalk.prototype.isInTransition = function() {
 	return this.transition_count ? true : false;
 };
 
-
-
-
-module.exports = SceneSerifBase;
+module.exports = SceneTalk;
