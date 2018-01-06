@@ -7,7 +7,7 @@ var MESSAGE_WINDOW_OUTLINE_MARGIN = 10;
 var TALKER_MOVE_PX = 5;
 
 // キャラのサイズ
-var SCALE = 1;
+var SCALE = 0.5;
 
 // 背景 遷移時のトランジション フレーム数
 var TRANSITION_COUNT = 100;
@@ -17,11 +17,12 @@ var MESSAGE_WINDOW_HEIGHT = 100;
 
 // サンプルセリフ
 var Serif= [
-	{"background":"nc14162"},
-	{"pos":"left","exp":"normal","chara":"renko","serif": "こんにちはメリー"},
-	{"pos":"right","exp":"normal","chara":"merry","serif": "こんにちは蓮子"},
-	{"pos":"left","exp":"smile","chara":"renko","serif": "今日もいい天気ね"},
-	{"pos":"right","exp":"smile","chara":"merry","serif": "そうね"},
+	{"background":"nc4527"},
+	{"pos":"left","exp":"normal","chara":"merry"},
+	{"pos":"right","exp":"normal","chara":"renko","serif": "こんにちはメリー"},
+	{"pos":"left","exp":"normal","chara":"merry","serif": "こんにちは蓮子"},
+	{"pos":"right","exp":"smile","chara":"renko","serif": "今日もいい天気ね"},
+	{"pos":"left","exp":"smile","chara":"merry","serif": "そうね"},
 ];
 
 // pos_name -> pos number
@@ -187,7 +188,7 @@ SceneTalk.prototype._showRightChara = function(){
 	var ctx = this.core.ctx;
 	ctx.save();
 
-	var x = 400;
+	var x = 350;
 	var y = 65;
 
 	var right_image = this.core.image_loader.getImage(this.serif.getImageName(RIGHT_POS));
@@ -216,7 +217,7 @@ SceneTalk.prototype._showLeftChara = function(){
 	ctx.save();
 
 	var x = -50;
-	var y = 25;
+	var y = 65 + 20;
 
 	var left_image = this.core.image_loader.getImage(this.serif.getImageName(LEFT_POS));
 	if(!this.serif.isTalking(LEFT_POS)) {
