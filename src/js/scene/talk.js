@@ -18,11 +18,11 @@ var MESSAGE_WINDOW_HEIGHT = 100;
 // サンプルセリフ
 var Serif= [
 	{"background":"nc4527"},
-	{"pos":"left","exp":"normal","chara":"merry"},
-	{"pos":"right","exp":"normal","chara":"renko","serif": "こんにちはメリー"},
-	{"pos":"left","exp":"normal","chara":"merry","serif": "こんにちは蓮子"},
-	{"pos":"right","exp":"smile","chara":"renko","serif": "今日もいい天気ね"},
-	{"pos":"left","exp":"smile","chara":"merry","serif": "そうね"},
+	{"pos":"left","exp":"normal","chara":"merry"	, "option": {"bgm": "nc13447"} },
+	{"pos":"right","exp":"normal","chara":"renko"	, "option": {"bgm": "nc13447"},"serif": "こんにちはメリー"},
+	{"pos":"left","exp":"normal","chara":"merry"	, "option": {"bgm": "nc13447"} ,"serif": "こんにちは蓮子"},
+	{"pos":"right","exp":"smile","chara":"renko"	, "option": {"bgm": "nc13447"} ,"serif": "今日もいい天気ね"},
+	{"pos":"left","exp":"smile","chara":"merry"	, "option": {"bgm": "nc13447"}, "serif": "そうね"},
 ];
 
 // pos_name -> pos number
@@ -64,17 +64,15 @@ SceneTalk.prototype.init = function(){
 
 	// フェードアウトする
 	this.setFadeOut(60);
+
+	// BGM 再生
+	if (this.serif.getOption().bgm) {
+		this.core.audio_loader.playBGM(this.serif.getOption().bgm);
+	}
 };
 
 SceneTalk.prototype.beforeDraw = function(){
 	base_scene.prototype.beforeDraw.apply(this, arguments);
-
-	/*
-	// BGM 再生
-	if (this.frame_count === 60 && this.bgm()) {
-		this.core.playBGM(this.bgm());
-	}
-	*/
 
 	if (this.isInTransition()) {
 		this.transition_count--;
