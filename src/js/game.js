@@ -26,14 +26,17 @@ util.inherit(Game, core);
 
 Game.prototype.init = function () {
 	core.prototype.init.apply(this, arguments);
+
 	this.addScene("loading", new SceneLoading(this));
 	this.addScene("talk", new SceneTalk(this));
 	this.addScene("end", new SceneEnd(this));
+
 	this.changeScene("loading");
 };
 
 Game.prototype.reload = function () {
 	//this.serif = CreateSerifLogic.exec();
+	this.init();
 
 };
 module.exports = Game;
