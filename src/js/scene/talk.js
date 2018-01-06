@@ -26,7 +26,7 @@ var base_scene = require('../hakurei').scene.base;
 
 var SerifManager = require('../hakurei').serif_manager;
 
-//var CreateDarkerImage = require('../logic/create_darker_image');
+var CreateDarkerImage = require('../logic/create_darker_image');
 
 var SceneTalk = function(game) {
 	base_scene.apply(this, arguments);
@@ -181,7 +181,7 @@ SceneTalk.prototype._showRightChara = function(){
 	var right_image = this.core.image_loader.getImage(this.serif.getImageName(RIGHT_POS));
 	if(!this.serif.isTalking(RIGHT_POS)) {
 		// 喋ってない方のキャラは暗くなる
-		//right_image = CreateDarkerImage.exec(right_image);
+		right_image = CreateDarkerImage.exec(right_image, 0.5);
 	}
 	else {
 		x -= TALKER_MOVE_PX;
@@ -209,7 +209,7 @@ SceneTalk.prototype._showLeftChara = function(){
 	var left_image = this.core.image_loader.getImage(this.serif.getImageName(LEFT_POS));
 	if(!this.serif.isTalking(LEFT_POS)) {
 		// 喋ってない方のキャラは暗くなる
-		//left_image = CreateDarkerImage.exec(left_image);
+		left_image = CreateDarkerImage.exec(left_image, 0.5);
 	}
 	else {
 		x += TALKER_MOVE_PX;
