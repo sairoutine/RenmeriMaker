@@ -17,7 +17,7 @@ var MESSAGE_WINDOW_HEIGHT = 100;
 
 // サンプルセリフ
 var Serif= [
-	{"background":"nc138477"},
+	{"background":"nc14162"},
 	{"pos":"left","exp":"normal","chara":"renko","serif": "こんにちはメリー"},
 	{"pos":"right","exp":"normal","chara":"merry","serif": "こんにちは蓮子"},
 	{"pos":"left","exp":"smile","chara":"renko","serif": "今日もいい天気ね"},
@@ -154,7 +154,33 @@ SceneTalk.prototype._showBackground = function(){
 	var ctx = this.core.ctx;
 	var background_name = this.serif.getBackgroundImageName();
 	var background = this.core.image_loader.getImage(background_name);
-	ctx.drawImage(background, 0, 0);
+
+	var bgWidth = background.width;
+	var bgHeight = background.height;
+
+	var scene_aspect = this.width / this.height;
+	var bg_aspect = bgWidth / bgHeight;
+	var left, top, width, height;
+
+	if(bg_aspect >= scene_aspect) {
+		width = this.width;
+		height = this.width / bg_aspect;
+		top = (this.height - height) / 2;
+		left = 0;
+	}
+	else {
+		height = this.height;
+		width = this.height * bg_aspect;
+		top = 0;
+		left = (this.width - width) / 2;
+	}
+
+	ctx.drawImage(background,
+		left,
+		top,
+		width,
+		height
+	);
 };
 
 SceneTalk.prototype._showRightChara = function(){
