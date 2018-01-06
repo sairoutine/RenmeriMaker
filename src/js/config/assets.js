@@ -12,6 +12,13 @@ AssetsConfig.images = {
 	"merry_cry":       "./image/merry/cry1.png",
 	"merry_surprised": "./image/merry/surprised1.png",
 
+	"nc138477": "./image/bg/nc138477.jpg",
+	"nc14162": "./image/bg/nc14162.jpg",
+	"nc4527": "./image/bg/nc4527.jpg",
+	"nc68222": "./image/bg/nc68222.jpg",
+	"nc72006": "./image/bg/nc72006.jpg",
+	"nc7951": "./image/bg/nc7951.jpg",
+	"nc95621": "./image/bg/nc95621.jpg",
 };
 
 AssetsConfig.sounds = {
