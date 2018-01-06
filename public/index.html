@@ -12,7 +12,7 @@
 	<hr />
 	<div>
 		<b>編集</b><br />
-		背景：<select id="background">
+		背景：<select id="background" onchange="game.reload();">
 			<option>nc138477</option>
 			<option>nc14162</option>
 			<option>nc4527</option>
@@ -20,7 +20,7 @@
 			<option>nc7951</option>
 			<option>nc95621</option>
 		</select>
-		BGM：<select id="bgm">
+		BGM：<select id="bgm" onchange="game.reload();">
 			<option>nc13447</option>
 			<option>nc20349</option>
 			<option>nc22928</option>
@@ -31,26 +31,26 @@
 		</select><br />
 
 
-		<select id="chara1">
+		<select id="chara1" onchange="game.reload();">
 			<option value="renko">蓮子</option>
 			<option value="merry">メリー</option>
 		</select>
-		<select id="exp1">
+		<select id="exp1" onchange="game.reload();">
 			<option value="normal">普通</option>
 			<option value="smile">笑</option>
 			<option value="cry">泣</option>
 			<option value="angry">怒</option>
 			<option value="tere">照</option>
 		</select>
-		<input type="text" id="serif1_1" />
+		<input type="text" id="serif1_1" onchange="game.reload();" />
 		<input type="text" id="serif1_2" />
 		<br />
 
-		<select id="chara2">
+		<select id="chara2" onchange="game.reload();">
 			<option value="renko">蓮子</option>
 			<option value="merry">メリー</option>
 		</select>
-		<select id="exp2">
+		<select id="exp2" onchange="game.reload();">
 			<option value="normal">普通</option>
 			<option value="smile">笑</option>
 			<option value="cry">泣</option>
@@ -61,11 +61,11 @@
 		<input type="text" id="serif2_2" />
 		<br />
 
-		<select id="chara3">
+		<select id="chara3" onchange="game.reload();">
 			<option value="renko">蓮子</option>
 			<option value="merry">メリー</option>
 		</select>
-		<select id="exp3">
+		<select id="exp3" onchange="game.reload();">
 			<option value="normal">普通</option>
 			<option value="smile">笑</option>
 			<option value="cry">泣</option>
@@ -76,11 +76,11 @@
 		<input type="text" id="serif3_2" />
 		<br />
 
-		<select id="chara4">
+		<select id="chara4" onchange="game.reload();">
 			<option value="renko">蓮子</option>
 			<option value="merry">メリー</option>
 		</select>
-		<select id="exp4">
+		<select id="exp4" onchange="game.reload();">
 			<option value="normal">普通</option>
 			<option value="smile">笑</option>
 			<option value="cry">泣</option>
@@ -91,11 +91,11 @@
 		<input type="text" id="serif4_2" />
 		<br />
 
-		<select id="chara5">
+		<select id="chara5" onchange="game.reload();">
 			<option value="renko">蓮子</option>
 			<option value="merry">メリー</option>
 		</select>
-		<select id="exp5">
+		<select id="exp5" onchange="game.reload();">
 			<option value="normal">普通</option>
 			<option value="smile">笑</option>
 			<option value="cry">泣</option>
@@ -104,6 +104,9 @@
 		</select>
 		<input type="text" id="serif5_1" />
 		<input type="text" id="serif5_2" />
+		<br />
+
+		<input type="button" value="リロード" onclick="game.reload();" />
 		<br />
 
 

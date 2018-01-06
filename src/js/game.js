@@ -38,5 +38,6 @@ Game.prototype.reload = function () {
 	//this.serif = CreateSerifLogic.exec();
 	this.init();
 
+	return true;
 };
 module.exports = Game;

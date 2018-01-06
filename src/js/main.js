@@ -11,6 +11,11 @@ window.onload = function() {
 	game = new Game(mainCanvas, options);
 
 	game.setupEvents();
+
+	// reset keyboard binding
+	window.onkeydown = function(e) {};
+	window.onkeyup   = function(e) {};
+
 	game.init();
 	game.startRun();
 
