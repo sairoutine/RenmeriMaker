@@ -32,7 +32,6 @@ var RIGHT_POS = 1;
 
 
 var Util = require('../hakurei').util;
-var CONSTANT = require('../hakurei').constant;
 var base_scene = require('../hakurei').scene.base;
 
 var SerifManager = require('../hakurei').serif_manager;
@@ -87,7 +86,7 @@ SceneTalk.prototype.beforeDraw = function(){
 	}
 
 
-	if(this.core.isKeyPush(CONSTANT.BUTTON_Z)) {
+	if(this.core.input_manager.isLeftClickPush()) {
 		if(this.serif.isEnd()) {
 			// 終了
 			this.notifySerifEnd();
