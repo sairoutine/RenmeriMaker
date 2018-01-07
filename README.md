@@ -17,3 +17,21 @@ rails _5.0.0_ new RenmeriMaker --database=mysql --skip-bundle
 cd Renmerimaker
 bundle install
 ```
+
+# MySQL の接続先
+```
+mysql.server start
+# ※場合によって
+vim /config/database.yml
+rails db:create
+```
+
+# スキーマ定義
+```
+# まず Novel だけ作成
+# カラムのtype 定義↓
+# http://api.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html#method-i-add_column
+rails generate model Novel id:bigint:primary_key title:string introduction:text script:text
+# TODO: id を bigint にする
+rails db:migrate
+```
