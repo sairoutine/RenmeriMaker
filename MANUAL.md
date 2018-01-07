@@ -31,7 +31,7 @@ rails db:create
 # まず Novel だけ作成
 # カラムのtype 定義↓
 # http://api.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html#method-i-add_column
-rails generate model Novel id:bigint:primary_key title:string introduction:text script:text
+rails generate model Novel title:string introduction:text script:text
 # TODO: id を bigint にする
 rails db:migrate
 ```
