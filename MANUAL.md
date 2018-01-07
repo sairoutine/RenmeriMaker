@@ -26,12 +26,6 @@ vim /config/database.yml
 rails db:create
 ```
 
-# 編集ページの静的ページ作成
-```
-rails generate controller Novel edit
-```
-
-
 # スキーマ定義
 ```
 # まず Novel だけ作成
