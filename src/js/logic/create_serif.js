@@ -1,19 +1,45 @@
 'use strict';
-// サンプルセリフ
-var Serif= [
-	{"background":"nc4527"},
-	{"pos":"left","exp":"normal","chara":"merry"	, "option": {"bgm": "nc13447"} },
-	{"pos":"right","exp":"normal","chara":"renko"	, "option": {"bgm": "nc13447"},"serif": "こんにちはメリー"},
-	{"pos":"left","exp":"normal","chara":"merry"	, "option": {"bgm": "nc13447"} ,"serif": "こんにちは蓮子"},
-	{"pos":"right","exp":"smile","chara":"renko"	, "option": {"bgm": "nc13447"} ,"serif": "今日もいい天気ね"},
-	{"pos":"left","exp":"smile","chara":"merry"	, "option": {"bgm": "nc13447"}, "serif": "そうね"},
-];
+var Util = require('../hakurei').util;
 
 // 静的クラス
 var CreateSerif = function() {};
 
 
 CreateSerif.exec = function () {
-	return Serif;
+	var bg = document.getElementById("background").value;
+	var bgm = document.getElementById("bgm").value;
+
+	var serif = [];
+	var i, len;
+	for (i = 1, len = 5; i <= len; i++) {
+		var chara = document.getElementById("chara" + i).value;
+		var exp = document.getElementById("exp" + i).value;
+		var pos = chara === "renko" ? "right" : "left";
+
+		var serif1 = document.getElementById("serif" + i + "_1").value;
+		var serif2 = document.getElementById("serif" + i + "_2").value;
+
+		if (!serif1) continue;
+
+		var message = serif1 + "\n" + serif2;
+
+		serif.push({
+			"pos": pos,
+			"exp": exp,
+			"chara": chara,
+			"serif": message,
+		});
+	}
+	// 背景
+	serif.unshift({"background": bg});
+
+	// BGM
+	if (bgm !== "なし") {
+		for (i = 0, len = serif.length; i < len; i++) {
+			serif[i] = Util.assign({}, serif[i], {"option": {"bgm": bgm}});
+		}
+	}
+
+	return serif;
 };
 module.exports = CreateSerif;

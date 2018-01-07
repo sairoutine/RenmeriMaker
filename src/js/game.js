@@ -27,6 +27,8 @@ Game.prototype.init = function () {
 };
 
 Game.prototype.reload = function () {
+	this.audio_loader.stopAllBGM();
+
 	this.init();
 };
 module.exports = Game;
