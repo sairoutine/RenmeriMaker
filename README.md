@@ -1,37 +1,24 @@
-# RenmeriMaker
+# README
 
-# ruby + rails のセットアップ
-```
-brew update
-brew install rbenv
-echo 'eval "$(rbenv init -)"' >> ~/.zshrc
-rbenv install 2.3.1
-rbenv global 2.3.1
-rbenv exec gem install bundler
-gem install rails -v 5.0.0
-```
+This README would normally document whatever steps are necessary to get the
+application up and running.
 
-# プロジェクトの作成
-```
-rails _5.0.0_ new RenmeriMaker --database=mysql --skip-bundle
-cd Renmerimaker
-bundle install
-```
+Things you may want to cover:
 
-# MySQL の接続先
-```
-mysql.server start
-# ※場合によって
-vim /config/database.yml
-rails db:create
-```
+* Ruby version
 
-# スキーマ定義
-```
-# まず Novel だけ作成
-# カラムのtype 定義↓
-# http://api.rubyonrails.org/classes/ActiveRecord/ConnectionAdapters/SchemaStatements.html#method-i-add_column
-rails generate model Novel id:bigint:primary_key title:string introduction:text script:text
-# TODO: id を bigint にする
-rails db:migrate
-```
+* System dependencies
+
+* Configuration
+
+* Database creation
+
+* Database initialization
+
+* How to run the test suite
+
+* Services (job queues, cache servers, search engines, etc.)
+
+* Deployment instructions
+
+* ...
