@@ -3,6 +3,7 @@ class NovelController < ApplicationController
   protect_from_forgery except: :create
 
   public
+    # 新規作成
     def create
       novel = Novel.new(novel_params)
       if novel.save
@@ -12,8 +13,17 @@ class NovelController < ApplicationController
       else
         # 投稿失敗
         render json: {status: "ng"}
+        return
       end
     end
+
+    # 新着一覧表示
+    def list
+      #@novels = Novel.paginate(page: params[:page])
+      @novels = Novel.all
+    end
+
+
   private
     def novel_params
       # POST データ例
