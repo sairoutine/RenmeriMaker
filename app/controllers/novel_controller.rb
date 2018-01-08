@@ -7,10 +7,11 @@ class NovelController < ApplicationController
       novel = Novel.new(novel_params)
       if novel.save
         # 投稿成功
-        redirect_to '/'
+        render json: {status: "ok"}
+        return
       else
         # 投稿失敗
-        redirect_to '/'
+        render json: {status: "ng"}
       end
     end
   private
