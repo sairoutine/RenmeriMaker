@@ -49,5 +49,7 @@ gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
 
 gem 'will_paginate', '3.1.0'
 
-
+# Twitter AOuth
+gem 'omniauth', '1.8.1'
+gem 'omniauth-twitter', '1.4.0'
 
