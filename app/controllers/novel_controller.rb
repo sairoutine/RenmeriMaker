@@ -19,8 +19,7 @@ class NovelController < ApplicationController
 
     # 新着一覧表示
     def list
-      #@novels = Novel.paginate(page: params[:page])
-      @novels = Novel.all
+      @novels = Novel.paginate(page: params[:page], per_page: 10)
     end
 
 
