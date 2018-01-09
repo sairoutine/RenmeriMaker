@@ -35,3 +35,10 @@ rails generate model Novel title:string introduction:text script:text
 # TODO: id を bigint にする
 rails db:migrate
 ```
+
+```
+# ユーザー
+rails generate model User provider:string uid:string nickname:string image_url:string last_show_notification_date:datetime
+# TODO: id を bigint にする
+rails db:migrate
+```
