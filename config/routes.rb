@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
   root   'novel#list'
 
+  get '/auth/:provider/callback' => 'sessions#create'
+
   #resources :novel, only: [:create]
   post '/novel/create', to: 'novel#create'
 
