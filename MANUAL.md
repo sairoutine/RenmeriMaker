@@ -53,3 +53,7 @@ rails generate migration change_user_id_column
 ```
 rails db:migrate
 ```
+
+# OmniAuth
+だいたい以下を見ればわかる
+https://qiita.com/To_BB/items/01863aa50d628c069b64
