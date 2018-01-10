@@ -6,7 +6,11 @@ class NovelController < ApplicationController
   before_action :logged_in_user, only: [:create, :new]
 
   public
-    # 新規作成
+    # 新規作成 入力画面
+    def new
+    end
+
+    # 新規作成 更新
     def create
       novel = Novel.new(novel_params)
       if novel.save
