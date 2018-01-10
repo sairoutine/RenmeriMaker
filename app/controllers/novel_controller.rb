@@ -2,6 +2,9 @@ class NovelController < ApplicationController
   # CSRF を一旦無効
   protect_from_forgery except: :create
 
+  # ログインしてないといけないメソッド
+  before_action :logged_in_user, only: [:create, :new]
+
   public
     # 新規作成
     def create
