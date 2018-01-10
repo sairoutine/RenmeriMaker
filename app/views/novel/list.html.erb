@@ -1,6 +1,7 @@
 <h1>All novels</h1>
-<%= link_to "新規作成", "/novel/new" %>
-
+<% if logged_in? %>
+  <%= link_to "新規作成", "/novel/new" %>
+<% end %>
 <ul class="novels">
   <% @novels.each do |novel| %>
     <li>
