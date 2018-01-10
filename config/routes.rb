@@ -2,6 +2,7 @@ Rails.application.routes.draw do
   root   'novel#list'
 
   get '/auth/:provider/callback' => 'sessions#create'
+  get '/logout' => 'sessions#destroy'
 
   #resources :novel, only: [:create]
   post '/novel/create', to: 'novel#create'

@@ -6,4 +6,12 @@ class SessionsController < ApplicationController
     session[:user_id] = user.id
     redirect_to "/", notice: 'ログインしました'
   end
+
+  def destroy
+    if self.helpers.current_user
+      session.delete(:user_id)
+      flash[:notice] = "ログアウトしました"
+    end
+    redirect_to "/"
+  end
 end
