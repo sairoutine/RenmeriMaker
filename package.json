@@ -1,12 +1,9 @@
 {
-  "name": "hakureijs-boilertemplate",
+  "name": "RenmeriMaker",
   "version": "0.0.1",
   "description": "",
   "main": "index.js",
   "scripts": {
-    "start": "electron ./public/electron.js",
-    "build:win": "cd public && electron-packager ./ NewGame --overwrite --platform=win32  --arch=x64 --version=1.6.0 --icon=icon.ico --out ../releases  --asar",
-    "build:mac": "cd public && electron-packager ./ NewGame --overwrite --platform=darwin --arch=x64 --version=1.6.0 --icon=icon.icns --out ../releases  --asar"
   },
   "author": "sairoutine",
   "license": "The Unlicense",
