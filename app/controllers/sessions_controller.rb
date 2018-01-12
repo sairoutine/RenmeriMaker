@@ -8,7 +8,7 @@ class SessionsController < ApplicationController
   end
 
   def destroy
-    if self.helpers.current_user
+    if current_user
       session.delete(:user_id)
       flash[:notice] = "ログアウトしました"
     end
