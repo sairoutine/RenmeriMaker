@@ -262,7 +262,7 @@ SceneTalk.prototype._showMessage = function() {
 	ctx.textAlign = 'left';
 	ctx.textBaseAlign = 'middle';
 
-	var x, y;
+	var y;
 	// セリフ表示
 	var lines = this.serif.lines();
 	if (lines.length) {
