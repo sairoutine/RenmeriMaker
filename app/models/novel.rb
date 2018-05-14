@@ -1,2 +1,0 @@
-class Novel < ApplicationRecord
-end
