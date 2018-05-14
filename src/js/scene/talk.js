@@ -16,8 +16,8 @@ var TRANSITION_COUNT = 100;
 var MESSAGE_WINDOW_HEIGHT = 100;
 
 // pos_name -> pos number
-var LEFT_POS = 0;
-var RIGHT_POS = 1;
+var LEFT_POS = "left";
+var RIGHT_POS = "right";
 
 
 
@@ -39,6 +39,7 @@ Util.inherit(SceneTalk, base_scene);
 SceneTalk.prototype.init = function(){
 	base_scene.prototype.init.apply(this, arguments);
 	this.serif.init(this.core.serif);
+	this.serif.start();
 
 	// 背景遷移時のトランジション
 	this.transition_count = 0;
@@ -56,8 +57,8 @@ SceneTalk.prototype.init = function(){
 	this.setFadeOut(60);
 
 	// BGM 再生
-	if (this.serif.getOption().bgm) {
-		this.core.audio_loader.playBGM(this.serif.getOption().bgm);
+	if (this.serif.getCurrentOption().bgm) {
+		this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
 	}
 };
 
@@ -122,10 +123,10 @@ SceneTalk.prototype.draw = function(){
 		this._showBackground();
 
 		// キャラ表示
-		if(this.serif.getImageName(RIGHT_POS)) {
+		if(this.serif.getCurrentCharaNameByPosition(RIGHT_POS)) {
 			this._showRightChara();
 		}
-		if(this.serif.getImageName(LEFT_POS)) {
+		if(this.serif.getCurrentCharaNameByPosition(LEFT_POS)) {
 			this._showLeftChara();
 		}
 
@@ -140,7 +141,7 @@ SceneTalk.prototype.draw = function(){
 // 背景画像表示
 SceneTalk.prototype._showBackground = function(){
 	var ctx = this.core.ctx;
-	var background_name = this.serif.getBackgroundImageName();
+	var background_name = this.serif.getCurrentBackgroundImageName();
 	var background = this.core.image_loader.getImage(background_name);
 
 	var bgWidth = background.width;
@@ -178,8 +179,8 @@ SceneTalk.prototype._showRightChara = function(){
 	var x = 350;
 	var y = 65;
 
-	var right_image = this.core.image_loader.getImage(this.serif.getImageName(RIGHT_POS));
-	if(!this.serif.isTalking(RIGHT_POS)) {
+	var right_image = this.core.image_loader.getImage(this.serif.getCurrentCharaNameByPosition(RIGHT_POS) + "_" + this.serif.getCurrentCharaExpressionByPosition(RIGHT_POS));
+	if(!this.serif.isCurrentTalkingByPosition(RIGHT_POS)) {
 		// 喋ってない方のキャラは暗くなる
 		right_image = CreateDarkerImage.exec(right_image, 0.5);
 	}
@@ -206,8 +207,8 @@ SceneTalk.prototype._showLeftChara = function(){
 	var x = -50;
 	var y = 65 + 20;
 
-	var left_image = this.core.image_loader.getImage(this.serif.getImageName(LEFT_POS));
-	if(!this.serif.isTalking(LEFT_POS)) {
+	var left_image = this.core.image_loader.getImage(this.serif.getCurrentCharaNameByPosition(LEFT_POS) + "_" + this.serif.getCurrentCharaExpressionByPosition(LEFT_POS));
+	if(!this.serif.isCurrentTalkingByPosition(LEFT_POS)) {
 		// 喋ってない方のキャラは暗くなる
 		left_image = CreateDarkerImage.exec(left_image, 0.5);
 	}
@@ -250,7 +251,7 @@ SceneTalk.prototype._showMessage = function() {
 	ctx.save();
 
 	// セリフの色
-	var font_color = this.serif.getOption().font_color;
+	var font_color = this.serif.getCurrentOption().font_color;
 	if(font_color) {
 		font_color = Util.hexToRGBString(font_color);
 	}
@@ -264,7 +265,7 @@ SceneTalk.prototype._showMessage = function() {
 
 	var y;
 	// セリフ表示
-	var lines = this.serif.lines();
+	var lines = this.serif.getCurrentPrintedSentences();
 	if (lines.length) {
 		// セリフテキストの y 座標初期位置
 		y = this.height - 125 + 40;
@@ -286,7 +287,7 @@ SceneTalk.prototype._showMessage = function() {
 
 // 立ち絵＆セリフ終了後
 SceneTalk.prototype.notifySerifEnd = function() {
-	this.core.changeScene("end");
+	this.core.scene_manager.changeScene("end");
 };
 
 // 遷移中かどうか

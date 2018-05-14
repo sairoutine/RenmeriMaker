@@ -52,7 +52,7 @@ SceneLoading.prototype.beforeDraw = function() {
 	//if (this.core.image_loader.isAllLoaded() && this.core.audio_loader.isAllLoaded() && this.core.font_loader.isAllLoaded()) {
 	if (this.core.image_loader.isAllLoaded() && this.core.audio_loader.isAllLoaded()) {
 		// 本番
-		this.core.changeScene("talk");
+		this.core.scene_manager.changeScene("talk");
 	}
 };
 SceneLoading.prototype.draw = function(){

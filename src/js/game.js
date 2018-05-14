@@ -19,11 +19,11 @@ Game.prototype.init = function () {
 
 	this.serif = CreateSerifLogic.exec();
 
-	this.addScene("loading", new SceneLoading(this));
-	this.addScene("talk", new SceneTalk(this));
-	this.addScene("end", new SceneEnd(this));
+	this.scene_manager.addScene("loading", new SceneLoading(this));
+	this.scene_manager.addScene("talk", new SceneTalk(this));
+	this.scene_manager.addScene("end", new SceneEnd(this));
 
-	this.changeScene("loading");
+	this.scene_manager.changeScene("loading");
 };
 
 // ゲームを読み込み直し
