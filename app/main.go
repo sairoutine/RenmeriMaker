@@ -1,8 +1,20 @@
 package main
 
-import "github.com/gin-gonic/gin"
+import (
+	//CONSTANT "github.com/sairoutine/RenmeriMaker/app/constant"
+	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
+	_ "github.com/jinzhu/gorm/dialects/mysql"
+)
 
 func main() {
+	// データベース
+	db, err := gorm.Open("mysql", "root@tcp(localhost:3306)/renmeri_maker")
+	defer db.Close()
+	if err != nil {
+		panic(err.Error())
+	}
+
 	r := gin.Default()
 	r.Static("/", "./public")
 	/*
