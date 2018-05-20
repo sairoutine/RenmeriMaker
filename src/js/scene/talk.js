@@ -47,14 +47,8 @@ SceneTalk.prototype.init = function(){
 	// シーン遷移前の BGM 止める
 	this.core.audio_loader.stopBGM();
 
-	/*
-	if (this.isPlayFadeIn()) {
-		this.setFadeIn(60);
-	}
-	*/
-
 	// フェードアウトする
-	this.setFadeOut(60);
+	this.core.scene_manager.setFadeOut(60);
 
 	// BGM 再生
 	if (this.serif.getCurrentOption().bgm) {

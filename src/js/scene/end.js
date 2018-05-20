@@ -12,7 +12,7 @@ Util.inherit(SceneTalk, base_scene);
 
 SceneTalk.prototype.init = function(){
 	base_scene.prototype.init.apply(this, arguments);
-	this.setFadeIn(60, "black");
+	this.core.scene_manager.setFadeIn(60, "black");
 };
 
 SceneTalk.prototype.beforeDraw = function(){
