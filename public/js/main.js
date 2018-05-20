@@ -13365,7 +13365,7 @@ Util.inherit(SceneTalk, base_scene);
 
 SceneTalk.prototype.init = function(){
 	base_scene.prototype.init.apply(this, arguments);
-	this.setFadeIn(60, "black");
+	this.core.scene_manager.setFadeIn(60, "black");
 };
 
 SceneTalk.prototype.beforeDraw = function(){
@@ -13553,14 +13553,8 @@ SceneTalk.prototype.init = function(){
 	// シーン遷移前の BGM 止める
 	this.core.audio_loader.stopBGM();
 
-	/*
-	if (this.isPlayFadeIn()) {
-		this.setFadeIn(60);
-	}
-	*/
-
 	// フェードアウトする
-	this.setFadeOut(60);
+	this.core.scene_manager.setFadeOut(60);
 
 	// BGM 再生
 	if (this.serif.getCurrentOption().bgm) {
