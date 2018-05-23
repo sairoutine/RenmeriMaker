@@ -2,6 +2,7 @@ package main
 
 import (
 	//CONSTANT "github.com/sairoutine/RenmeriMaker/app/constant"
+	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
@@ -16,6 +17,10 @@ func main() {
 	}
 
 	r := gin.Default()
+
+	store := sessions.NewCookieStore([]byte("secret"))
+
+	r.Use(sessions.Sessions("renmeri_maker_session", store))
 	r.Static("/", "../public")
 	/*
 		r.GET("/ping", func(c *gin.Context) {
