@@ -8,6 +8,21 @@
   version = "v1.2"
 
 [[projects]]
+  name = "github.com/coreos/pkg"
+  packages = ["flagutil"]
+  revision = "97fdf19511ea361ae1c100dd393cc47f8dcfa1e1"
+  version = "v4"
+
+[[projects]]
+  name = "github.com/dghubble/oauth1"
+  packages = [
+    ".",
+    "twitter"
+  ]
+  revision = "70562a5920ad9b6ff03ef697c0f90ae569abbd2b"
+  version = "v0.4.0"
+
+[[projects]]
   name = "github.com/garyburd/redigo"
   packages = [
     "internal",
@@ -103,6 +118,12 @@
 
 [[projects]]
   branch = "master"
+  name = "golang.org/x/net"
+  packages = ["context"]
+  revision = "dfa909b99c79129e1100513e5cd36307665e5723"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
   revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
@@ -122,6 +143,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "deb736960205284f5b589db918025b25c418f8f7a914e4e5127e14d8ccb5d90f"
+  inputs-digest = "bf0dda5a40b0ac319fa349ff37e6a63e9fbe5fe6ed866f9b0cc3ca00b40efd32"
   solver-name = "gps-cdcl"
   solver-version = 1
