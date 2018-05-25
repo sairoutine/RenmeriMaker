@@ -7,6 +7,9 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
+	controllerNovel "github.com/sairoutine/RenmeriMaker/app/controller/novel"
+	controllerNovelEmoji "github.com/sairoutine/RenmeriMaker/app/controller/novel/emoji"
+	controllerUser "github.com/sairoutine/RenmeriMaker/app/controller/user"
 )
 
 func main() {
@@ -30,51 +33,30 @@ func main() {
 	user := r.Group("/user")
 	{
 		// ユーザー一覧を表示
-		user.GET("/", func(c *gin.Context) {
-
-		})
+		user.GET("/", controllerUser.Index)
 		// ユーザーを表示
-		user.GET("/show/:id", func(c *gin.Context) {
-
-		})
+		user.GET("/show/:id", controllerUser.Show)
 	}
 	// ノベル
 	novel := r.Group("/novel")
 	{
 		// ノベル投稿 表示ページ
-		novel.GET("/new", func(c *gin.Context) {
-
-		})
+		novel.GET("/new", controllerNovel.New)
 		// ノベル投稿
-		novel.POST("/create", func(c *gin.Context) {
-
-		})
+		novel.POST("/create", controllerNovel.Create)
 		// ノベル投稿 編集ページ
-		novel.GET("/edit", func(c *gin.Context) {
-
-		})
-
+		novel.GET("/edit", controllerNovel.Edit)
 		// ノベル表示
-		novel.GET("/show/:id", func(c *gin.Context) {
-
-		})
+		novel.GET("/show/:id", controllerNovel.Show)
 		// ノベル更新
-		novel.POST("/update/:id", func(c *gin.Context) {
-
-		})
-
+		novel.POST("/update/:id", controllerNovel.Update)
 		// ノベル削除
-		novel.DELETE("/delete/:id", func(c *gin.Context) {
-
-		})
-
+		novel.DELETE("/delete/:id", controllerNovel.Delete)
 		// 絵文字
 		emoji := novel.Group("/emoji/:id")
 		{
 			// 絵文字を投稿
-			emoji.POST("/create", func(c *gin.Context) {
-
-			})
+			emoji.POST("/create", controllerNovelEmoji.Create)
 		}
 	}
 
