@@ -2,7 +2,6 @@ package server
 
 import (
 	"github.com/gin-gonic/gin"
-	"github.com/jinzhu/gorm"
 	"net/http"
 )
 
@@ -24,13 +23,6 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 }
 
 func Build() *Server {
-	// データベース
-	db, err := gorm.Open("mysql", "root@tcp(localhost:3307)/renmeri_maker")
-	defer db.Close()
-	if err != nil {
-		panic(err.Error())
-	}
-
 	s := New()
 	s.SetupMiddleware()
 	s.SetupRouter()
