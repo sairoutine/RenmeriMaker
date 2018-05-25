@@ -10,7 +10,7 @@ import (
 
 func main() {
 	// データベース
-	db, err := gorm.Open("mysql", "root@tcp(localhost:3306)/renmeri_maker")
+	db, err := gorm.Open("mysql", "root@tcp(localhost:3307)/renmeri_maker")
 	defer db.Close()
 	if err != nil {
 		panic(err.Error())

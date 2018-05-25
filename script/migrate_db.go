@@ -52,7 +52,7 @@ type Emoji struct {
 }
 
 func main() {
-	db, err := gorm.Open("mysql", "root@tcp(localhost:3306)/renmeri_maker?charset=utf8&parseTime=True&loc=Local")
+	db, err := gorm.Open("mysql", "root@tcp(localhost:3307)/renmeri_maker?charset=utf8&parseTime=True&loc=Local")
 	if err != nil {
 		panic(err.Error())
 	}
