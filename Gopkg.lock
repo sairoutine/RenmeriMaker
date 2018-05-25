@@ -8,12 +8,6 @@
   version = "v1.2"
 
 [[projects]]
-  branch = "master"
-  name = "github.com/dchest/uniuri"
-  packages = ["."]
-  revision = "8902c56451e9b58ff940bbe5fec35d5f9c04584a"
-
-[[projects]]
   name = "github.com/garyburd/redigo"
   packages = [
     "internal",
@@ -24,15 +18,15 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/gin-contrib/sessions"
-  packages = ["."]
-  revision = "15760a03818fe16125cd735433b57a7398335b13"
-
-[[projects]]
-  branch = "master"
   name = "github.com/gin-contrib/sse"
   packages = ["."]
   revision = "22d885f9ecc78bf4ee5d72b937e4bbcdc58e8cae"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/gin-contrib/static"
+  packages = ["."]
+  revision = "73da7037e716e63aa2b0ffceb630dfa7be299086"
 
 [[projects]]
   branch = "master"
@@ -109,12 +103,6 @@
 
 [[projects]]
   branch = "master"
-  name = "github.com/utrack/gin-csrf"
-  packages = ["."]
-  revision = "402f6eaad1b1d5bb1225e0f1fb1b90342b79967a"
-
-[[projects]]
-  branch = "master"
   name = "golang.org/x/sys"
   packages = ["unix"]
   revision = "7c87d13f8e835d2fb3a70a2912c811ed0c1d241b"
@@ -134,6 +122,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "76eb0b96bd0f99c94b688f0badd06fa5699103a6d33ca4b65177a2609ecf7417"
+  inputs-digest = "deb736960205284f5b589db918025b25c418f8f7a914e4e5127e14d8ccb5d90f"
   solver-name = "gps-cdcl"
   solver-version = 1
