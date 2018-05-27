@@ -33,7 +33,7 @@ func (s *Server) SetupTwitterOAuth() {
 		ConsumerKey:    *consumerKey,
 		ConsumerSecret: *consumerSecret,
 		Endpoint:       oauth1Twitter.AuthorizeEndpoint,
-		CallbackURL:    "http://localhost:8082/user/callback",
+		CallbackURL:    "http://localhost:8082/twitter/callback",
 	}
 
 	// requestTokenを取得して Twitter OAuth認証ページにリダイレクト
