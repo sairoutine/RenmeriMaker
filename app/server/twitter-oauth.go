@@ -9,7 +9,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	model "github.com/sairoutine/RenmeriMaker/app/model"
+	"github.com/sairoutine/RenmeriMaker/app/model"
 	"net/http"
 	"os"
 	"time"
