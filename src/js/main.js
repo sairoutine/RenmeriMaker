@@ -6,7 +6,8 @@ var game;
 window.onload = function() {
 	var mainCanvas = document.getElementById('mainCanvas');
 
-	var options = {};
+	// サーバーサイドからのデータ
+	var options = window.config;
 
 	game = new Game(mainCanvas, options);
 
