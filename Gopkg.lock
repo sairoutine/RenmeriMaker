@@ -8,10 +8,22 @@
   version = "v1.2"
 
 [[projects]]
+  name = "github.com/cenkalti/backoff"
+  packages = ["."]
+  revision = "2ea60e5f094469f9e65adb9cd103795b73ae743e"
+  version = "v2.0.0"
+
+[[projects]]
   name = "github.com/coreos/pkg"
   packages = ["flagutil"]
   revision = "97fdf19511ea361ae1c100dd393cc47f8dcfa1e1"
   version = "v4"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/dghubble/go-twitter"
+  packages = ["twitter"]
+  revision = "093ee2cf4e32ef608cded0ace84d5d82a52da4fa"
 
 [[projects]]
   name = "github.com/dghubble/oauth1"
@@ -21,6 +33,12 @@
   ]
   revision = "70562a5920ad9b6ff03ef697c0f90ae569abbd2b"
   version = "v0.4.0"
+
+[[projects]]
+  name = "github.com/dghubble/sling"
+  packages = ["."]
+  revision = "eb56e89ac5088bebb12eef3cb4b293300f43608b"
+  version = "v1.1.0"
 
 [[projects]]
   name = "github.com/garyburd/redigo"
@@ -70,6 +88,12 @@
   packages = ["proto"]
   revision = "b4deda0973fb4c70b50d226b1af49f3da59f5265"
   version = "v1.1.0"
+
+[[projects]]
+  branch = "master"
+  name = "github.com/google/go-querystring"
+  packages = ["query"]
+  revision = "53e6ce116135b80d037921a7fdd5138cf32d7a8a"
 
 [[projects]]
   name = "github.com/gorilla/context"
@@ -143,6 +167,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "bf0dda5a40b0ac319fa349ff37e6a63e9fbe5fe6ed866f9b0cc3ca00b40efd32"
+  inputs-digest = "0deab04da18bd36686978806e787aa42eae81f0bcef2c479a813e91708f9119a"
   solver-name = "gps-cdcl"
   solver-version = 1

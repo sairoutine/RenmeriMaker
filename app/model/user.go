@@ -24,6 +24,9 @@ import (
 type User struct {
 	ID                       uint64 `gorm:"AUTO_INCREMENT"`
 	DispName                 string `gorm:"size:255"`
+	TwitterID                int64  `gorm:"unique_index"`
+	TwitterAccessToken       string `gorm:"size:255"`
+	TwitterAccessSecret      string `gorm:"size:255"`
 	LastShowNotificationDate time.Time
 	Novels                   []Novel // One-To-Many relationship (has many - use Novel's UserID as foreign key)
 }

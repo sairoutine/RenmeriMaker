@@ -7,7 +7,7 @@ import (
 
 func ConnectDB() gin.HandlerFunc {
 	return func(c *gin.Context) {
-		db, err := gorm.Open("mysql", "root@tcp(localhost:3307)/renmeri_maker")
+		db, err := gorm.Open("mysql", "root@tcp(localhost:3307)/renmeri_maker?parseTime=true")
 		defer db.Close()
 		if err != nil {
 			panic(err.Error())

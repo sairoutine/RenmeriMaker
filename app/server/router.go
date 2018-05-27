@@ -3,16 +3,19 @@ package server
 import (
 	"flag"
 	"github.com/coreos/pkg/flagutil"
+	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
-	"github.com/dghubble/oauth1/twitter"
-
+	oauth1Twitter "github.com/dghubble/oauth1/twitter"
 	"github.com/gin-gonic/contrib/sessions"
 	"github.com/gin-gonic/gin"
+	"github.com/jinzhu/gorm"
 	controllerNovel "github.com/sairoutine/RenmeriMaker/app/controller/novel"
 	controllerNovelEmoji "github.com/sairoutine/RenmeriMaker/app/controller/novel/emoji"
 	controllerUser "github.com/sairoutine/RenmeriMaker/app/controller/user"
+	model "github.com/sairoutine/RenmeriMaker/app/model"
 	"net/http"
 	"os"
+	"time"
 )
 
 func (s *Server) SetupRouter() {
@@ -32,7 +35,8 @@ func (s *Server) SetupRouter() {
 	config := oauth1.Config{
 		ConsumerKey:    *consumerKey,
 		ConsumerSecret: *consumerSecret,
-		Endpoint:       twitter.AuthorizeEndpoint,
+		Endpoint:       oauth1Twitter.AuthorizeEndpoint,
+		CallbackURL:    "http://localhost:8082/user/callback",
 	}
 
 	// ユーザー
@@ -65,6 +69,8 @@ func (s *Server) SetupRouter() {
 		// Twitter OAuth認証ページからリダイレクトされる
 		// ユーザー登録
 		user.GET("/callback", func(c *gin.Context) {
+			db := c.MustGet("DB").(*gorm.DB)
+
 			oauthToken := c.Query("oauth_token")
 			oauthVerifier := c.Query("oauth_verifier")
 
@@ -73,15 +79,50 @@ func (s *Server) SetupRouter() {
 
 			accessToken, accessSecret, _ := config.AccessToken(oauthToken, requestSecret, oauthVerifier)
 
+			// Twitter 情報の取得
+			config := oauth1.NewConfig(*consumerKey, *consumerSecret)
+			token := oauth1.NewToken(accessToken, accessSecret)
+			httpClient := config.Client(oauth1.NoContext, token)
+			client := twitter.NewClient(httpClient)
+
+			f := false
+			t := true
+			twitterUser, _, _ := client.Accounts.VerifyCredentials(&twitter.AccountVerifyParams{
+				IncludeEntities: &f,
+				IncludeEmail:    &t,
+			})
+
+			// すでにユーザー登録されていないか確認
+			user := model.User{}
+			recordNotFound := db.Where(&model.User{TwitterID: twitterUser.ID}).First(&user).RecordNotFound()
+
+			if recordNotFound {
+				// 新規登録
+				user = model.User{
+					DispName:                 twitterUser.Name,
+					TwitterID:                twitterUser.ID,
+					TwitterAccessToken:       accessToken,
+					TwitterAccessSecret:      accessSecret,
+					LastShowNotificationDate: time.Now(),
+				}
+
+				db.Create(&user)
+			} else {
+				// すでに登録されている
+
+				// Twitter アクセストークンだけ更新
+				user.TwitterAccessToken = accessToken
+				user.TwitterAccessSecret = accessSecret
+				db.Save(&user)
+			}
 			// TODO:
-			// request_secret session の削除
-			// Twitter プロフィールの取得
-			// 'twitter_id', profile.id をもとにユーザー検索
-			// 存在しない insert
-			// 存在する access token だけ最新に更新
-			// user_id をセッションに登録
-			session.Set("access_token", accessToken)
-			session.Set("access_secret", accessSecret)
+			// SetupTwitterOAuth 関数にまとめる
+
+			// 認証時に生成したリクエストトークンを削除
+			session.Set("request_secret", nil)
+
+			// user_id をセッションに保存
+			session.Set("user_id", user.ID)
 			session.Save()
 
 			c.Redirect(http.StatusFound, "/")
