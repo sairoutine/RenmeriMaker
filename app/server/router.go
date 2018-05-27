@@ -1,6 +1,7 @@
 package server
 
 import (
+	controllerApiV1Novel "github.com/sairoutine/RenmeriMaker/app/controller/api/v1/novel"
 	controllerNovel "github.com/sairoutine/RenmeriMaker/app/controller/novel"
 	controllerNovelEmoji "github.com/sairoutine/RenmeriMaker/app/controller/novel/emoji"
 	controllerUser "github.com/sairoutine/RenmeriMaker/app/controller/user"
@@ -29,14 +30,10 @@ func (s *Server) SetupRouter() {
 	{
 		// ノベル投稿 表示ページ
 		novel.GET("/new", controllerNovel.New)
-		// ノベル投稿
-		novel.POST("/create", controllerNovel.Create)
 		// ノベル投稿 編集ページ
 		novel.GET("/edit", controllerNovel.Edit)
 		// ノベル表示
 		novel.GET("/show/:id", controllerNovel.Show)
-		// ノベル更新
-		novel.POST("/update/:id", controllerNovel.Update)
 		// ノベル削除
 		novel.DELETE("/delete/:id", controllerNovel.Delete)
 		// 絵文字
@@ -44,6 +41,17 @@ func (s *Server) SetupRouter() {
 		{
 			// 絵文字を投稿
 			emoji.POST("/create", controllerNovelEmoji.Create)
+		}
+	}
+	// API
+	apiV1 := r.Group("/api/v1")
+	{
+		apiV1Novel := apiV1.Group("novel")
+		{
+			// ノベル投稿
+			apiV1Novel.POST("/create", controllerApiV1Novel.Create)
+			// ノベル更新
+			apiV1Novel.POST("/update/:id", controllerApiV1Novel.Update)
 		}
 	}
 
