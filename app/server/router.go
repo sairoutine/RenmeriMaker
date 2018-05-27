@@ -31,7 +31,7 @@ func (s *Server) SetupRouter() {
 		// ノベル投稿 表示ページ
 		novel.GET("/new", controllerNovel.New)
 		// ノベル投稿 編集ページ
-		novel.GET("/edit", controllerNovel.Edit)
+		novel.GET("/edit/:id", controllerNovel.Edit)
 		// ノベル表示
 		novel.GET("/show/:id", controllerNovel.Show)
 		// ノベル削除
@@ -46,7 +46,7 @@ func (s *Server) SetupRouter() {
 	// API
 	apiV1 := r.Group("/api/v1")
 	{
-		apiV1Novel := apiV1.Group("novel")
+		apiV1Novel := apiV1.Group("/novel")
 		{
 			// ノベル投稿
 			apiV1Novel.POST("/create", controllerApiV1Novel.Create)
