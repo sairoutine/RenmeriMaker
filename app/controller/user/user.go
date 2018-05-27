@@ -30,7 +30,7 @@ func Show(c *gin.Context) {
 	recordNotFound := db.Where(&model.User{ID: util.String2Uint64(id)}).First(&user).RecordNotFound()
 
 	if !recordNotFound {
-		c.HTML(http.StatusOK, "user/show.html", gin.H{
+		c.HTML(http.StatusOK, "user/show.tmpl", gin.H{
 			"ID":   user.ID,
 			"Name": user.DispName,
 		})
