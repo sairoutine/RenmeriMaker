@@ -6,5 +6,5 @@ import (
 )
 
 func RenderNotFound(c *gin.Context) {
-	c.HTML(http.StatusOK, "error/404.html", nil)
+	c.HTML(http.StatusNotFound, "error/404.tmpl", nil)
 }
