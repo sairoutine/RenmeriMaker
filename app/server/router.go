@@ -13,6 +13,7 @@ import (
 	controllerNovelEmoji "github.com/sairoutine/RenmeriMaker/app/controller/novel/emoji"
 	controllerUser "github.com/sairoutine/RenmeriMaker/app/controller/user"
 	model "github.com/sairoutine/RenmeriMaker/app/model"
+	"github.com/sairoutine/RenmeriMaker/app/util"
 	"net/http"
 	"os"
 	"time"
@@ -20,6 +21,9 @@ import (
 
 func (s *Server) SetupRouter() {
 	r := s.Engine
+
+	// テンプレート
+	r.LoadHTMLGlob("../template/**/*")
 
 	// 環境変数からconsumer-key, consumer-secretを取得
 	flags := flag.NewFlagSet("app-auth", flag.ExitOnError)
@@ -159,4 +163,5 @@ func (s *Server) SetupRouter() {
 		}
 	}
 
+	r.NoRoute(util.RenderNotFound)
 }
