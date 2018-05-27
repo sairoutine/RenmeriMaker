@@ -1,15 +1,16 @@
 package server
 
 import (
+	"github.com/gin-contrib/sessions"
+	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-contrib/static"
-	"github.com/gin-gonic/contrib/sessions"
 	middleware "github.com/sairoutine/RenmeriMaker/app/middleware"
 )
 
 func (s *Server) SetupMiddleware() {
 	r := s.Engine
 
-	store := sessions.NewCookieStore([]byte("secret"))
+	store := memstore.NewStore([]byte("secret"))
 
 	// セッション
 	r.Use(sessions.Sessions("renmeri_maker_session", store))

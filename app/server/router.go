@@ -6,7 +6,7 @@ import (
 	"github.com/dghubble/go-twitter/twitter"
 	"github.com/dghubble/oauth1"
 	oauth1Twitter "github.com/dghubble/oauth1/twitter"
-	"github.com/gin-gonic/contrib/sessions"
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	controllerNovel "github.com/sairoutine/RenmeriMaker/app/controller/novel"
@@ -119,12 +119,19 @@ func (s *Server) SetupRouter() {
 			// SetupTwitterOAuth 関数にまとめる
 
 			// 認証時に生成したリクエストトークンを削除
-			session.Set("request_secret", nil)
+			session.Delete("request_secret")
 
 			// user_id をセッションに保存
 			session.Set("user_id", user.ID)
 			session.Save()
 
+			c.Redirect(http.StatusFound, "/")
+		})
+
+		// ログアウト
+		user.GET("/logout", func(c *gin.Context) {
+			session := sessions.Default(c)
+			session.Clear()
 			c.Redirect(http.StatusFound, "/")
 		})
 

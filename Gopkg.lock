@@ -2,12 +2,6 @@
 
 
 [[projects]]
-  name = "github.com/boj/redistore"
-  packages = ["."]
-  revision = "fc113767cd6b051980f260d6dbe84b2740c46ab0"
-  version = "v1.2"
-
-[[projects]]
   name = "github.com/cenkalti/backoff"
   packages = ["."]
   revision = "2ea60e5f094469f9e65adb9cd103795b73ae743e"
@@ -41,13 +35,13 @@
   version = "v1.1.0"
 
 [[projects]]
-  name = "github.com/garyburd/redigo"
+  branch = "master"
+  name = "github.com/gin-contrib/sessions"
   packages = [
-    "internal",
-    "redis"
+    ".",
+    "memstore"
   ]
-  revision = "a69d19351219b6dd56f274f96d85a7014a2ec34e"
-  version = "v1.6.0"
+  revision = "15760a03818fe16125cd735433b57a7398335b13"
 
 [[projects]]
   branch = "master"
@@ -60,12 +54,6 @@
   name = "github.com/gin-contrib/static"
   packages = ["."]
   revision = "73da7037e716e63aa2b0ffceb630dfa7be299086"
-
-[[projects]]
-  branch = "master"
-  name = "github.com/gin-gonic/contrib"
-  packages = ["sessions"]
-  revision = "33543d11593dd66df698cae8b4c776faa0827359"
 
 [[projects]]
   name = "github.com/gin-gonic/gin"
@@ -135,6 +123,12 @@
   version = "v0.0.3"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/quasoft/memstore"
+  packages = ["."]
+  revision = "72cbde23778087efc0d9af366d6f08ceacbf4705"
+
+[[projects]]
   name = "github.com/ugorji/go"
   packages = ["codec"]
   revision = "b4c50a2b199d93b13dc15e78929cfb23bfdf21ab"
@@ -167,6 +161,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "0deab04da18bd36686978806e787aa42eae81f0bcef2c479a813e91708f9119a"
+  inputs-digest = "9eaebc6c81028423883333a34189dadb75f8c7bc8540f17863892bfa34ed97f1"
   solver-name = "gps-cdcl"
   solver-version = 1
