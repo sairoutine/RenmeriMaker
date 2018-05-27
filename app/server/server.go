@@ -25,6 +25,7 @@ func (s *Server) ServeHTTP(w http.ResponseWriter, req *http.Request) {
 func Build() *Server {
 	s := New()
 	s.SetupMiddleware()
+	s.SetupTwitterOAuth()
 	s.SetupRouter()
 
 	return s

@@ -1,7 +1,6 @@
 package user
 
 import (
-	"fmt"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
@@ -38,4 +37,10 @@ func Show(c *gin.Context) {
 	} else {
 		util.RenderNotFound(c)
 	}
+}
+
+func Logout(c *gin.Context) {
+	session := sessions.Default(c)
+	session.Clear()
+	c.Redirect(http.StatusFound, "/")
 }
