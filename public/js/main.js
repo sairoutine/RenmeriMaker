@@ -121,8 +121,16 @@ var SceneEnd = require('./scene/end');
 
 var CreateSerifLogic = require('./logic/create_serif');
 
-var Game = function(canvas) {
+var Game = function(canvas, option) {
 	core.apply(this, arguments);
+
+	option = option || {};
+
+	// 新規作成 or 更新
+	this._is_new = option.is_new;
+
+	// ノベルID (更新の場合)
+	this._id = option.id;
 
 	this.serif = null;
 };
@@ -154,7 +162,17 @@ Game.prototype.save = function () {
 	serif = encodeURIComponent(serif);
 
 	var http = new XMLHttpRequest();
-	var url = "/novel/create";
+
+	var url;
+
+	// 新規作成
+	if (this._is_new) {
+		url = "/api/v1/novel/create";
+	}
+	// 更新
+	else {
+		url = "/api/v1/novel/update/" + this._id;
+	}
 	var params = "script=" + serif;
 
 	http.open("POST", url, true);
@@ -13329,7 +13347,8 @@ var game;
 window.onload = function() {
 	var mainCanvas = document.getElementById('mainCanvas');
 
-	var options = {};
+	// サーバーサイドからのデータ
+	var options = window.config;
 
 	game = new Game(mainCanvas, options);
 
