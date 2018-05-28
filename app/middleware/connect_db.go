@@ -13,8 +13,10 @@ func ConnectDB() gin.HandlerFunc {
 		}
 		defer db.Close()
 
-		// ★ログ設定
-		db.LogMode(true)
+		// ログ設定
+		if gin.Mode() == gin.DebugMode {
+			db.LogMode(true)
+		}
 
 		c.Set("DB", db)
 		c.Next()
