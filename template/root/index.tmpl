@@ -3,17 +3,25 @@
 		蓮メリメーカー
 </h1>
 <p>
-<a href="/twitter/auth">ログイン<br />
-<a href="/user/logout">ログアウト<br />
+<a href="/twitter/auth">ログイン</a><br />
+<a href="/user/logout">ログアウト</a><br />
 <hr />
-<a href="/user/">ユーザー一覧<br />
-<a href="/user/show/1">ユーザー詳細<br />
+<a href="/user/">ユーザー一覧</a><br />
+<a href="/user/show/1">ユーザー詳細</a><br />
 <hr />
-<a href="/novel/new">新規作成<br />
-<a href="/novel/show/1">ノベル詳細<br />
-<a href="/novel/edit/1">ノベル編集<br />
-<a href="/novel/delete/1">ノベル削除<br />
-<a href="/novel/emoji/1/create">絵文字投稿<br />
+<a href="/novel/new">ノベル新規作成</a><br />
+<hr />
+
+{{ range .novels }}
+	タイトル:<br />
+	説明:<br />
+	投稿者:<br />
+	<a href="/novel/show/{{.ID}}">ノベル詳細</a><br />
+	<a href="/novel/edit/{{.ID}}">ノベル編集</a><br />
+	<a href="/novel/delete/{{.ID}}">ノベル削除</a><br />
+	<a href="/novel/emoji/{{.ID}}/create">絵文字投稿</a><br />
+	<hr />
+{{ end }}
 </p>
 </html>
 {{ end }}
