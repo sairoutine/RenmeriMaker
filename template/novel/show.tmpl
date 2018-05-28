@@ -1,0 +1,16 @@
+{{ define "novel/show.tmpl" }}
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<title>蓮メリメーカー</title>
+</head>
+<body>
+	<div id="debug"></div>
+	<div id="canvasdiv">
+		<canvas id="mainCanvas" width="640" height="480"></canvas>
+	</div>
+	{{template "novel/_script_tag.tmpl" .}}
+</body>
+</html>
+{{ end }}

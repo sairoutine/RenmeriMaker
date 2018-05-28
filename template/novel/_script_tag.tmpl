@@ -1,0 +1,13 @@
+{{ define "novel/_script_tag.tmpl" }}
+<script type="text/javascript">
+	window.config = {
+		"mode": "{{ .Mode }}",
+		"id": {{ .Id }},
+		"script": "{{ .Script }}",
+	};
+</script>
+<script type="text/javascript" src="/js/main.js"></script>
+<!--
+<script type="text/javascript" src="/js/main.min.js"></script>
+-->
+{{ end }}
