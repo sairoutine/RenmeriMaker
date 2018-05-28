@@ -127,19 +127,28 @@ var Game = function(canvas, option) {
 	option = option || {};
 
 	// 新規作成 or 更新
-	this._is_new = option.is_new;
+	this._mode = option.mode;
 
 	// ノベルID (更新の場合)
 	this._id = option.id;
 
-	this.serif = null;
+	// セリフ
+	this.serif = option.script;
 };
 util.inherit(Game, core);
 
 Game.prototype.init = function () {
 	core.prototype.init.apply(this, arguments);
 
-	this.serif = CreateSerifLogic.exec();
+	if (this.isEditMode() || this.isNewMode()) {
+		this.serif = CreateSerifLogic.exec();
+	}
+	else if (this.isShowMode()) {
+		this.serif = JSON.parse(this.serif);
+	}
+	else {
+		throw new Error("Illegal game mode");
+	}
 
 	this.scene_manager.addScene("loading", new SceneLoading(this));
 	this.scene_manager.addScene("talk", new SceneTalk(this));
@@ -166,12 +175,15 @@ Game.prototype.save = function () {
 	var url;
 
 	// 新規作成
-	if (this._is_new) {
+	if (this.isNewMode()) {
 		url = "/api/v1/novel/create";
 	}
 	// 更新
-	else {
+	else if (this.isEditMode()) {
 		url = "/api/v1/novel/update/" + this._id;
+	}
+	else {
+		throw new Error("Illegal game mode");
 	}
 	var params = "script=" + serif;
 
@@ -184,6 +196,18 @@ Game.prototype.save = function () {
 	};
 	http.send(params);
 };
+
+Game.prototype.isShowMode = function () {
+	return this._mode === "show";
+};
+Game.prototype.isEditMode = function () {
+	return this._mode === "edit";
+};
+Game.prototype.isNewMode = function () {
+	return this._mode === "new";
+};
+
+
 
 
 module.exports = Game;
