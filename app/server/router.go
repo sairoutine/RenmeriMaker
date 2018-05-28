@@ -1,6 +1,7 @@
 package server
 
 import (
+	controllerRoot "github.com/sairoutine/RenmeriMaker/app/controller"
 	controllerApiV1Novel "github.com/sairoutine/RenmeriMaker/app/controller/api/v1/novel"
 	controllerNovel "github.com/sairoutine/RenmeriMaker/app/controller/novel"
 	controllerNovelEmoji "github.com/sairoutine/RenmeriMaker/app/controller/novel/emoji"
@@ -13,6 +14,8 @@ func (s *Server) SetupRouter() {
 
 	// テンプレート
 	r.LoadHTMLGlob("../template/**/*")
+
+	r.GET("/", controllerRoot.Index)
 
 	// ユーザー
 	user := r.Group("/user")

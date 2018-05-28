@@ -1,0 +1,19 @@
+{{ define "root/index.tmpl" }}
+<html><h1>
+		蓮メリメーカー
+</h1>
+<p>
+<a href="/twitter/auth">ログイン<br />
+<a href="/user/logout">ログアウト<br />
+<hr />
+<a href="/user/">ユーザー一覧<br />
+<a href="/user/show/1">ユーザー詳細<br />
+<hr />
+<a href="/novel/new">新規作成<br />
+<a href="/novel/show/1">ノベル詳細<br />
+<a href="/novel/edit/1">ノベル編集<br />
+<a href="/novel/delete/1">ノベル削除<br />
+<a href="/novel/emoji/1/create">絵文字投稿<br />
+</p>
+</html>
+{{ end }}
