@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/sairoutine/RenmeriMaker/app/model"
+	"github.com/sairoutine/RenmeriMaker/app/util"
 	"net/http"
 	"os"
 	"time"
@@ -64,7 +65,12 @@ func (s *Server) SetupTwitterOAuth() {
 		oauthVerifier := c.Query("oauth_verifier")
 
 		session := sessions.Default(c)
-		requestSecret := session.Get("request_secret").(string)
+		requestSecret, ok := session.Get("request_secret").(string)
+
+		if !ok {
+			util.RenderForbidden(c)
+			return
+		}
 
 		accessToken, accessSecret, _ := config.AccessToken(oauthToken, requestSecret, oauthVerifier)
 

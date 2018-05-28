@@ -31,10 +31,10 @@ func Edit(c *gin.Context) {
 
 	// ログイン情報を取得
 	session := sessions.Default(c)
-	loginUserId := session.Get("user_id").(uint64)
+	loginUserId, ok := session.Get("user_id").(uint64)
 
 	// 自分が作ったノベルでなければエラー
-	if novel.UserID != loginUserId {
+	if !ok || novel.UserID != loginUserId {
 		util.RenderForbidden(c)
 		return
 	}

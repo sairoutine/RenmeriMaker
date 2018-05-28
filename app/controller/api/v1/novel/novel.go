@@ -18,16 +18,16 @@ func Create(c *gin.Context) {
 
 	// ログイン情報を取得
 	session := sessions.Default(c)
-	loginUserId := session.Get("user_id")
+	loginUserId, ok := session.Get("user_id").(uint64)
 
 	// ログインしていなければエラー
-	if loginUserId == nil {
+	if !ok {
 		util.RenderForbidden(c)
 		return
 	}
 
 	novel := model.Novel{
-		UserID: loginUserId.(uint64),
+		UserID: loginUserId,
 		Script: script,
 	}
 

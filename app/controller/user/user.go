@@ -19,10 +19,10 @@ func Show(c *gin.Context) {
 	// IDが me かつログイン中ならば自分のプロフィールを表示する
 	if id == "me" {
 		session := sessions.Default(c)
-		userId := session.Get("user_id")
+		userId, ok := session.Get("user_id").(string)
 
-		if userId != nil {
-			id = userId.(string)
+		if ok {
+			id = userId
 		}
 	}
 
