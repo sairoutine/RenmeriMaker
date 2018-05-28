@@ -39,6 +39,7 @@
   name = "github.com/gin-contrib/sessions"
   packages = [
     ".",
+    "cookie",
     "memstore"
   ]
   revision = "15760a03818fe16125cd735433b57a7398335b13"
@@ -161,6 +162,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "9eaebc6c81028423883333a34189dadb75f8c7bc8540f17863892bfa34ed97f1"
+  inputs-digest = "fb5f4d02cef92af84c95daebbf85cfd6c7ac0687075f6106ff78e236c41408ce"
   solver-name = "gps-cdcl"
   solver-version = 1
