@@ -9,9 +9,6 @@ import (
 	"net/http"
 )
 
-func Index(c *gin.Context) {
-
-}
 func Show(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 	id := c.Param("id")

@@ -20,8 +20,6 @@ func (s *Server) SetupRouter() {
 	// ユーザー
 	user := r.Group("/user")
 	{
-		// ユーザー一覧を表示
-		user.GET("/", controllerUser.Index)
 		// ユーザーを表示
 		user.GET("/show/:id", controllerUser.Show)
 
