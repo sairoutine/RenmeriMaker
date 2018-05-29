@@ -190,26 +190,35 @@ Game.prototype.save = function () {
 
 	var http = new XMLHttpRequest();
 
-	var url;
+	var api_url, is_new;
 
 	// 新規作成
 	if (this.isNewMode()) {
-		url = "/api/v1/novel/create";
+		api_url = "/api/v1/novel/create";
+		is_new = true;
 	}
 	// 更新
 	else if (this.isEditMode()) {
-		url = "/api/v1/novel/update/" + this._id;
+		api_url = "/api/v1/novel/update/" + this._id;
+		is_new = false;
 	}
 	else {
 		throw new Error("Illegal game mode");
 	}
 	var params = "script=" + serif;
 
-	http.open("POST", url, true);
+	http.open("POST", api_url, true);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
 	http.onreadystatechange = function() {//Call a function when the state changes.
 		if(http.readyState === 4 && http.status === 200) {
+			var data = JSON.parse(http.responseText);
+
 			window.alert("保存しました");
+
+			// リダイレクト
+			if (is_new) {
+				location.href = "/novel/show/" + data.id;
+			}
 		}
 	};
 	http.send(params);
