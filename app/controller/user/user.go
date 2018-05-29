@@ -7,6 +7,7 @@ import (
 	"github.com/sairoutine/RenmeriMaker/app/model"
 	"github.com/sairoutine/RenmeriMaker/app/util"
 	"net/http"
+	"strconv"
 )
 
 func Show(c *gin.Context) {
@@ -14,26 +15,50 @@ func Show(c *gin.Context) {
 	id := c.Param("id")
 
 	// IDが me かつログイン中ならば自分のプロフィールを表示する
+	isMe := false
 	if id == "me" {
-		session := sessions.Default(c)
-		userId, ok := session.Get("user_id").(string)
+		isMe = true
+	}
 
-		if ok {
-			id = userId
+	if isMe {
+		session := sessions.Default(c)
+		userId, ok := session.Get("user_id").(uint64)
+
+		if !ok {
+			// 未ログイン
+			util.RenderNotFound(c)
+			return
 		}
+
+		// 自分のユーザーID
+		// TODO: Uint64ToString method
+		id = strconv.FormatUint(userId, 10)
 	}
 
 	user := model.User{}
 	recordNotFound := db.Where(&model.User{ID: util.String2Uint64(id)}).First(&user).RecordNotFound()
 
-	if !recordNotFound {
-		c.HTML(http.StatusOK, "user/show.tmpl", gin.H{
-			"ID":   user.ID,
-			"Name": user.DispName,
-		})
-	} else {
+	if recordNotFound {
 		util.RenderNotFound(c)
+		return
 	}
+
+	// ユーザーに紐づくノベルを取得
+	novels := []model.Novel{}
+	if isMe {
+		// 自分のプロフィールの場合、公開／非公開のノベルを表示
+		db.Where(map[string]interface{}{"user_id": id}).Find(&novels)
+	} else {
+		// 他人のプロフィールの場合、公開のノベルのみを表示
+		db.Where(map[string]interface{}{"user_id": id, "is_private": false}).Find(&novels)
+	}
+
+	c.HTML(http.StatusOK, "user/show.tmpl", gin.H{
+		"ID":     user.ID,
+		"Name":   user.DispName,
+		"novels": novels,
+	})
+
 }
 
 func Logout(c *gin.Context) {
