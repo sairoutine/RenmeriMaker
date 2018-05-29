@@ -72,6 +72,12 @@ func Show(c *gin.Context) {
 		isOwner = true
 	}
 
+	// 自分が作ったノベルでなく、非公開ならエラー
+	if !isOwner && novel.IsPrivate {
+		util.RenderNotFound(c)
+		return
+	}
+
 	c.HTML(http.StatusOK, "novel/show.tmpl", gin.H{
 		//"UserName": "test",
 		//"Title": "test",

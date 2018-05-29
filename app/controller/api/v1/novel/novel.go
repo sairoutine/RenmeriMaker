@@ -27,8 +27,9 @@ func Create(c *gin.Context) {
 	}
 
 	novel := model.Novel{
-		UserID: loginUserId,
-		Script: script,
+		UserID:    loginUserId,
+		Script:    script,
+		IsPrivate: true,
 	}
 
 	// 新規登録

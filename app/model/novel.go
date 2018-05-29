@@ -7,5 +7,6 @@ type Novel struct {
 	Title        string  `gorm:"size:255"`
 	Introduction string  `gorm:"size:255"`
 	Script       string  `gorm:"type:text"`
+	IsPrivate    bool    `gorm:""`
 	Emojis       []Emoji // One-To-Many relationship (has many - use Emoji's UserID as foreign key)
 }
