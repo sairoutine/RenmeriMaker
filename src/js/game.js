@@ -18,8 +18,24 @@ var Game = function(canvas, option) {
 	// ノベルID (更新の場合)
 	this._id = option.id;
 
+	this._script = option.script;
+
+	if (this.isEditMode()) {
+		CreateSerifLogic.revert(JSON.parse(this._script));
+	}
+	else if(this.isNewMode()) {
+		//nothing to do
+	}
+	else if (this.isShowMode()) {
+		//nothing to do
+	}
+	else {
+		throw new Error("Illegal game mode");
+	}
+
+
 	// セリフ
-	this.serif = option.script;
+	this.serif = null;
 };
 util.inherit(Game, core);
 
@@ -30,11 +46,13 @@ Game.prototype.init = function () {
 		this.serif = CreateSerifLogic.exec();
 	}
 	else if (this.isShowMode()) {
-		this.serif = JSON.parse(this.serif);
+		this.serif = JSON.parse(this._script);
 	}
 	else {
 		throw new Error("Illegal game mode");
 	}
+
+
 
 	this.scene_manager.addScene("loading", new SceneLoading(this));
 	this.scene_manager.addScene("talk", new SceneTalk(this));
