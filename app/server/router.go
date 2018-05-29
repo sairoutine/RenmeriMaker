@@ -15,7 +15,11 @@ func (s *Server) SetupRouter() {
 	// テンプレート
 	r.LoadHTMLGlob("../template/**/*")
 
+	// トップページ
 	r.GET("/", controllerRoot.Index)
+
+	// アバウト
+	r.GET("/about", controllerRoot.About)
 
 	// ユーザー
 	user := r.Group("/user")

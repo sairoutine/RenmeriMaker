@@ -17,3 +17,7 @@ func Index(c *gin.Context) {
 		"novels": novels,
 	})
 }
+
+func About(c *gin.Context) {
+	c.HTML(http.StatusOK, "root/about.tmpl", gin.H{})
+}
