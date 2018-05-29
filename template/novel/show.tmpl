@@ -10,6 +10,14 @@
 	<div id="canvasdiv">
 		<canvas id="mainCanvas" width="640" height="480"></canvas>
 	</div>
+
+	{{if .IsOwner }}
+		<a href="/novel/edit/{{.Id}}">ノベル編集</a><br />
+		<a href="/novel/delete/{{.Id}}">ノベル削除</a><br />
+	{{else}}
+		<a href="/novel/emoji/{{.Id}}/create">絵文字投稿</a><br />
+	{{end}}
+
 	{{template "novel/_script_tag.tmpl" .}}
 </body>
 </html>

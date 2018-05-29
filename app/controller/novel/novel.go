@@ -62,13 +62,24 @@ func Show(c *gin.Context) {
 		return
 	}
 
+	// ログイン情報を取得
+	session := sessions.Default(c)
+	loginUserId, ok := session.Get("user_id").(uint64)
+
+	// 自分が作ったノベルかどうか
+	isOwner := false
+	if ok && novel.UserID == loginUserId {
+		isOwner = true
+	}
+
 	c.HTML(http.StatusOK, "novel/show.tmpl", gin.H{
 		//"UserName": "test",
 		//"Title": "test",
 		//"Introduction": "test",
-		"Script": novel.Script,
-		"Mode":   constant.ScriptShowMode,
-		"Id":     novel.ID,
+		"Script":  novel.Script,
+		"Mode":    constant.ScriptShowMode,
+		"Id":      novel.ID,
+		"IsOwner": isOwner,
 	})
 
 }
