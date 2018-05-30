@@ -39,8 +39,6 @@ func (s *Server) SetupRouter() {
 		novel.GET("/edit/:id", controllerNovel.Edit)
 		// ノベル表示
 		novel.GET("/show/:id", controllerNovel.Show)
-		// ノベル削除
-		novel.POST("/delete/:id", controllerNovel.Delete)
 		// ノベル公開／非公開
 		novel.POST("/toggle/:id", controllerNovel.TogglePrivate)
 		// 絵文字

@@ -17,7 +17,6 @@
 	<hr />
 	{{if .IsOwner }}
 		<a href="/novel/edit/{{.Id}}">ノベル編集</a><br />
-		<a href="/novel/delete/{{.Id}}">ノベル削除</a><br />
 	{{else}}
 		{{ range $key, $value := .EmojiMap }}
 			<form action="/novel/emoji/{{$.Id}}/add/{{$key}}" method="post" style="display:inline;">

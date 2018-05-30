@@ -144,7 +144,3 @@ func TogglePrivate(c *gin.Context) {
 
 	c.Redirect(http.StatusMovedPermanently, "/novel/edit/"+util.Uint64ToString(novel.ID))
 }
-
-func Delete(c *gin.Context) {
-
-}
