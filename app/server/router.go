@@ -21,14 +21,14 @@ func (s *Server) SetupRouter() {
 	// アバウト
 	r.GET("/about", controllerRoot.About)
 
+	// ログアウト
+	r.GET("/logout", controllerRoot.Logout)
+
 	// ユーザー
 	user := r.Group("/user")
 	{
 		// ユーザーを表示
 		user.GET("/show/:id", controllerUser.Show)
-
-		// ログアウト
-		user.GET("/logout", controllerUser.Logout)
 	}
 	// ノベル
 	novel := r.Group("/novel")

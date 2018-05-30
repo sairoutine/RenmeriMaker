@@ -5,8 +5,11 @@
 <p>
 <a href="/about">アバウト</a><br />
 <hr />
-<a href="/twitter/auth">ログイン</a><br />
-<a href="/user/logout">ログアウト</a><br />
+{{ if .isLogin }}
+	<a href="/logout">ログアウト</a><br />
+{{ else }}
+	<a href="/twitter/auth">ログイン</a><br />
+{{ end }}
 <hr />
 <a href="/user/show/1">ユーザー詳細</a><br />
 <a href="/user/show/me">自分のプロフィール</a><br />

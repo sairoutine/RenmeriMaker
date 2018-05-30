@@ -59,9 +59,3 @@ func Show(c *gin.Context) {
 	})
 
 }
-
-func Logout(c *gin.Context) {
-	session := sessions.Default(c)
-	session.Clear()
-	c.Redirect(http.StatusFound, "/")
-}
