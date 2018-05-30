@@ -11,6 +11,16 @@ import (
 )
 
 func New(c *gin.Context) {
+	// ログイン情報を取得
+	session := sessions.Default(c)
+	_, ok := session.Get("user_id").(uint64)
+
+	// ログインしていなければエラー
+	if !ok {
+		util.RenderForbidden(c)
+		return
+	}
+
 	c.HTML(http.StatusOK, "novel/new.tmpl", gin.H{
 		"Script": "", // nil
 		"Mode":   constant.ScriptNewMode,
