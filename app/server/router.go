@@ -40,7 +40,9 @@ func (s *Server) SetupRouter() {
 		// ノベル表示
 		novel.GET("/show/:id", controllerNovel.Show)
 		// ノベル削除
-		novel.DELETE("/delete/:id", controllerNovel.Delete)
+		novel.POST("/delete/:id", controllerNovel.Delete)
+		// ノベル公開／非公開
+		novel.POST("/toggle/:id", controllerNovel.TogglePrivate)
 		// 絵文字
 		emoji := novel.Group("/emoji/:id")
 		{

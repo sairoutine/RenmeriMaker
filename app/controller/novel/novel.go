@@ -43,9 +43,10 @@ func Edit(c *gin.Context) {
 	}
 
 	c.HTML(http.StatusOK, "novel/edit.tmpl", gin.H{
-		"Script": novel.Script,
-		"Mode":   constant.ScriptEditMode,
-		"Id":     novel.ID,
+		"Script":    novel.Script,
+		"Mode":      constant.ScriptEditMode,
+		"Id":        novel.ID,
+		"IsPrivate": novel.IsPrivate,
 	})
 }
 
@@ -88,6 +89,44 @@ func Show(c *gin.Context) {
 		"IsOwner": isOwner,
 	})
 
+}
+
+// 公開／非公開にする
+func TogglePrivate(c *gin.Context) {
+	db := c.MustGet("DB").(*gorm.DB)
+	id := c.Param("id")
+
+	novel := model.Novel{}
+	recordNotFound := db.Where(&model.Novel{ID: util.String2Uint64(id)}).First(&novel).RecordNotFound()
+
+	// 存在しないノベルならエラー
+	if recordNotFound {
+		util.RenderNotFound(c)
+		return
+	}
+
+	// ログイン情報を取得
+	session := sessions.Default(c)
+	loginUserId, ok := session.Get("user_id").(uint64)
+
+	// ログインしていなければエラー
+	if !ok {
+		util.RenderForbidden(c)
+		return
+	}
+
+	// 自分が作ったノベルでなければエラー
+	if novel.UserID != loginUserId {
+		util.RenderForbidden(c)
+		return
+	}
+
+	// toggle
+	novel.IsPrivate = !novel.IsPrivate
+
+	db.Save(&novel)
+
+	c.Redirect(http.StatusMovedPermanently, "/novel/edit/"+util.Uint64ToString(novel.ID))
 }
 
 func Delete(c *gin.Context) {
