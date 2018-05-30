@@ -7,7 +7,6 @@ import (
 	"github.com/sairoutine/RenmeriMaker/app/model"
 	"github.com/sairoutine/RenmeriMaker/app/util"
 	"net/http"
-	"strconv"
 )
 
 func Show(c *gin.Context) {
@@ -32,7 +31,7 @@ func Show(c *gin.Context) {
 
 		// 自分のユーザーID
 		// TODO: Uint64ToString method
-		id = strconv.FormatUint(userId, 10)
+		id = util.Uint64ToString(userId)
 	}
 
 	user := model.User{}

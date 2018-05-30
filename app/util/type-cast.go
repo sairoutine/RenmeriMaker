@@ -10,3 +10,9 @@ func String2Uint64(str string) uint64 {
 
 	return ui
 }
+
+func Uint64ToString(ui uint64) string {
+	var str string
+	str = strconv.FormatUint(ui, 10)
+	return str
+}
