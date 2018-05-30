@@ -47,7 +47,7 @@ func (s *Server) SetupRouter() {
 		emoji := novel.Group("/emoji/:id")
 		{
 			// 絵文字を投稿
-			emoji.POST("/create", controllerNovelEmoji.Create)
+			emoji.POST("/add/:type", controllerNovelEmoji.Add)
 		}
 	}
 	// API

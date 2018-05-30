@@ -89,14 +89,20 @@ func Show(c *gin.Context) {
 		return
 	}
 
+	// 紐づく絵文字を取得
+	emojis := []model.Emoji{}
+	db.Where(&model.Emoji{NovelID: util.String2Uint64(id)}).Find(&emojis)
+
 	c.HTML(http.StatusOK, "novel/show.tmpl", gin.H{
 		//"UserName": "test",
 		//"Title": "test",
 		//"Introduction": "test",
-		"Script":  novel.Script,
-		"Mode":    constant.ScriptShowMode,
-		"Id":      novel.ID,
-		"IsOwner": isOwner,
+		"Script":   novel.Script,
+		"Mode":     constant.ScriptShowMode,
+		"Id":       novel.ID,
+		"IsOwner":  isOwner,
+		"EmojiMap": constant.EmojiMap,
+		"Emojis":   emojis,
 	})
 
 }

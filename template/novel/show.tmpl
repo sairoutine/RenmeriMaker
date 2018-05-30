@@ -10,12 +10,20 @@
 	<div id="canvasdiv">
 		<canvas id="mainCanvas" width="640" height="480"></canvas>
 	</div>
-
+	<hr />
+	{{ range $emoji := .Emojis }}
+		<img src="/image/emoji/{{$emoji.FileName}}" width="24" height="24">{{$emoji.Count}}
+	{{ end }}
+	<hr />
 	{{if .IsOwner }}
 		<a href="/novel/edit/{{.Id}}">ノベル編集</a><br />
 		<a href="/novel/delete/{{.Id}}">ノベル削除</a><br />
 	{{else}}
-		<a href="/novel/emoji/{{.Id}}/create">絵文字投稿</a><br />
+		{{ range $key, $value := .EmojiMap }}
+			<form action="/novel/emoji/{{$.Id}}/add/{{$key}}" method="post" style="display:inline;">
+			<input type="image" src="/image/emoji/{{$value}}" value="" name="submit" width="24" height="24" />
+			</form>
+		{{ end }}
 	{{end}}
 
 	{{template "novel/_script_tag.tmpl" .}}
