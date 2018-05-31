@@ -35,6 +35,12 @@
   version = "v1.1.0"
 
 [[projects]]
+  name = "github.com/gigovich/simpagin"
+  packages = ["."]
+  revision = "077caaf3628a38fc470a142ee9d1b1cc1e40418e"
+  version = "0.1.1"
+
+[[projects]]
   branch = "master"
   name = "github.com/gin-contrib/sessions"
   packages = [
@@ -162,6 +168,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "fb5f4d02cef92af84c95daebbf85cfd6c7ac0687075f6106ff78e236c41408ce"
+  inputs-digest = "283528ebc6e0f41fe7a32d1267e2deee603b1926fedf1f672a49d3435ba21e2d"
   solver-name = "gps-cdcl"
   solver-version = 1

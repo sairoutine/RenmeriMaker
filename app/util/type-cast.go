@@ -16,3 +16,10 @@ func Uint64ToString(ui uint64) string {
 	str = strconv.FormatUint(ui, 10)
 	return str
 }
+
+func String2Int(str string) int {
+	var i int
+	i, _ = strconv.Atoi(str)
+
+	return i
+}

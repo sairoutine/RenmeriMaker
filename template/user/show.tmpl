@@ -6,14 +6,14 @@
 	ID: {{.ID}}<br />
 	Name: {{.Name}}<br />
 	<hr />
-	{{ range .novels }}
+	{{ range .Novels }}
 		タイトル:<br />
 		説明:<br />
 		投稿者:<br />
 		<a href="/novel/show/{{.ID}}">ノベル詳細</a><br />
 		<hr />
 	{{ end }}
-
+	{{.Pagination}}
 </p>
 </html>
 {{ end }}
