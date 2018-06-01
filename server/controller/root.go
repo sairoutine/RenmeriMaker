@@ -38,7 +38,7 @@ func Index(c *gin.Context) {
 
 	// ノベル一覧
 	novels := []model.Novel{}
-	db.Where(map[string]interface{}{"is_private": false}).Limit(LIMIT).Offset((p - 1) * LIMIT).Find(&novels)
+	db.Preload("User").Where(map[string]interface{}{"is_private": false}).Limit(LIMIT).Offset((p - 1) * LIMIT).Find(&novels)
 
 	// ページングHTML
 	retHTML := util.GenereatePagination(p, count, LIMIT)

@@ -9,7 +9,7 @@
 	{{ range .Novels }}
 		タイトル:{{.Title}}<br />
 		説明:{{.Description}}<br />
-		投稿者:<br />
+		投稿者:{{.User.DispName}}<br />
 		<a href="/novel/show/{{.ID}}">ノベル詳細</a><br />
 		<hr />
 	{{ end }}

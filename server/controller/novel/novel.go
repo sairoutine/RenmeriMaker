@@ -69,7 +69,7 @@ func Show(c *gin.Context) {
 	id := c.Param("id")
 
 	novel := model.Novel{}
-	recordNotFound := db.Where(&model.Novel{ID: util.String2Uint64(id)}).First(&novel).RecordNotFound()
+	recordNotFound := db.Preload("User").Preload("Emojis").Where(&model.Novel{ID: util.String2Uint64(id)}).First(&novel).RecordNotFound()
 
 	// 存在しないノベルならエラー
 	if recordNotFound {
@@ -93,20 +93,15 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	// 紐づく絵文字を取得
-	emojis := []model.Emoji{}
-	db.Where(&model.Emoji{NovelID: util.String2Uint64(id)}).Find(&emojis)
-
 	util.RenderHTML(c, http.StatusOK, "novel/show.tmpl", gin.H{
-		//"UserName": "test",
-		"Mode":        constant.ScriptShowMode,
+		"Novel":       novel,
 		"Id":          novel.ID,
 		"Title":       novel.Title,
 		"Description": novel.Description,
 		"Script":      novel.Script,
+		"Mode":        constant.ScriptShowMode,
 		"IsOwner":     isOwner,
 		"EmojiMap":    constant.EmojiMap,
-		"Emojis":      emojis,
 	})
 
 }
