@@ -15,6 +15,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/dchest/uniuri"
+  packages = ["."]
+  revision = "8902c56451e9b58ff940bbe5fec35d5f9c04584a"
+
+[[projects]]
+  branch = "master"
   name = "github.com/dghubble/go-twitter"
   packages = ["twitter"]
   revision = "093ee2cf4e32ef608cded0ace84d5d82a52da4fa"
@@ -155,6 +161,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/utrack/gin-csrf"
+  packages = ["."]
+  revision = "402f6eaad1b1d5bb1225e0f1fb1b90342b79967a"
+
+[[projects]]
+  branch = "master"
   name = "golang.org/x/net"
   packages = ["context"]
   revision = "dfa909b99c79129e1100513e5cd36307665e5723"
@@ -180,6 +192,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "62c6806bda7947311d2ff496c7e3f191acb8de76d57c4b4482f624b0e4bdae7a"
+  inputs-digest = "8382ff07cf847f36bce912794192e38b710e68f23675be6be9f4227a7e3de3e8"
   solver-name = "gps-cdcl"
   solver-version = 1

@@ -2,8 +2,26 @@ package util
 
 import (
 	"github.com/gin-gonic/gin"
+	csrf "github.com/utrack/gin-csrf"
 	"net/http"
 )
+
+// 200 OK HTML
+func RenderHTML(c *gin.Context, code int, name string, obj gin.H) {
+	// csrf token
+	obj["_csrf"] = csrf.GetToken(c)
+
+	c.HTML(code, name, obj)
+}
+
+// 200 OK JSON
+func RenderJSON(c *gin.Context, code int, obj gin.H) {
+	if gin.Mode() == gin.DebugMode {
+		c.IndentedJSON(code, obj)
+	} else {
+		c.JSON(code, obj)
+	}
+}
 
 // 404 エラー
 func RenderNotFound(c *gin.Context) {

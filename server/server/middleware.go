@@ -27,6 +27,9 @@ func (s *Server) SetupMiddleware() {
 	// stack stace 表示
 	r.Use(middleware.Recovery())
 
+	// csrf
+	r.Use(middleware.Csrf())
+
 	// データベース接続
 	r.Use(middleware.ConnectDB())
 
