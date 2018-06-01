@@ -1,7 +1,7 @@
 'use strict';
 
 // ソース元の対象ファイル
-var source_file = './src/js/main.js';
+var source_file = './client/js/main.js';
 // 出力ディレクトリ
 var dist_dir = './public/js/';
 // アプリファイル
@@ -53,7 +53,7 @@ gulp.task('build', function(callback) {
 });
 
 gulp.task('watch', function() {
-	watch(['src/js/**/*.(js|html|fs|vs)'], function(event) {
+	watch(['client/js/**/*.(js|html|fs|vs)'], function(event) {
 		gulp.start("build");
 	});
 });
