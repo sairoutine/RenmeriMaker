@@ -15,14 +15,14 @@ const LIMIT = 10
 func Show(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
 	id := c.Param("id")
-	page_num := c.Query("p")
+	pageNum := c.Query("p")
 
 	// ページ数
-	if page_num == "" {
-		page_num = "1"
+	if pageNum == "" {
+		pageNum = "1"
 	}
 
-	p := util.String2Int(page_num)
+	p := util.String2Int(pageNum)
 
 	// IDが me かつログイン中ならば自分のプロフィールを表示する
 	isMe := false
