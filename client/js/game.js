@@ -21,9 +21,12 @@ var Game = function(canvas, option) {
 	// csrf token
 	this._csrf_token = option.csrf;
 
-	this._script = option.script;
+	this._script      = option.script;
 
 	if (this.isEditMode()) {
+		document.getElementById("title").value = option.title;
+		document.getElementById("description").value = option.description;
+
 		CreateSerifLogic.revert(JSON.parse(this._script));
 	}
 	else if(this.isNewMode()) {
@@ -94,7 +97,11 @@ Game.prototype.save = function () {
 	else {
 		throw new Error("Illegal game mode");
 	}
-	var params = "script=" + serif;
+
+	var title = document.getElementById("title").value;
+	var description = document.getElementById("description").value;
+
+	var params = "script=" + serif + "&title=" + encodeURIComponent(title) + "&description=" + encodeURIComponent(description);
 
 	http.open("POST", api_url, true);
 	http.setRequestHeader("Content-type", "application/x-www-form-urlencoded");

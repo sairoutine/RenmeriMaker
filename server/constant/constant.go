@@ -21,3 +21,8 @@ var EmojiMap = map[string]string{
 	"Sunglasses": "Sunglasses_Emoji.png",
 	"Joy":        "Tears_of_Joy_Emoji.png",
 }
+
+const (
+	DefaultTitle       = "タイトルなし"
+	DefaultDescription = "なし"
+)

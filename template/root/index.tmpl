@@ -18,8 +18,8 @@
 <hr />
 
 {{ range .novels }}
-	タイトル:<br />
-	説明:<br />
+	タイトル:{{.Title}}<br />
+	説明:{{.Description}}<br />
 	投稿者:<br />
 	<a href="/novel/show/{{.ID}}">ノベル詳細</a><br />
 	<hr />

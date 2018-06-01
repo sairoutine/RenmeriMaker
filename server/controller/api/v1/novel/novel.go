@@ -4,6 +4,7 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/sairoutine/RenmeriMaker/server/constant"
 	"github.com/sairoutine/RenmeriMaker/server/model"
 	"github.com/sairoutine/RenmeriMaker/server/util"
 	"net/http"
@@ -15,6 +16,8 @@ func Create(c *gin.Context) {
 	// POST データ取得
 	c.Request.ParseForm()
 	script := c.Request.Form["script"][0]
+	title := c.Request.Form["title"][0]
+	description := c.Request.Form["description"][0]
 
 	// ログイン情報を取得
 	session := sessions.Default(c)
@@ -26,10 +29,20 @@ func Create(c *gin.Context) {
 		return
 	}
 
+	if title == "" {
+		title = constant.DefaultTitle
+	}
+
+	if description == "" {
+		description = constant.DefaultDescription
+	}
+
 	novel := model.Novel{
-		UserID:    loginUserId,
-		Script:    script,
-		IsPrivate: true,
+		UserID:      loginUserId,
+		Script:      script,
+		Title:       title,
+		Description: description,
+		IsPrivate:   true,
 	}
 
 	// 新規登録
@@ -47,6 +60,8 @@ func Update(c *gin.Context) {
 	// POST データ取得
 	c.Request.ParseForm()
 	script := c.Request.Form["script"][0]
+	title := c.Request.Form["title"][0]
+	description := c.Request.Form["description"][0]
 
 	novel := model.Novel{}
 	recordNotFound := db.Where(&model.Novel{ID: util.String2Uint64(id)}).First(&novel).RecordNotFound()
@@ -74,6 +89,8 @@ func Update(c *gin.Context) {
 	}
 
 	novel.Script = script
+	novel.Description = description
+	novel.Title = title
 
 	// 新規登録
 	db.Save(&novel)

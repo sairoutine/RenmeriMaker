@@ -11,6 +11,10 @@
 		<canvas id="mainCanvas" width="640" height="480"></canvas>
 	</div>
 	<hr />
+	タイトル:{{.Title}}<br />
+	説明:{{.Description}}<br />
+	投稿者:<br />
+	<hr />
 	{{ range $emoji := .Emojis }}
 		<img src="/image/emoji/{{$emoji.FileName}}" width="24" height="24">{{$emoji.Count}}
 	{{ end }}

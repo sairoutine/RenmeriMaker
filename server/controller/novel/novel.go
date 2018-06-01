@@ -22,9 +22,11 @@ func New(c *gin.Context) {
 	}
 
 	util.RenderHTML(c, http.StatusOK, "novel/new.tmpl", gin.H{
-		"Script": "", // nil
-		"Mode":   constant.ScriptNewMode,
-		"Id":     0, // nil
+		"Mode":        constant.ScriptNewMode,
+		"Id":          0,  // nil
+		"Title":       "", // nil
+		"Description": "", // nil
+		"Script":      "", // nil
 
 	})
 
@@ -53,10 +55,12 @@ func Edit(c *gin.Context) {
 	}
 
 	util.RenderHTML(c, http.StatusOK, "novel/edit.tmpl", gin.H{
-		"Script":    novel.Script,
-		"Mode":      constant.ScriptEditMode,
-		"Id":        novel.ID,
-		"IsPrivate": novel.IsPrivate,
+		"Mode":        constant.ScriptEditMode,
+		"Id":          novel.ID,
+		"Title":       novel.Title,
+		"Description": novel.Description,
+		"Script":      novel.Script,
+		"IsPrivate":   novel.IsPrivate,
 	})
 }
 
@@ -95,14 +99,14 @@ func Show(c *gin.Context) {
 
 	util.RenderHTML(c, http.StatusOK, "novel/show.tmpl", gin.H{
 		//"UserName": "test",
-		//"Title": "test",
-		//"Introduction": "test",
-		"Script":   novel.Script,
-		"Mode":     constant.ScriptShowMode,
-		"Id":       novel.ID,
-		"IsOwner":  isOwner,
-		"EmojiMap": constant.EmojiMap,
-		"Emojis":   emojis,
+		"Mode":        constant.ScriptShowMode,
+		"Id":          novel.ID,
+		"Title":       novel.Title,
+		"Description": novel.Description,
+		"Script":      novel.Script,
+		"IsOwner":     isOwner,
+		"EmojiMap":    constant.EmojiMap,
+		"Emojis":      emojis,
 	})
 
 }
