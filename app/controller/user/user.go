@@ -63,9 +63,6 @@ func Show(c *gin.Context) {
 		db.Model(&model.Novel{}).Where(map[string]interface{}{"user_id": id, "is_private": false}).Count(&count)
 	}
 
-	// ページングHTML
-	retHTML := util.GenereatePagination(p, count, LIMIT)
-
 	// ユーザーに紐づくノベルを取得
 	novels := []model.Novel{}
 	if isMe {
@@ -75,6 +72,9 @@ func Show(c *gin.Context) {
 		// 他人のプロフィールの場合、公開のノベルのみを表示
 		db.Where(map[string]interface{}{"user_id": id, "is_private": false}).Limit(LIMIT).Offset(p * LIMIT).Find(&novels)
 	}
+
+	// ページングHTML
+	retHTML := util.GenereatePagination(p, count, LIMIT)
 
 	c.HTML(http.StatusOK, "user/show.tmpl", gin.H{
 		"ID":         user.ID,
