@@ -35,7 +35,7 @@ func Create(c *gin.Context) {
 	// 新規登録
 	db.Create(&novel)
 
-	c.JSON(http.StatusOK, gin.H{
+	util.RenderJSON(c, http.StatusOK, gin.H{
 		"id": novel.ID,
 	})
 }
@@ -78,7 +78,7 @@ func Update(c *gin.Context) {
 	// 新規登録
 	db.Save(&novel)
 
-	c.JSON(http.StatusOK, gin.H{
+	util.RenderJSON(c, http.StatusOK, gin.H{
 		"id": novel.ID,
 	})
 }

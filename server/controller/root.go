@@ -43,7 +43,7 @@ func Index(c *gin.Context) {
 	// ページングHTML
 	retHTML := util.GenereatePagination(p, count, LIMIT)
 
-	c.HTML(http.StatusOK, "root/index.tmpl", gin.H{
+	util.RenderHTML(c, http.StatusOK, "root/index.tmpl", gin.H{
 		"novels":     novels,
 		"isLogin":    isLogin,
 		"pagination": retHTML,
@@ -51,7 +51,7 @@ func Index(c *gin.Context) {
 }
 
 func About(c *gin.Context) {
-	c.HTML(http.StatusOK, "root/about.tmpl", gin.H{})
+	util.RenderHTML(c, http.StatusOK, "root/about.tmpl", gin.H{})
 }
 
 func Logout(c *gin.Context) {

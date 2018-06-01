@@ -21,7 +21,7 @@ func New(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "novel/new.tmpl", gin.H{
+	util.RenderHTML(c, http.StatusOK, "novel/new.tmpl", gin.H{
 		"Script": "", // nil
 		"Mode":   constant.ScriptNewMode,
 		"Id":     0, // nil
@@ -52,7 +52,7 @@ func Edit(c *gin.Context) {
 		return
 	}
 
-	c.HTML(http.StatusOK, "novel/edit.tmpl", gin.H{
+	util.RenderHTML(c, http.StatusOK, "novel/edit.tmpl", gin.H{
 		"Script":    novel.Script,
 		"Mode":      constant.ScriptEditMode,
 		"Id":        novel.ID,
@@ -93,7 +93,7 @@ func Show(c *gin.Context) {
 	emojis := []model.Emoji{}
 	db.Where(&model.Emoji{NovelID: util.String2Uint64(id)}).Find(&emojis)
 
-	c.HTML(http.StatusOK, "novel/show.tmpl", gin.H{
+	util.RenderHTML(c, http.StatusOK, "novel/show.tmpl", gin.H{
 		//"UserName": "test",
 		//"Title": "test",
 		//"Introduction": "test",

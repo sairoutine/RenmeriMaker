@@ -76,7 +76,7 @@ func Show(c *gin.Context) {
 	// ページングHTML
 	retHTML := util.GenereatePagination(p, count, LIMIT)
 
-	c.HTML(http.StatusOK, "user/show.tmpl", gin.H{
+	util.RenderHTML(c, http.StatusOK, "user/show.tmpl", gin.H{
 		"ID":         user.ID,
 		"Name":       user.DispName,
 		"Novels":     novels,

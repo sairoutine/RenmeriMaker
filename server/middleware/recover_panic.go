@@ -5,6 +5,7 @@ import (
 	"github.com/ekyoung/gin-nice-recovery"
 	"github.com/gin-gonic/gin"
 	"github.com/go-errors/errors"
+	"github.com/sairoutine/RenmeriMaker/server/util"
 	"net/http"
 )
 
@@ -22,7 +23,7 @@ func recoveryHandler(c *gin.Context, err interface{}) {
 		isDebug = false
 	}
 
-	c.HTML(http.StatusInternalServerError, "error/500.tmpl", gin.H{
+	util.RenderHTML(c, http.StatusInternalServerError, "error/500.tmpl", gin.H{
 		"message":    goErr.Error(),
 		"stacktrace": fmt.Sprintf("%s", goErr.Stack()),
 		"isDebug":    isDebug,
