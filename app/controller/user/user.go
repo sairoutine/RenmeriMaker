@@ -1,17 +1,15 @@
 package user
 
 import (
-	"fmt"
-	"github.com/gigovich/simpagin"
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/sairoutine/RenmeriMaker/app/model"
 	"github.com/sairoutine/RenmeriMaker/app/util"
-	"html/template"
 	"net/http"
 )
 
+// 1ページの表示件数
 const LIMIT = 10
 
 func Show(c *gin.Context) {
@@ -65,42 +63,8 @@ func Show(c *gin.Context) {
 		db.Model(&model.Novel{}).Where(map[string]interface{}{"user_id": id, "is_private": false}).Count(&count)
 	}
 
-	// ページング設定
-	pg := simpagin.New(
-		p,     // Active page which items we displaying now
-		count, // Total count of items
-		LIMIT, // We show only LIMIT items in each page
-		5,     // And our paginator rendered as N pages list
-	)
-
-	pg.SetRenderer(func(p simpagin.Page) string {
-		switch p.Type {
-		case simpagin.PageLeft:
-			if p.Number == 0 {
-				return `<li class="disabled"><span>&laquo;</span></li>`
-			}
-			return fmt.Sprintf(`<li><a href="?p=%d">&laquo;</a></li>`, p.Number)
-		case simpagin.PageMiddle:
-			if p.IsActive {
-				return fmt.Sprintf(`<li class="active"><span>%d</span></li>`, p.Number)
-			}
-			return fmt.Sprintf(`<li><a href="?p=%d">%d</a></li>`, p.Number, p.Number)
-		case simpagin.PageRight:
-			if p.Number == 0 {
-				return `<li class="disabled"><span>&raquo;</span></li>`
-			}
-			return fmt.Sprintf(`<li><a href="?p=%d">&raquo;</a></li>`, p.Number)
-		}
-		return ""
-	})
-
-	retStr := pg.LeftPage.String()
-	for _, page := range pg.PageList {
-		retStr += page.String()
-	}
-
-	retStr += pg.RightPage.String()
-	retHTML := template.HTML(retStr)
+	// ページングHTML
+	retHTML := util.GenereatePagination(p, count, LIMIT)
 
 	// ユーザーに紐づくノベルを取得
 	novels := []model.Novel{}
