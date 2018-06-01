@@ -1,12 +1,12 @@
 package server
 
 import (
-	controllerRoot "github.com/sairoutine/RenmeriMaker/app/controller"
-	controllerApiV1Novel "github.com/sairoutine/RenmeriMaker/app/controller/api/v1/novel"
-	controllerNovel "github.com/sairoutine/RenmeriMaker/app/controller/novel"
-	controllerNovelEmoji "github.com/sairoutine/RenmeriMaker/app/controller/novel/emoji"
-	controllerUser "github.com/sairoutine/RenmeriMaker/app/controller/user"
-	"github.com/sairoutine/RenmeriMaker/app/util"
+	controllerRoot "github.com/sairoutine/RenmeriMaker/server/controller"
+	controllerApiV1Novel "github.com/sairoutine/RenmeriMaker/server/controller/api/v1/novel"
+	controllerNovel "github.com/sairoutine/RenmeriMaker/server/controller/novel"
+	controllerNovelEmoji "github.com/sairoutine/RenmeriMaker/server/controller/novel/emoji"
+	controllerUser "github.com/sairoutine/RenmeriMaker/server/controller/user"
+	"github.com/sairoutine/RenmeriMaker/server/util"
 )
 
 func (s *Server) SetupRouter() {

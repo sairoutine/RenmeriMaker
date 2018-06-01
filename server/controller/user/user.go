@@ -4,8 +4,8 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/sairoutine/RenmeriMaker/app/model"
-	"github.com/sairoutine/RenmeriMaker/app/util"
+	"github.com/sairoutine/RenmeriMaker/server/model"
+	"github.com/sairoutine/RenmeriMaker/server/util"
 	"net/http"
 )
 

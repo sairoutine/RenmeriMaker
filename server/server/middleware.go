@@ -6,7 +6,7 @@ import (
 	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
-	middleware "github.com/sairoutine/RenmeriMaker/app/middleware"
+	middleware "github.com/sairoutine/RenmeriMaker/server/middleware"
 )
 
 func (s *Server) SetupMiddleware() {

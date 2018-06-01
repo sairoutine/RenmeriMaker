@@ -3,7 +3,7 @@ package main
 import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
-	model "github.com/sairoutine/RenmeriMaker/app/model"
+	model "github.com/sairoutine/RenmeriMaker/server/model"
 )
 
 func main() {

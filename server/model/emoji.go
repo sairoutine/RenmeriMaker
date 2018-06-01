@@ -1,7 +1,7 @@
 package model
 
 import (
-	"github.com/sairoutine/RenmeriMaker/app/constant"
+	"github.com/sairoutine/RenmeriMaker/server/constant"
 )
 
 // Emoji is.
