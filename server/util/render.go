@@ -8,6 +8,10 @@ import (
 
 // 200 OK HTML
 func RenderHTML(c *gin.Context, code int, name string, obj gin.H) {
+	if obj == nil {
+		obj = gin.H{}
+	}
+
 	// csrf token
 	obj["_csrf"] = csrf.GetToken(c)
 
