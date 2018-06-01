@@ -13,7 +13,7 @@
 	<hr />
 	タイトル:{{.Novel.Title}}<br />
 	説明:{{.Novel.Description}}<br />
-	投稿者:{{.Novel.User.DispName}}<br />
+	投稿者:<a href="/user/show/{{.Novel.User.ID}}">{{.Novel.User.DispName}}</a><br />
 	<hr />
 	{{ range $emoji := .Novel.Emojis }}
 		<img src="/image/emoji/{{$emoji.FileName}}" width="24" height="24">{{$emoji.Count}}

@@ -20,7 +20,7 @@
 {{ range .novels }}
 	タイトル:{{.Title}}<br />
 	説明:{{.Description}}<br />
-	投稿者:{{.User.DispName}}<br />
+	投稿者:<a href="/user/show/{{.User.ID}}">{{.User.DispName}}</a><br />
 	<a href="/novel/show/{{.ID}}">ノベル詳細</a><br />
 	<hr />
 {{ end }}
