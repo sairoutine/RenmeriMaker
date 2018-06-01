@@ -1,0 +1,15 @@
+{{ define "error/500.tmpl" }}
+<html><h1>
+		500
+</h1>
+<p>
+	Internal Server Error
+</p>
+{{ if .isDebug }}
+	<pre>
+	{{ .message }}
+	{{ .stacktrace }}
+	</pre>
+{{ end }}
+</html>
+{{ end }}

@@ -35,6 +35,12 @@
   version = "v1.1.0"
 
 [[projects]]
+  branch = "master"
+  name = "github.com/ekyoung/gin-nice-recovery"
+  packages = ["."]
+  revision = "1654dca486db940bf0c76b0562328f40a898504e"
+
+[[projects]]
   name = "github.com/gigovich/simpagin"
   packages = ["."]
   revision = "077caaf3628a38fc470a142ee9d1b1cc1e40418e"
@@ -71,6 +77,12 @@
   ]
   revision = "d459835d2b077e44f7c9b453505ee29881d5d12d"
   version = "v1.2"
+
+[[projects]]
+  name = "github.com/go-errors/errors"
+  packages = ["."]
+  revision = "a6af135bd4e28680facf08a3d206b454abc877a4"
+  version = "v1.0.1"
 
 [[projects]]
   name = "github.com/go-sql-driver/mysql"
@@ -168,6 +180,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "283528ebc6e0f41fe7a32d1267e2deee603b1926fedf1f672a49d3435ba21e2d"
+  inputs-digest = "62c6806bda7947311d2ff496c7e3f191acb8de76d57c4b4482f624b0e4bdae7a"
   solver-name = "gps-cdcl"
   solver-version = 1

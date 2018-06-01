@@ -24,6 +24,9 @@ func (s *Server) SetupMiddleware() {
 	// セッション
 	r.Use(sessions.Sessions("renmeri_maker_session", store))
 
+	// stack stace 表示
+	r.Use(middleware.Recovery())
+
 	// データベース接続
 	r.Use(middleware.ConnectDB())
 
