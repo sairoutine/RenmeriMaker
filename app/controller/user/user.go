@@ -67,10 +67,10 @@ func Show(c *gin.Context) {
 	novels := []model.Novel{}
 	if isMe {
 		// 自分のプロフィールの場合、公開／非公開のノベルを表示
-		db.Where(map[string]interface{}{"user_id": id}).Limit(LIMIT).Offset(p * LIMIT).Find(&novels)
+		db.Where(map[string]interface{}{"user_id": id}).Limit(LIMIT).Offset((p - 1) * LIMIT).Find(&novels)
 	} else {
 		// 他人のプロフィールの場合、公開のノベルのみを表示
-		db.Where(map[string]interface{}{"user_id": id, "is_private": false}).Limit(LIMIT).Offset(p * LIMIT).Find(&novels)
+		db.Where(map[string]interface{}{"user_id": id, "is_private": false}).Limit(LIMIT).Offset((p - 1) * LIMIT).Find(&novels)
 	}
 
 	// ページングHTML
