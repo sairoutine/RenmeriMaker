@@ -1,20 +1,31 @@
 (function(){function r(e,n,t){function o(i,f){if(!n[i]){if(!e[i]){var c="function"==typeof require&&require;if(!f&&c)return c(i,!0);if(u)return u(i,!0);var a=new Error("Cannot find module '"+i+"'");throw a.code="MODULE_NOT_FOUND",a}var p=n[i]={exports:{}};e[i][0].call(p.exports,function(r){var n=e[i][1][r];return o(n||r)},p,p.exports,r,e,n,t)}return n[i].exports}for(var u="function"==typeof require&&require,i=0;i<t.length;i++)o(t[i]);return o}return r})()({1:[function(require,module,exports){
 'use strict';
 
+var Util = require('../hakurei').util;
 var AssetsConfig = {};
 
-AssetsConfig.images = {
-	"renko_normal":    "/image/renko/normal1.png",
-	"renko_smile":     "/image/renko/smile1.png",
-	"renko_cry":       "/image/renko/cry1.png",
-	"renko_surprised": "/image/renko/surprised1.png",
-	"renko_angry":     "/image/renko/angry1.png",
-	"merry_normal":    "/image/merry/normal1.png",
-	"merry_smile":     "/image/merry/smile.png",
-	"merry_cry":       "/image/merry/cry1.png",
-	"merry_surprised": "/image/merry/surprised1.png",
-	"merry_angry":     "/image/merry/angry1.png",
+AssetsConfig.images = Util.assign(
+	require("./chara"),
+	require("./bg")
+);
 
+AssetsConfig.sounds = {
+	/*
+	leaving_title: {
+		path: "/sound/leaving_title.ogg",
+		volume: 1.0,
+	},
+	*/
+};
+
+AssetsConfig.bgms = require("./bgm");
+
+module.exports = AssetsConfig;
+
+},{"../hakurei":6,"./bg":2,"./bgm":3,"./chara":4}],2:[function(require,module,exports){
+'use strict';
+
+module.exports = {
 	"nc138477": {
 		name: "森の中",
 		path: "/image/bg/nc138477.jpg",
@@ -43,18 +54,14 @@ AssetsConfig.images = {
 		name: "お店",
 		path: "/image/bg/nc95621.jpg",
 	},
-};
+}
 
-AssetsConfig.sounds = {
-	/*
-	leaving_title: {
-		path: "/sound/leaving_title.ogg",
-		volume: 1.0,
-	},
-	*/
-};
 
-AssetsConfig.bgms = {
+
+},{}],3:[function(require,module,exports){
+'use strict';
+
+module.exports = {
 	nc13447: {
 		name: "しんみり",
 		path: "/bgm/nc13447.mp3",
@@ -105,18 +112,25 @@ AssetsConfig.bgms = {
 		//loopEnd: 1*60 + 47 + 0.027,
 		volume: 1.0,
 	},
+}
 
+},{}],4:[function(require,module,exports){
+'use strict';
 
+module.exports = {
+	"renko_normal":    "/image/renko/normal1.png",
+	"renko_smile":     "/image/renko/smile1.png",
+	"renko_cry":       "/image/renko/cry1.png",
+	"renko_surprised": "/image/renko/surprised1.png",
+	"renko_angry":     "/image/renko/angry1.png",
+	"merry_normal":    "/image/merry/normal1.png",
+	"merry_smile":     "/image/merry/smile.png",
+	"merry_cry":       "/image/merry/cry1.png",
+	"merry_surprised": "/image/merry/surprised1.png",
+	"merry_angry":     "/image/merry/angry1.png",
+}
 
-
-
-
-};
-
-
-module.exports = AssetsConfig;
-
-},{}],2:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 var core = require('./hakurei').core;
 var util = require('./hakurei').util;
@@ -257,12 +271,12 @@ Game.prototype.isNewMode = function () {
 
 module.exports = Game;
 
-},{"./hakurei":3,"./logic/create_serif":55,"./scene/end":57,"./scene/loading":58,"./scene/talk":59}],3:[function(require,module,exports){
+},{"./hakurei":6,"./logic/create_serif":58,"./scene/end":60,"./scene/loading":61,"./scene/talk":62}],6:[function(require,module,exports){
 'use strict';
 
 module.exports = require("./hakureijs/index");
 
-},{"./hakureijs/index":10}],4:[function(require,module,exports){
+},{"./hakureijs/index":13}],7:[function(require,module,exports){
 'use strict';
 
 var AudioLoader = function() {
@@ -618,7 +632,7 @@ AudioLoader.prototype.progress = function() {
 
 module.exports = AudioLoader;
 
-},{}],5:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 // TODO: refactor
@@ -791,7 +805,7 @@ FontLoader.prototype._createFontLoadingDOM = function(name) {
 
 module.exports = FontLoader;
 
-},{}],6:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 var ImageLoader = function() {
@@ -870,7 +884,7 @@ ImageLoader.prototype.progress = function() {
 
 module.exports = ImageLoader;
 
-},{}],7:[function(require,module,exports){
+},{}],10:[function(require,module,exports){
 'use strict';
 
 // only keyboard (because core class uses key board map)
@@ -887,7 +901,7 @@ var Constant = {
 
 module.exports = Constant;
 
-},{}],8:[function(require,module,exports){
+},{}],11:[function(require,module,exports){
 'use strict';
 
 var CONSTANT = {
@@ -919,7 +933,7 @@ CONSTANT.SPRITE3D.A_SIZE =
 
 module.exports = CONSTANT;
 
-},{}],9:[function(require,module,exports){
+},{}],12:[function(require,module,exports){
 'use strict';
 
 /* TODO: create scene_manager class */
@@ -1375,7 +1389,7 @@ Core.prototype.changeSceneWithLoading = function(scene, assets) {
 
 module.exports = Core;
 
-},{"./asset_loader/audio":4,"./asset_loader/font":5,"./asset_loader/image":6,"./manager/debug":11,"./manager/input":12,"./manager/save":13,"./manager/scene":15,"./manager/time":17,"./shader/main.fs":47,"./shader/main.vs":48,"./shader_program":49,"./storage/scenario":52,"./util":53,"webgl-debug":30}],10:[function(require,module,exports){
+},{"./asset_loader/audio":7,"./asset_loader/font":8,"./asset_loader/image":9,"./manager/debug":14,"./manager/input":15,"./manager/save":16,"./manager/scene":18,"./manager/time":20,"./shader/main.fs":50,"./shader/main.vs":51,"./shader_program":52,"./storage/scenario":55,"./util":56,"webgl-debug":33}],13:[function(require,module,exports){
 'use strict';
 var Hakurei = {
 	// deprecated namespaces
@@ -1463,7 +1477,7 @@ var Hakurei = {
 };
 module.exports = Hakurei;
 
-},{"./asset_loader/audio":4,"./asset_loader/font":5,"./asset_loader/image":6,"./constant/button":7,"./core":9,"./manager/save":13,"./manager/scenario":14,"./master/repository_generator":19,"./object/base":32,"./object/point":33,"./object/pool_manager":34,"./object/pool_manager3d":35,"./object/sprite":36,"./object/sprite3d":37,"./object/ui/base":38,"./object/ui/group":39,"./object/ui/image":40,"./object/ui/spinner":41,"./object/ui/text":42,"./object/ui_parts":43,"./scene/base":44,"./scene/loading":45,"./scene/movie":46,"./shader_program":49,"./storage/base":50,"./storage/save":51,"./util":53}],11:[function(require,module,exports){
+},{"./asset_loader/audio":7,"./asset_loader/font":8,"./asset_loader/image":9,"./constant/button":10,"./core":12,"./manager/save":16,"./manager/scenario":17,"./master/repository_generator":22,"./object/base":35,"./object/point":36,"./object/pool_manager":37,"./object/pool_manager3d":38,"./object/sprite":39,"./object/sprite3d":40,"./object/ui/base":41,"./object/ui/group":42,"./object/ui/image":43,"./object/ui/spinner":44,"./object/ui/text":45,"./object/ui_parts":46,"./scene/base":47,"./scene/loading":48,"./scene/movie":49,"./shader_program":52,"./storage/base":53,"./storage/save":54,"./util":56}],14:[function(require,module,exports){
 'use strict';
 var Util = require("../util");
 
@@ -1805,7 +1819,7 @@ DebugManager.prototype.isShowingFps = function () {
 
 module.exports = DebugManager;
 
-},{"../util":53}],12:[function(require,module,exports){
+},{"../util":56}],15:[function(require,module,exports){
 'use strict';
 
 var CONSTANT = require("../constant/button");
@@ -2219,7 +2233,7 @@ InputManager.prototype.dumpGamePadKey = function() {
 
 module.exports = InputManager;
 
-},{"../constant/button":7,"../object/point":33,"../util":53}],13:[function(require,module,exports){
+},{"../constant/button":10,"../object/point":36,"../util":56}],16:[function(require,module,exports){
 'use strict';
 // repository for storage save class
 
@@ -2276,7 +2290,7 @@ SaveManager.prototype.del = function(){
 
 module.exports = SaveManager;
 
-},{}],14:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 // TODO: add _isStartPrintLetter, isPausePrintLetter method
@@ -2667,7 +2681,7 @@ ScenarioManager.prototype.getCurrentJunctionList = function () {
 
 module.exports = ScenarioManager;
 
-},{"../util":53,"./serif_abolished_notifier_base":16}],15:[function(require,module,exports){
+},{"../util":56,"./serif_abolished_notifier_base":19}],18:[function(require,module,exports){
 'use strict';
 
 var SceneLoading = require('../scene/loading');
@@ -2879,7 +2893,7 @@ SceneManager.prototype.drawTransition = function() {
 
 module.exports = SceneManager;
 
-},{"../scene/loading":45}],16:[function(require,module,exports){
+},{"../scene/loading":48}],19:[function(require,module,exports){
 'use strict';
 
 
@@ -2982,7 +2996,7 @@ SerifManager.prototype.background_image = function () {
 
 module.exports = SerifManager;
 
-},{}],17:[function(require,module,exports){
+},{}],20:[function(require,module,exports){
 'use strict';
 
 var ID = 0;
@@ -3043,7 +3057,7 @@ TimeManager.prototype.executeEvents = function () {
 
 module.exports = TimeManager;
 
-},{}],18:[function(require,module,exports){
+},{}],21:[function(require,module,exports){
 'use strict';
 /*
 	{
@@ -3091,7 +3105,7 @@ MasterDAOGenerator.exec = function (type_info, option) {
 
 module.exports = MasterDAOGenerator;
 
-},{}],19:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 'use strict';
 var MasterDAOGenerator = require("./dao_generator");
 
@@ -3141,7 +3155,7 @@ MasterRepositoryGenerator.exec = function (type_info, option, data_list) {
 
 module.exports = MasterRepositoryGenerator;
 
-},{"./dao_generator":18}],20:[function(require,module,exports){
+},{"./dao_generator":21}],23:[function(require,module,exports){
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
@@ -3179,7 +3193,7 @@ exports.quat = require("./gl-matrix/quat.js");
 exports.vec2 = require("./gl-matrix/vec2.js");
 exports.vec3 = require("./gl-matrix/vec3.js");
 exports.vec4 = require("./gl-matrix/vec4.js");
-},{"./gl-matrix/common.js":21,"./gl-matrix/mat2.js":22,"./gl-matrix/mat2d.js":23,"./gl-matrix/mat3.js":24,"./gl-matrix/mat4.js":25,"./gl-matrix/quat.js":26,"./gl-matrix/vec2.js":27,"./gl-matrix/vec3.js":28,"./gl-matrix/vec4.js":29}],21:[function(require,module,exports){
+},{"./gl-matrix/common.js":24,"./gl-matrix/mat2.js":25,"./gl-matrix/mat2d.js":26,"./gl-matrix/mat3.js":27,"./gl-matrix/mat4.js":28,"./gl-matrix/quat.js":29,"./gl-matrix/vec2.js":30,"./gl-matrix/vec3.js":31,"./gl-matrix/vec4.js":32}],24:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3251,7 +3265,7 @@ glMatrix.equals = function(a, b) {
 
 module.exports = glMatrix;
 
-},{}],22:[function(require,module,exports){
+},{}],25:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3689,7 +3703,7 @@ mat2.multiplyScalarAndAdd = function(out, a, b, scale) {
 
 module.exports = mat2;
 
-},{"./common.js":21}],23:[function(require,module,exports){
+},{"./common.js":24}],26:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4160,7 +4174,7 @@ mat2d.equals = function (a, b) {
 
 module.exports = mat2d;
 
-},{"./common.js":21}],24:[function(require,module,exports){
+},{"./common.js":24}],27:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4908,7 +4922,7 @@ mat3.equals = function (a, b) {
 
 module.exports = mat3;
 
-},{"./common.js":21}],25:[function(require,module,exports){
+},{"./common.js":24}],28:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -7046,7 +7060,7 @@ mat4.equals = function (a, b) {
 
 module.exports = mat4;
 
-},{"./common.js":21}],26:[function(require,module,exports){
+},{"./common.js":24}],29:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -7648,7 +7662,7 @@ quat.equals = vec4.equals;
 
 module.exports = quat;
 
-},{"./common.js":21,"./mat3.js":24,"./vec3.js":28,"./vec4.js":29}],27:[function(require,module,exports){
+},{"./common.js":24,"./mat3.js":27,"./vec3.js":31,"./vec4.js":32}],30:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8237,7 +8251,7 @@ vec2.equals = function (a, b) {
 
 module.exports = vec2;
 
-},{"./common.js":21}],28:[function(require,module,exports){
+},{"./common.js":24}],31:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -9016,7 +9030,7 @@ vec3.equals = function (a, b) {
 
 module.exports = vec3;
 
-},{"./common.js":21}],29:[function(require,module,exports){
+},{"./common.js":24}],32:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -9627,7 +9641,7 @@ vec4.equals = function (a, b) {
 
 module.exports = vec4;
 
-},{"./common.js":21}],30:[function(require,module,exports){
+},{"./common.js":24}],33:[function(require,module,exports){
 (function (global){
 /*
 ** Copyright (c) 2012 The Khronos Group Inc.
@@ -10585,7 +10599,7 @@ return {
 module.exports = WebGLDebugUtils;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],31:[function(require,module,exports){
+},{}],34:[function(require,module,exports){
 'use strict';
 
 // internal class
@@ -11046,21 +11060,21 @@ module.exports = {
 	object_point: ObjectPoint,
 };
 
-},{"../util":53}],32:[function(require,module,exports){
+},{"../util":56}],35:[function(require,module,exports){
 'use strict';
 
 var _base_and_point_classes = require('./_base_and_point_classes');
 
 module.exports = _base_and_point_classes.object_base;
 
-},{"./_base_and_point_classes":31}],33:[function(require,module,exports){
+},{"./_base_and_point_classes":34}],36:[function(require,module,exports){
 'use strict';
 
 var _base_and_point_classes = require('./_base_and_point_classes');
 
 module.exports = _base_and_point_classes.object_point;
 
-},{"./_base_and_point_classes":31}],34:[function(require,module,exports){
+},{"./_base_and_point_classes":34}],37:[function(require,module,exports){
 'use strict';
 // TODO: rename manager -> container
 // TODO: add pooling logic
@@ -11158,7 +11172,7 @@ PoolManager.prototype.removeOutOfStageObjects = function() {
 
 module.exports = PoolManager;
 
-},{"../util":53,"./base":32}],35:[function(require,module,exports){
+},{"../util":56,"./base":35}],38:[function(require,module,exports){
 'use strict';
 
 // TODO: rename manager -> container
@@ -11400,7 +11414,7 @@ PoolManager3D.prototype.shader = function(){
 
 module.exports = PoolManager3D;
 
-},{"../constant/webgl":8,"../util":53,"./base":32,"gl-matrix":20}],36:[function(require,module,exports){
+},{"../constant/webgl":11,"../util":56,"./base":35,"gl-matrix":23}],39:[function(require,module,exports){
 'use strict';
 var base_object = require('./base');
 var util = require('../util');
@@ -11543,7 +11557,7 @@ Sprite.prototype.alpha = function() {
 
 module.exports = Sprite;
 
-},{"../util":53,"./base":32}],37:[function(require,module,exports){
+},{"../util":56,"./base":35}],40:[function(require,module,exports){
 'use strict';
 var base_object = require('./base');
 var util = require('../util');
@@ -11888,7 +11902,7 @@ Sprite3d.prototype.isReflect = function(){
 
 module.exports = Sprite3d;
 
-},{"../constant/webgl":8,"../util":53,"./base":32,"gl-matrix":20}],38:[function(require,module,exports){
+},{"../constant/webgl":11,"../util":56,"./base":35,"gl-matrix":23}],41:[function(require,module,exports){
 'use strict';
 
 var BaseObject = require('../base');
@@ -11996,7 +12010,7 @@ ObjectUIBase.prototype.hide = function() {
 
 module.exports = ObjectUIBase;
 
-},{"../../util":53,"../base":32}],39:[function(require,module,exports){
+},{"../../util":56,"../base":35}],42:[function(require,module,exports){
 'use strict';
 
 var BaseObjectUI = require('./base');
@@ -12049,7 +12063,7 @@ ObjectUIGroup.prototype.draw = function() {
 
 module.exports = ObjectUIGroup;
 
-},{"../../util":53,"./base":38}],40:[function(require,module,exports){
+},{"../../util":56,"./base":41}],43:[function(require,module,exports){
 'use strict';
 
 var BaseObjectUI = require('./base');
@@ -12115,7 +12129,7 @@ ObjectUIImage.prototype.draw = function() {
 
 module.exports = ObjectUIImage;
 
-},{"../../util":53,"./base":38}],41:[function(require,module,exports){
+},{"../../util":56,"./base":41}],44:[function(require,module,exports){
 'use strict';
 
 var LINES = 16;
@@ -12181,7 +12195,7 @@ ObjectUISpinner.prototype.height = function() { return this.size()/2; };
 
 module.exports = ObjectUISpinner;
 
-},{"../../util":53,"./base":38}],42:[function(require,module,exports){
+},{"../../util":56,"./base":41}],45:[function(require,module,exports){
 'use strict';
 
 var BaseObjectUI = require('./base');
@@ -12236,7 +12250,7 @@ ObjectUIText.prototype.draw = function() {
 
 module.exports = ObjectUIText;
 
-},{"../../util":53,"./base":38}],43:[function(require,module,exports){
+},{"../../util":56,"./base":41}],46:[function(require,module,exports){
 'use strict';
 // deprecated. use ui objects
 
@@ -12312,7 +12326,7 @@ ObjectUIParts.prototype.draw = function(){
 
 module.exports = ObjectUIParts;
 
-},{"../util":53,"./base":32}],44:[function(require,module,exports){
+},{"../util":56,"./base":35}],47:[function(require,module,exports){
 'use strict';
 var ObjectBase = require("../object/base");
 var Util = require('../util');
@@ -12576,7 +12590,7 @@ Util.inherit(UI, ObjectBase);
 module.exports = SceneBase;
 
 
-},{"../object/base":32,"../util":53}],45:[function(require,module,exports){
+},{"../object/base":35,"../util":56}],48:[function(require,module,exports){
 'use strict';
 
 // loading scene
@@ -12658,7 +12672,7 @@ SceneLoading.prototype.notifyAllLoaded = function(){
 
 module.exports = SceneLoading;
 
-},{"../util":53,"./base":44}],46:[function(require,module,exports){
+},{"../util":56,"./base":47}],49:[function(require,module,exports){
 'use strict';
 
 // movie scene
@@ -12797,15 +12811,15 @@ SceneMovie.prototype.notifyEnd = function(){
 
 module.exports = SceneMovie;
 
-},{"../util":53,"./base":44}],47:[function(require,module,exports){
+},{"../util":56,"./base":47}],50:[function(require,module,exports){
 
 module.exports = "attribute vec3 aVertexPosition;\nattribute vec2 aTextureCoordinates;\nattribute vec4 aColor;\n\nuniform mat4 uMVMatrix;\nuniform mat4 uPMatrix;\nvarying vec2 vTextureCoordinates;\nvarying vec4 vColor;\n\nvoid main() {\n\tgl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n\tvTextureCoordinates = aTextureCoordinates;\n\tvColor = aColor;\n}\n\n";
 
-},{}],48:[function(require,module,exports){
+},{}],51:[function(require,module,exports){
 
 module.exports = "precision mediump float;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoordinates;\nvarying vec4 vColor;\n\nvoid main() {\n\tvec4 textureColor = texture2D(uSampler, vTextureCoordinates);\n\tgl_FragColor = textureColor * vColor;\n}\n\n";
 
-},{}],49:[function(require,module,exports){
+},{}],52:[function(require,module,exports){
 'use strict';
 var glmat = require("gl-matrix");
 
@@ -12876,7 +12890,7 @@ ShaderProgram.prototype.createShaderProgram = function(gl, vertex_shader, fragme
 
 module.exports = ShaderProgram;
 
-},{"gl-matrix":20}],50:[function(require,module,exports){
+},{"gl-matrix":23}],53:[function(require,module,exports){
 'use strict';
 /* eslint-disable new-cap */
 
@@ -13102,7 +13116,7 @@ StorageBase.prototype._removeWebStorage = function() {
 
 module.exports = StorageBase;
 
-},{"../util":53}],51:[function(require,module,exports){
+},{"../util":56}],54:[function(require,module,exports){
 'use strict';
 var base_class = require('./base');
 var util = require('../util');
@@ -13128,7 +13142,7 @@ StorageSave.KEY = function(){
 
 module.exports = StorageSave;
 
-},{"../util":53,"./base":50}],52:[function(require,module,exports){
+},{"../util":56,"./base":53}],55:[function(require,module,exports){
 'use strict';
 var base_class = require('./base');
 var util = require('../util');
@@ -13176,7 +13190,7 @@ StorageScenario.prototype.incrementPlayedCount = function(id){
 
 module.exports = StorageScenario;
 
-},{"../util":53,"./base":50}],53:[function(require,module,exports){
+},{"../util":56,"./base":53}],56:[function(require,module,exports){
 'use strict';
 var Util = {
 	inherit: function( child, parent ) {
@@ -13325,7 +13339,7 @@ var Util = {
 
 module.exports = Util;
 
-},{}],54:[function(require,module,exports){
+},{}],57:[function(require,module,exports){
 'use strict';
 
 /* 画像を暗く変換する */
@@ -13367,7 +13381,7 @@ CreateDarkerImage.exec = function (image, alpha) {
 
 module.exports = CreateDarkerImage;
 
-},{}],55:[function(require,module,exports){
+},{}],58:[function(require,module,exports){
 'use strict';
 var Util = require('../hakurei').util;
 
@@ -13437,7 +13451,7 @@ CreateSerif.revert = function (serif) {
 
 module.exports = CreateSerif;
 
-},{"../hakurei":3}],56:[function(require,module,exports){
+},{"../hakurei":6}],59:[function(require,module,exports){
 'use strict';
 var Game = require('./game');
 
@@ -13468,7 +13482,7 @@ if(window.require) {
 	window.require('electron').webFrame.setVisualZoomLevelLimits(1,1); // unable to zoom
 }
 
-},{"./game":2}],57:[function(require,module,exports){
+},{"./game":5}],60:[function(require,module,exports){
 'use strict';
 
 var Util = require('../hakurei').util;
@@ -13512,7 +13526,7 @@ SceneTalk.prototype.draw = function(){
 
 module.exports = SceneTalk;
 
-},{"../hakurei":3}],58:[function(require,module,exports){
+},{"../hakurei":6}],61:[function(require,module,exports){
 'use strict';
 
 // ローディングシーン
@@ -13577,7 +13591,7 @@ SceneLoading.prototype.draw = function(){
 
 module.exports = SceneLoading;
 
-},{"../config/assets":1,"../hakurei":3}],59:[function(require,module,exports){
+},{"../config/assets":1,"../hakurei":6}],62:[function(require,module,exports){
 'use strict';
 
 // 画面に対するウィンドウの余白
@@ -13871,4 +13885,4 @@ SceneTalk.prototype.isInTransition = function() {
 
 module.exports = SceneTalk;
 
-},{"../hakurei":3,"../logic/create_darker_image":54}]},{},[56]);
+},{"../hakurei":6,"../logic/create_darker_image":57}]},{},[59]);
