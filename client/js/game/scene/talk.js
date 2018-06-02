@@ -47,9 +47,6 @@ SceneTalk.prototype.init = function(){
 	// シーン遷移前の BGM 止める
 	this.core.audio_loader.stopBGM();
 
-	// フェードアウトする
-	this.core.scene_manager.setFadeOut(60);
-
 	// BGM 再生
 	if (this.serif.getCurrentOption().bgm) {
 		this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
@@ -281,6 +278,9 @@ SceneTalk.prototype._showMessage = function() {
 
 // 立ち絵＆セリフ終了後
 SceneTalk.prototype.notifySerifEnd = function() {
+	// フェードアウトする
+	this.core.scene_manager.setFadeOut(60);
+
 	this.core.scene_manager.changeScene("end");
 };
 
