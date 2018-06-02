@@ -1,7 +1,5 @@
 'use strict';
-var Game = require('./game');
-
-var game;
+var Game = require('./game/game');
 
 window.onload = function() {
 	var mainCanvas = document.getElementById('mainCanvas');
@@ -9,7 +7,7 @@ window.onload = function() {
 	// サーバーサイドからのデータ
 	var options = window.config;
 
-	game = new Game(mainCanvas, options);
+	var game = new Game(mainCanvas, options);
 
 	game.setupEvents();
 
@@ -20,10 +18,4 @@ window.onload = function() {
 	game.init();
 	game.startRun();
 
-	window.game = game;
 };
-
-// for electron
-if(window.require) {
-	window.require('electron').webFrame.setVisualZoomLevelLimits(1,1); // unable to zoom
-}

@@ -1,3 +1,3 @@
-[submodule "src/js/hakureijs"]
-	path = client/js/hakureijs
+[submodule "client/js/game/hakureijs"]
+	path = client/js/game/hakureijs
 	url = https://github.com/sairoutine/hakureijs.git
