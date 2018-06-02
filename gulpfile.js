@@ -25,6 +25,7 @@ gulp.task('browserify', function() {
 		.transform(stringify, {
 			appliesTo: { includeExtensions: ['.vs', '.fs'] }, // シェーダーファイルをテキストとして require できるようにする
 		})
+		.transform("babelify", {presets: ["es2015"], "plugins": ["mjsx"]})
 		.bundle()
 		.on('error', function(err){   //ここからエラーだった時の記述
 			// デスクトップ通知
