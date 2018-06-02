@@ -15,13 +15,34 @@ AssetsConfig.images = {
 	"merry_surprised": "/image/merry/surprised1.png",
 	"merry_angry":     "/image/merry/angry1.png",
 
-	"nc138477": "/image/bg/nc138477.jpg",
-	"nc14162": "/image/bg/nc14162.jpg",
-	"nc4527": "/image/bg/nc4527.jpg",
-	"nc68222": "/image/bg/nc68222.jpg",
-	"nc72006": "/image/bg/nc72006.jpg",
-	"nc7951": "/image/bg/nc7951.jpg",
-	"nc95621": "/image/bg/nc95621.jpg",
+	"nc138477": {
+		name: "森の中",
+		path: "/image/bg/nc138477.jpg",
+	},
+	"nc14162": {
+		name: "夜の海岸",
+		path: "/image/bg/nc14162.jpg",
+	},
+	"nc4527": {
+		name: "道路",
+		path: "/image/bg/nc4527.jpg",
+	},
+	"nc68222": {
+		name: "校門前",
+		path: "/image/bg/nc68222.jpg",
+	},
+	"nc72006": {
+		name: "夜の森林",
+		path: "/image/bg/nc72006.jpg",
+	},
+	"nc7951": {
+		name: "学内",
+		path: "/image/bg/nc7951.jpg",
+	},
+	"nc95621": {
+		name: "お店",
+		path: "/image/bg/nc95621.jpg",
+	},
 };
 
 AssetsConfig.sounds = {
@@ -35,36 +56,42 @@ AssetsConfig.sounds = {
 
 AssetsConfig.bgms = {
 	nc13447: {
+		name: "しんみり",
 		path: "/bgm/nc13447.mp3",
 		loopStart: 0*60 + 0 + 0.000,
 		//loopEnd: 1*60 + 47 + 0.027,
 		volume: 1.0,
 	},
 	nc20349: {
+		name: "やる気がない",
 		path: "/bgm/nc20349.mp3",
 		loopStart: 0*60 + 0 + 0.000,
 		//loopEnd: 1*60 + 47 + 0.027,
 		volume: 1.0,
 	},
 	nc22928: {
+		name: "ナチュラル",
 		path: "/bgm/nc22928.mp3",
 		loopStart: 0*60 + 0 + 0.000,
 		//loopEnd: 1*60 + 47 + 0.027,
 		volume: 1.0,
 	},
 	nc32144: {
+		name: "おしゃれ",
 		path: "/bgm/nc32144.m4a",
 		loopStart: 0*60 + 0 + 0.000,
 		//loopEnd: 1*60 + 47 + 0.027,
 		volume: 1.0,
 	},
 	nc38444: {
+		name: "ほのぼの",
 		path: "/bgm/nc38444.mp3",
 		loopStart: 0*60 + 0 + 0.000,
 		//loopEnd: 1*60 + 47 + 0.027,
 		volume: 1.0,
 	},
 	nc41740: {
+		name: "キラキラ",
 		path: "/bgm/nc41740.mp3",
 		loopStart: 0*60 + 0 + 0.000,
 		//loopEnd: 1*60 + 47 + 0.027,
@@ -72,6 +99,7 @@ AssetsConfig.bgms = {
 	},
 
 	nc76949: {
+		name: "和風",
 		path: "/bgm/nc76949.mp3",
 		loopStart: 0*60 + 0 + 0.000,
 		//loopEnd: 1*60 + 47 + 0.027,
@@ -89,29 +117,6 @@ AssetsConfig.bgms = {
 module.exports = AssetsConfig;
 
 },{}],2:[function(require,module,exports){
-'use strict';
-var DEBUG = require("./debug_constant");
-
-var CONSTANT = {
-	DEBUG: {},
-
-};
-
-if (DEBUG.ON) {
-	CONSTANT.DEBUG = DEBUG;
-}
-module.exports = CONSTANT;
-
-},{"./debug_constant":3}],3:[function(require,module,exports){
-'use strict';
-var DEBUG = {
-	ON: true,
-	SOUND_OFF: true,
-};
-
-module.exports = DEBUG;
-
-},{}],4:[function(require,module,exports){
 'use strict';
 var core = require('./hakurei').core;
 var util = require('./hakurei').util;
@@ -252,12 +257,12 @@ Game.prototype.isNewMode = function () {
 
 module.exports = Game;
 
-},{"./hakurei":5,"./logic/create_serif":57,"./scene/end":59,"./scene/loading":60,"./scene/talk":61}],5:[function(require,module,exports){
+},{"./hakurei":3,"./logic/create_serif":55,"./scene/end":57,"./scene/loading":58,"./scene/talk":59}],3:[function(require,module,exports){
 'use strict';
 
 module.exports = require("./hakureijs/index");
 
-},{"./hakureijs/index":12}],6:[function(require,module,exports){
+},{"./hakureijs/index":10}],4:[function(require,module,exports){
 'use strict';
 
 var AudioLoader = function() {
@@ -613,7 +618,7 @@ AudioLoader.prototype.progress = function() {
 
 module.exports = AudioLoader;
 
-},{}],7:[function(require,module,exports){
+},{}],5:[function(require,module,exports){
 'use strict';
 
 // TODO: refactor
@@ -786,7 +791,7 @@ FontLoader.prototype._createFontLoadingDOM = function(name) {
 
 module.exports = FontLoader;
 
-},{}],8:[function(require,module,exports){
+},{}],6:[function(require,module,exports){
 'use strict';
 
 var ImageLoader = function() {
@@ -865,7 +870,7 @@ ImageLoader.prototype.progress = function() {
 
 module.exports = ImageLoader;
 
-},{}],9:[function(require,module,exports){
+},{}],7:[function(require,module,exports){
 'use strict';
 
 // only keyboard (because core class uses key board map)
@@ -882,7 +887,7 @@ var Constant = {
 
 module.exports = Constant;
 
-},{}],10:[function(require,module,exports){
+},{}],8:[function(require,module,exports){
 'use strict';
 
 var CONSTANT = {
@@ -914,7 +919,7 @@ CONSTANT.SPRITE3D.A_SIZE =
 
 module.exports = CONSTANT;
 
-},{}],11:[function(require,module,exports){
+},{}],9:[function(require,module,exports){
 'use strict';
 
 /* TODO: create scene_manager class */
@@ -1370,7 +1375,7 @@ Core.prototype.changeSceneWithLoading = function(scene, assets) {
 
 module.exports = Core;
 
-},{"./asset_loader/audio":6,"./asset_loader/font":7,"./asset_loader/image":8,"./manager/debug":13,"./manager/input":14,"./manager/save":15,"./manager/scene":17,"./manager/time":19,"./shader/main.fs":49,"./shader/main.vs":50,"./shader_program":51,"./storage/scenario":54,"./util":55,"webgl-debug":32}],12:[function(require,module,exports){
+},{"./asset_loader/audio":4,"./asset_loader/font":5,"./asset_loader/image":6,"./manager/debug":11,"./manager/input":12,"./manager/save":13,"./manager/scene":15,"./manager/time":17,"./shader/main.fs":47,"./shader/main.vs":48,"./shader_program":49,"./storage/scenario":52,"./util":53,"webgl-debug":30}],10:[function(require,module,exports){
 'use strict';
 var Hakurei = {
 	// deprecated namespaces
@@ -1458,7 +1463,7 @@ var Hakurei = {
 };
 module.exports = Hakurei;
 
-},{"./asset_loader/audio":6,"./asset_loader/font":7,"./asset_loader/image":8,"./constant/button":9,"./core":11,"./manager/save":15,"./manager/scenario":16,"./master/repository_generator":21,"./object/base":34,"./object/point":35,"./object/pool_manager":36,"./object/pool_manager3d":37,"./object/sprite":38,"./object/sprite3d":39,"./object/ui/base":40,"./object/ui/group":41,"./object/ui/image":42,"./object/ui/spinner":43,"./object/ui/text":44,"./object/ui_parts":45,"./scene/base":46,"./scene/loading":47,"./scene/movie":48,"./shader_program":51,"./storage/base":52,"./storage/save":53,"./util":55}],13:[function(require,module,exports){
+},{"./asset_loader/audio":4,"./asset_loader/font":5,"./asset_loader/image":6,"./constant/button":7,"./core":9,"./manager/save":13,"./manager/scenario":14,"./master/repository_generator":19,"./object/base":32,"./object/point":33,"./object/pool_manager":34,"./object/pool_manager3d":35,"./object/sprite":36,"./object/sprite3d":37,"./object/ui/base":38,"./object/ui/group":39,"./object/ui/image":40,"./object/ui/spinner":41,"./object/ui/text":42,"./object/ui_parts":43,"./scene/base":44,"./scene/loading":45,"./scene/movie":46,"./shader_program":49,"./storage/base":50,"./storage/save":51,"./util":53}],11:[function(require,module,exports){
 'use strict';
 var Util = require("../util");
 
@@ -1800,7 +1805,7 @@ DebugManager.prototype.isShowingFps = function () {
 
 module.exports = DebugManager;
 
-},{"../util":55}],14:[function(require,module,exports){
+},{"../util":53}],12:[function(require,module,exports){
 'use strict';
 
 var CONSTANT = require("../constant/button");
@@ -2214,7 +2219,7 @@ InputManager.prototype.dumpGamePadKey = function() {
 
 module.exports = InputManager;
 
-},{"../constant/button":9,"../object/point":35,"../util":55}],15:[function(require,module,exports){
+},{"../constant/button":7,"../object/point":33,"../util":53}],13:[function(require,module,exports){
 'use strict';
 // repository for storage save class
 
@@ -2271,7 +2276,7 @@ SaveManager.prototype.del = function(){
 
 module.exports = SaveManager;
 
-},{}],16:[function(require,module,exports){
+},{}],14:[function(require,module,exports){
 'use strict';
 
 // TODO: add _isStartPrintLetter, isPausePrintLetter method
@@ -2662,7 +2667,7 @@ ScenarioManager.prototype.getCurrentJunctionList = function () {
 
 module.exports = ScenarioManager;
 
-},{"../util":55,"./serif_abolished_notifier_base":18}],17:[function(require,module,exports){
+},{"../util":53,"./serif_abolished_notifier_base":16}],15:[function(require,module,exports){
 'use strict';
 
 var SceneLoading = require('../scene/loading');
@@ -2874,7 +2879,7 @@ SceneManager.prototype.drawTransition = function() {
 
 module.exports = SceneManager;
 
-},{"../scene/loading":47}],18:[function(require,module,exports){
+},{"../scene/loading":45}],16:[function(require,module,exports){
 'use strict';
 
 
@@ -2977,7 +2982,7 @@ SerifManager.prototype.background_image = function () {
 
 module.exports = SerifManager;
 
-},{}],19:[function(require,module,exports){
+},{}],17:[function(require,module,exports){
 'use strict';
 
 var ID = 0;
@@ -3038,7 +3043,7 @@ TimeManager.prototype.executeEvents = function () {
 
 module.exports = TimeManager;
 
-},{}],20:[function(require,module,exports){
+},{}],18:[function(require,module,exports){
 'use strict';
 /*
 	{
@@ -3086,7 +3091,7 @@ MasterDAOGenerator.exec = function (type_info, option) {
 
 module.exports = MasterDAOGenerator;
 
-},{}],21:[function(require,module,exports){
+},{}],19:[function(require,module,exports){
 'use strict';
 var MasterDAOGenerator = require("./dao_generator");
 
@@ -3136,7 +3141,7 @@ MasterRepositoryGenerator.exec = function (type_info, option, data_list) {
 
 module.exports = MasterRepositoryGenerator;
 
-},{"./dao_generator":20}],22:[function(require,module,exports){
+},{"./dao_generator":18}],20:[function(require,module,exports){
 /**
  * @fileoverview gl-matrix - High performance matrix and vector operations
  * @author Brandon Jones
@@ -3174,7 +3179,7 @@ exports.quat = require("./gl-matrix/quat.js");
 exports.vec2 = require("./gl-matrix/vec2.js");
 exports.vec3 = require("./gl-matrix/vec3.js");
 exports.vec4 = require("./gl-matrix/vec4.js");
-},{"./gl-matrix/common.js":23,"./gl-matrix/mat2.js":24,"./gl-matrix/mat2d.js":25,"./gl-matrix/mat3.js":26,"./gl-matrix/mat4.js":27,"./gl-matrix/quat.js":28,"./gl-matrix/vec2.js":29,"./gl-matrix/vec3.js":30,"./gl-matrix/vec4.js":31}],23:[function(require,module,exports){
+},{"./gl-matrix/common.js":21,"./gl-matrix/mat2.js":22,"./gl-matrix/mat2d.js":23,"./gl-matrix/mat3.js":24,"./gl-matrix/mat4.js":25,"./gl-matrix/quat.js":26,"./gl-matrix/vec2.js":27,"./gl-matrix/vec3.js":28,"./gl-matrix/vec4.js":29}],21:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3246,7 +3251,7 @@ glMatrix.equals = function(a, b) {
 
 module.exports = glMatrix;
 
-},{}],24:[function(require,module,exports){
+},{}],22:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -3684,7 +3689,7 @@ mat2.multiplyScalarAndAdd = function(out, a, b, scale) {
 
 module.exports = mat2;
 
-},{"./common.js":23}],25:[function(require,module,exports){
+},{"./common.js":21}],23:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4155,7 +4160,7 @@ mat2d.equals = function (a, b) {
 
 module.exports = mat2d;
 
-},{"./common.js":23}],26:[function(require,module,exports){
+},{"./common.js":21}],24:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -4903,7 +4908,7 @@ mat3.equals = function (a, b) {
 
 module.exports = mat3;
 
-},{"./common.js":23}],27:[function(require,module,exports){
+},{"./common.js":21}],25:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -7041,7 +7046,7 @@ mat4.equals = function (a, b) {
 
 module.exports = mat4;
 
-},{"./common.js":23}],28:[function(require,module,exports){
+},{"./common.js":21}],26:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -7643,7 +7648,7 @@ quat.equals = vec4.equals;
 
 module.exports = quat;
 
-},{"./common.js":23,"./mat3.js":26,"./vec3.js":30,"./vec4.js":31}],29:[function(require,module,exports){
+},{"./common.js":21,"./mat3.js":24,"./vec3.js":28,"./vec4.js":29}],27:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -8232,7 +8237,7 @@ vec2.equals = function (a, b) {
 
 module.exports = vec2;
 
-},{"./common.js":23}],30:[function(require,module,exports){
+},{"./common.js":21}],28:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -9011,7 +9016,7 @@ vec3.equals = function (a, b) {
 
 module.exports = vec3;
 
-},{"./common.js":23}],31:[function(require,module,exports){
+},{"./common.js":21}],29:[function(require,module,exports){
 /* Copyright (c) 2015, Brandon Jones, Colin MacKenzie IV.
 
 Permission is hereby granted, free of charge, to any person obtaining a copy
@@ -9622,7 +9627,7 @@ vec4.equals = function (a, b) {
 
 module.exports = vec4;
 
-},{"./common.js":23}],32:[function(require,module,exports){
+},{"./common.js":21}],30:[function(require,module,exports){
 (function (global){
 /*
 ** Copyright (c) 2012 The Khronos Group Inc.
@@ -10580,7 +10585,7 @@ return {
 module.exports = WebGLDebugUtils;
 
 }).call(this,typeof global !== "undefined" ? global : typeof self !== "undefined" ? self : typeof window !== "undefined" ? window : {})
-},{}],33:[function(require,module,exports){
+},{}],31:[function(require,module,exports){
 'use strict';
 
 // internal class
@@ -11041,21 +11046,21 @@ module.exports = {
 	object_point: ObjectPoint,
 };
 
-},{"../util":55}],34:[function(require,module,exports){
+},{"../util":53}],32:[function(require,module,exports){
 'use strict';
 
 var _base_and_point_classes = require('./_base_and_point_classes');
 
 module.exports = _base_and_point_classes.object_base;
 
-},{"./_base_and_point_classes":33}],35:[function(require,module,exports){
+},{"./_base_and_point_classes":31}],33:[function(require,module,exports){
 'use strict';
 
 var _base_and_point_classes = require('./_base_and_point_classes');
 
 module.exports = _base_and_point_classes.object_point;
 
-},{"./_base_and_point_classes":33}],36:[function(require,module,exports){
+},{"./_base_and_point_classes":31}],34:[function(require,module,exports){
 'use strict';
 // TODO: rename manager -> container
 // TODO: add pooling logic
@@ -11153,7 +11158,7 @@ PoolManager.prototype.removeOutOfStageObjects = function() {
 
 module.exports = PoolManager;
 
-},{"../util":55,"./base":34}],37:[function(require,module,exports){
+},{"../util":53,"./base":32}],35:[function(require,module,exports){
 'use strict';
 
 // TODO: rename manager -> container
@@ -11395,7 +11400,7 @@ PoolManager3D.prototype.shader = function(){
 
 module.exports = PoolManager3D;
 
-},{"../constant/webgl":10,"../util":55,"./base":34,"gl-matrix":22}],38:[function(require,module,exports){
+},{"../constant/webgl":8,"../util":53,"./base":32,"gl-matrix":20}],36:[function(require,module,exports){
 'use strict';
 var base_object = require('./base');
 var util = require('../util');
@@ -11538,7 +11543,7 @@ Sprite.prototype.alpha = function() {
 
 module.exports = Sprite;
 
-},{"../util":55,"./base":34}],39:[function(require,module,exports){
+},{"../util":53,"./base":32}],37:[function(require,module,exports){
 'use strict';
 var base_object = require('./base');
 var util = require('../util');
@@ -11883,7 +11888,7 @@ Sprite3d.prototype.isReflect = function(){
 
 module.exports = Sprite3d;
 
-},{"../constant/webgl":10,"../util":55,"./base":34,"gl-matrix":22}],40:[function(require,module,exports){
+},{"../constant/webgl":8,"../util":53,"./base":32,"gl-matrix":20}],38:[function(require,module,exports){
 'use strict';
 
 var BaseObject = require('../base');
@@ -11991,7 +11996,7 @@ ObjectUIBase.prototype.hide = function() {
 
 module.exports = ObjectUIBase;
 
-},{"../../util":55,"../base":34}],41:[function(require,module,exports){
+},{"../../util":53,"../base":32}],39:[function(require,module,exports){
 'use strict';
 
 var BaseObjectUI = require('./base');
@@ -12044,7 +12049,7 @@ ObjectUIGroup.prototype.draw = function() {
 
 module.exports = ObjectUIGroup;
 
-},{"../../util":55,"./base":40}],42:[function(require,module,exports){
+},{"../../util":53,"./base":38}],40:[function(require,module,exports){
 'use strict';
 
 var BaseObjectUI = require('./base');
@@ -12110,7 +12115,7 @@ ObjectUIImage.prototype.draw = function() {
 
 module.exports = ObjectUIImage;
 
-},{"../../util":55,"./base":40}],43:[function(require,module,exports){
+},{"../../util":53,"./base":38}],41:[function(require,module,exports){
 'use strict';
 
 var LINES = 16;
@@ -12176,7 +12181,7 @@ ObjectUISpinner.prototype.height = function() { return this.size()/2; };
 
 module.exports = ObjectUISpinner;
 
-},{"../../util":55,"./base":40}],44:[function(require,module,exports){
+},{"../../util":53,"./base":38}],42:[function(require,module,exports){
 'use strict';
 
 var BaseObjectUI = require('./base');
@@ -12231,7 +12236,7 @@ ObjectUIText.prototype.draw = function() {
 
 module.exports = ObjectUIText;
 
-},{"../../util":55,"./base":40}],45:[function(require,module,exports){
+},{"../../util":53,"./base":38}],43:[function(require,module,exports){
 'use strict';
 // deprecated. use ui objects
 
@@ -12307,7 +12312,7 @@ ObjectUIParts.prototype.draw = function(){
 
 module.exports = ObjectUIParts;
 
-},{"../util":55,"./base":34}],46:[function(require,module,exports){
+},{"../util":53,"./base":32}],44:[function(require,module,exports){
 'use strict';
 var ObjectBase = require("../object/base");
 var Util = require('../util');
@@ -12571,7 +12576,7 @@ Util.inherit(UI, ObjectBase);
 module.exports = SceneBase;
 
 
-},{"../object/base":34,"../util":55}],47:[function(require,module,exports){
+},{"../object/base":32,"../util":53}],45:[function(require,module,exports){
 'use strict';
 
 // loading scene
@@ -12600,7 +12605,14 @@ SceneLoading.prototype.init = function(assets, next_scene_name) {
 	this.next_scene_name = next_scene_name;
 
 	for (var key in images) {
-		this.core.image_loader.loadImage(key, images[key]);
+		var image_conf = images[key];
+
+		if (typeof image_conf === "string") {
+			this.core.image_loader.loadImage(key, image_conf);
+		}
+		else {
+			this.core.image_loader.loadImage(key, image_conf.path, image_conf.scale_width, image_conf.scale_height);
+		}
 	}
 
 	for (var key2 in sounds) {
@@ -12646,7 +12658,7 @@ SceneLoading.prototype.notifyAllLoaded = function(){
 
 module.exports = SceneLoading;
 
-},{"../util":55,"./base":46}],48:[function(require,module,exports){
+},{"../util":53,"./base":44}],46:[function(require,module,exports){
 'use strict';
 
 // movie scene
@@ -12785,15 +12797,15 @@ SceneMovie.prototype.notifyEnd = function(){
 
 module.exports = SceneMovie;
 
-},{"../util":55,"./base":46}],49:[function(require,module,exports){
+},{"../util":53,"./base":44}],47:[function(require,module,exports){
 
 module.exports = "attribute vec3 aVertexPosition;\nattribute vec2 aTextureCoordinates;\nattribute vec4 aColor;\n\nuniform mat4 uMVMatrix;\nuniform mat4 uPMatrix;\nvarying vec2 vTextureCoordinates;\nvarying vec4 vColor;\n\nvoid main() {\n\tgl_Position = uPMatrix * uMVMatrix * vec4(aVertexPosition, 1.0);\n\tvTextureCoordinates = aTextureCoordinates;\n\tvColor = aColor;\n}\n\n";
 
-},{}],50:[function(require,module,exports){
+},{}],48:[function(require,module,exports){
 
 module.exports = "precision mediump float;\nuniform sampler2D uSampler;\nvarying vec2 vTextureCoordinates;\nvarying vec4 vColor;\n\nvoid main() {\n\tvec4 textureColor = texture2D(uSampler, vTextureCoordinates);\n\tgl_FragColor = textureColor * vColor;\n}\n\n";
 
-},{}],51:[function(require,module,exports){
+},{}],49:[function(require,module,exports){
 'use strict';
 var glmat = require("gl-matrix");
 
@@ -12864,7 +12876,7 @@ ShaderProgram.prototype.createShaderProgram = function(gl, vertex_shader, fragme
 
 module.exports = ShaderProgram;
 
-},{"gl-matrix":22}],52:[function(require,module,exports){
+},{"gl-matrix":20}],50:[function(require,module,exports){
 'use strict';
 /* eslint-disable new-cap */
 
@@ -13090,7 +13102,7 @@ StorageBase.prototype._removeWebStorage = function() {
 
 module.exports = StorageBase;
 
-},{"../util":55}],53:[function(require,module,exports){
+},{"../util":53}],51:[function(require,module,exports){
 'use strict';
 var base_class = require('./base');
 var util = require('../util');
@@ -13116,7 +13128,7 @@ StorageSave.KEY = function(){
 
 module.exports = StorageSave;
 
-},{"../util":55,"./base":52}],54:[function(require,module,exports){
+},{"../util":53,"./base":50}],52:[function(require,module,exports){
 'use strict';
 var base_class = require('./base');
 var util = require('../util');
@@ -13164,7 +13176,7 @@ StorageScenario.prototype.incrementPlayedCount = function(id){
 
 module.exports = StorageScenario;
 
-},{"../util":55,"./base":52}],55:[function(require,module,exports){
+},{"../util":53,"./base":50}],53:[function(require,module,exports){
 'use strict';
 var Util = {
 	inherit: function( child, parent ) {
@@ -13313,7 +13325,7 @@ var Util = {
 
 module.exports = Util;
 
-},{}],56:[function(require,module,exports){
+},{}],54:[function(require,module,exports){
 'use strict';
 
 /* 画像を暗く変換する */
@@ -13355,7 +13367,7 @@ CreateDarkerImage.exec = function (image, alpha) {
 
 module.exports = CreateDarkerImage;
 
-},{}],57:[function(require,module,exports){
+},{}],55:[function(require,module,exports){
 'use strict';
 var Util = require('../hakurei').util;
 
@@ -13425,7 +13437,7 @@ CreateSerif.revert = function (serif) {
 
 module.exports = CreateSerif;
 
-},{"../hakurei":5}],58:[function(require,module,exports){
+},{"../hakurei":3}],56:[function(require,module,exports){
 'use strict';
 var Game = require('./game');
 
@@ -13456,7 +13468,7 @@ if(window.require) {
 	window.require('electron').webFrame.setVisualZoomLevelLimits(1,1); // unable to zoom
 }
 
-},{"./game":4}],59:[function(require,module,exports){
+},{"./game":2}],57:[function(require,module,exports){
 'use strict';
 
 var Util = require('../hakurei').util;
@@ -13500,15 +13512,14 @@ SceneTalk.prototype.draw = function(){
 
 module.exports = SceneTalk;
 
-},{"../hakurei":5}],60:[function(require,module,exports){
+},{"../hakurei":3}],58:[function(require,module,exports){
 'use strict';
 
 // ローディングシーン
 
-var base_scene = require('../hakurei').scene.base;
+var base_scene = require('../hakurei').scene.loading;
 var Util = require('../hakurei').util;
 var AssetsConfig = require('../config/assets');
-var CONSTANT = require('../constant');
 
 var SceneLoading = function(core) {
 	base_scene.apply(this, arguments);
@@ -13516,48 +13527,10 @@ var SceneLoading = function(core) {
 Util.inherit(SceneLoading, base_scene);
 
 SceneLoading.prototype.init = function() {
-	base_scene.prototype.init.apply(this, arguments);
+	base_scene.prototype.init.apply(this, [AssetsConfig, "talk"]);
 
-	// ゲームで使用する画像一覧
-	for (var key in AssetsConfig.images) {
-		var image_conf = AssetsConfig.images[key];
-		if (typeof image_conf === "string") {
-			this.core.image_loader.loadImage(key, image_conf);
-		}
-		else {
-			this.core.image_loader.loadImage(key, image_conf.image, image_conf.scale_width, image_conf.scale_height);
-		}
-	}
-
-	// ゲームで使用するSE一覧
-	for (var key2 in AssetsConfig.sounds) {
-		var conf2 = AssetsConfig.sounds[key2];
-
-		// デバッグ用ミュート
-		var volume2 = CONSTANT.DEBUG.SOUND_OFF ? 0 : conf2.volume;
-
-		this.core.audio_loader.loadSound(key2, conf2.path, volume2);
-	}
-
-	// ゲームで使用するBGM一覧
-	for (var key3 in AssetsConfig.bgms) {
-		var conf3 = AssetsConfig.bgms[key3];
-		// デバッグ用ミュート
-		var volume3 = CONSTANT.DEBUG.SOUND_OFF ? 0 : conf3.volume;
-
-		this.core.audio_loader.loadBGM(key3, conf3.path, volume3, conf3.loopStart, conf3.loopEnd);
-	}
 };
 
-SceneLoading.prototype.beforeDraw = function() {
-	base_scene.prototype.beforeDraw.apply(this, arguments);
-
-	//if (this.core.image_loader.isAllLoaded() && this.core.audio_loader.isAllLoaded() && this.core.font_loader.isAllLoaded()) {
-	if (this.core.image_loader.isAllLoaded() && this.core.audio_loader.isAllLoaded()) {
-		// 本番
-		this.core.scene_manager.changeScene("talk");
-	}
-};
 SceneLoading.prototype.draw = function(){
 	base_scene.prototype.draw.apply(this, arguments);
 	var ctx = this.core.ctx;
@@ -13602,14 +13575,9 @@ SceneLoading.prototype.draw = function(){
 };
 
 
-SceneLoading.prototype.progress = function(){
-	var progress = (this.core.audio_loader.progress() + this.core.image_loader.progress() + this.core.font_loader.progress()) / 3;
-	return progress;
-};
-
 module.exports = SceneLoading;
 
-},{"../config/assets":1,"../constant":2,"../hakurei":5}],61:[function(require,module,exports){
+},{"../config/assets":1,"../hakurei":3}],59:[function(require,module,exports){
 'use strict';
 
 // 画面に対するウィンドウの余白
@@ -13903,4 +13871,4 @@ SceneTalk.prototype.isInTransition = function() {
 
 module.exports = SceneTalk;
 
-},{"../hakurei":5,"../logic/create_darker_image":56}]},{},[58]);
+},{"../hakurei":3,"../logic/create_darker_image":54}]},{},[56]);
