@@ -18,6 +18,12 @@ func Create(c *gin.Context) {
 	script := c.Request.Form["script"][0]
 	title := c.Request.Form["title"][0]
 	description := c.Request.Form["description"][0]
+	var isPrivate bool
+	if c.Request.Form["isPrivate"][0] == "1" {
+		isPrivate = true
+	} else {
+		isPrivate = false
+	}
 
 	// ログイン情報を取得
 	session := sessions.Default(c)
@@ -42,7 +48,7 @@ func Create(c *gin.Context) {
 		Script:      script,
 		Title:       title,
 		Description: description,
-		IsPrivate:   true,
+		IsPrivate:   isPrivate,
 	}
 
 	// 新規登録
@@ -62,6 +68,12 @@ func Update(c *gin.Context) {
 	script := c.Request.Form["script"][0]
 	title := c.Request.Form["title"][0]
 	description := c.Request.Form["description"][0]
+	var isPrivate bool
+	if c.Request.Form["isPrivate"][0] == "1" {
+		isPrivate = true
+	} else {
+		isPrivate = false
+	}
 
 	novel := model.Novel{}
 	recordNotFound := db.Where(&model.Novel{ID: util.String2Uint64(id)}).First(&novel).RecordNotFound()
@@ -91,6 +103,7 @@ func Update(c *gin.Context) {
 	novel.Script = script
 	novel.Description = description
 	novel.Title = title
+	novel.IsPrivate = isPrivate
 
 	// 新規登録
 	db.Save(&novel)
