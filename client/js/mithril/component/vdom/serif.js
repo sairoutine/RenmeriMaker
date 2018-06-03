@@ -36,7 +36,7 @@ Serif.prototype.toGameData = function () {
 
 Serif.prototype.toComponent = function (ctrl) {
 	var self = this;
-	return <div>
+	return <span>
 		<select onchange={m.withAttr("value", function (value) {
 			self.chara(value);
 
@@ -79,12 +79,7 @@ Serif.prototype.toComponent = function (ctrl) {
 			self.value(value);
 			ctrl.reload();
 		})}></textarea>
-		<input type="button" value="☓" onclick={function () {
-			ctrl.delete(self);
-			ctrl.reload();
-		}} />
-		<br />
-	</div>;
+	</span>;
 };
 
 module.exports = Serif;

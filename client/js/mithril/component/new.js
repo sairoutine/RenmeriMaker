@@ -163,6 +163,13 @@ module.exports = {
 					for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
 						var vdom = ctrl.vm.vdom[i];
 						vdomlist.push(vdom.toComponent(ctrl));
+
+						(function (vdom) {
+							vdomlist.push(<span><input type="button" value="☓" onclick={function () {
+								ctrl.delete(vdom);
+								ctrl.reload();
+							}} /><br /></span>);
+						})(vdom);
 					}
 					return vdomlist;
 				})()}

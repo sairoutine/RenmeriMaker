@@ -24,7 +24,7 @@ Background.prototype.toGameData = function () {
 
 Background.prototype.toComponent = function (ctrl) {
 	var self = this;
-	return <div>
+	return <span>
 		<select onchange={m.withAttr("value", function (value) {
 			self.value(value);
 			ctrl.reload();
@@ -39,11 +39,7 @@ Background.prototype.toComponent = function (ctrl) {
 			return list;
 		})()}
 		</select>
-		<input type="button" value="☓" onclick={function () {
-			ctrl.delete(self);
-			ctrl.reload();
-		}} />
-	</div>;
+	</span>;
 };
 
 module.exports = Background;
