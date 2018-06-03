@@ -1,6 +1,18 @@
 'use strict';
 var m = require('mithril');
 
+var bgm_map = require('../../../game/config/bgm');
+// game 側の assets config からメニュー一覧を生成
+
+var bgm_list = [];
+for (var key in bgm_map) {
+	var value = bgm_map[key];
+
+	bgm_list.push({name: value.name, value: key});
+}
+
+
+
 var Bgm = function (args) {
 	this.define = m.prop(args.define);
 	this.value = m.prop(args.option.bgm);
@@ -13,17 +25,6 @@ Bgm.prototype.toGameData = function () {
 		}
 	};
 };
-
-
-var bgm_list = [
-	{name: "A", value: "nc13447"},
-	{name: "B", value: "nc20349"},
-	{name: "C", value: "nc22928"},
-	{name: "D", value: "nc32144"},
-	{name: "E", value: "nc38444"},
-	{name: "F", value: "nc41740"},
-	{name: "G", value: "nc76949"},
-];
 
 Bgm.prototype.toComponent = function (ctrl) {
 	var self = this;

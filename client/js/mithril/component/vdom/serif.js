@@ -1,6 +1,21 @@
 'use strict';
 var m = require('mithril');
 
+var chara_list = [
+	{name: "蓮子", value: "renko"},
+	{name: "メリー", value: "merry"},
+];
+
+var exp_list = [
+	{name: "普通", value: "normal"},
+	{name: "笑", value: "smile"},
+	{name: "泣", value: "cry"},
+	{name: "怒", value: "angry"},
+	{name: "驚", value: "surprised"},
+];
+
+
+
 var Serif = function (args) {
 	this.define = m.prop(args.define);
 	this.pos = m.prop(args.pos);
@@ -18,21 +33,6 @@ Serif.prototype.toGameData = function () {
 		serif: this.value(),
 	};
 };
-
-var chara_list = [
-	{name: "蓮子", value: "renko"},
-	{name: "メリー", value: "merry"},
-];
-
-
-
-var exp_list = [
-	{name: "普通", value: "normal"},
-	{name: "笑", value: "smile"},
-	{name: "泣", value: "cry"},
-	{name: "怒", value: "angry"},
-	{name: "驚", value: "surprised"},
-];
 
 Serif.prototype.toComponent = function (ctrl) {
 	var self = this;

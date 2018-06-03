@@ -1,5 +1,15 @@
 'use strict';
 var m = require('mithril');
+var bg_map = require('../../../game/config/bg');
+// game 側の assets config からメニュー一覧を生成
+
+var bg_list = [];
+for (var key in bg_map) {
+	var value = bg_map[key];
+
+	bg_list.push({name: value.name, value: key});
+}
+
 
 var Background = function (args) {
 	this.define = m.prop(args.define);
@@ -11,17 +21,6 @@ Background.prototype.toGameData = function () {
 		background: this.value(),
 	};
 };
-
-var bg_list = [
-	{name: "A", value: "nc138477"},
-	{name: "B", value: "nc14162"},
-	{name: "C", value: "nc4527"},
-	{name: "D", value: "nc72006"},
-	{name: "E", value: "nc7951"},
-	{name: "F", value: "nc95621"},
-];
-
-
 
 Background.prototype.toComponent = function (ctrl) {
 	var self = this;
