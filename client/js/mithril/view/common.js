@@ -16,6 +16,29 @@ var VdomList = require('../config/vdomlist');
 				{{ end }}
 */
 
+
+/*
+	<hr />
+	タイトル:{{.Novel.Title}}<br />
+	説明:{{.Novel.Description}}<br />
+	投稿者:<a href="/user/show/{{.Novel.User.ID}}">{{.Novel.User.DispName}}</a><br />
+	<hr />
+	{{ range $emoji := .Novel.Emojis }}
+		<img src="/image/emoji/{{$emoji.FileName}}" width="24" height="24">{{$emoji.Count}}
+	{{ end }}
+	<hr />
+	{{if .IsOwner }}
+		<a href="/novel/edit/{{.Novel.ID}}">ノベル編集</a><br />
+	{{else}}
+		{{ range $key, $value := .EmojiMap }}
+			<form action="/novel/emoji/{{$.Novel.ID}}/add/{{$key}}" method="post" style="display:inline;">
+			<input type="hidden" name="_csrf" value="{{$._csrf}}" />
+			<input type="image" src="/image/emoji/{{$value}}" value="" name="submit" width="24" height="24" />
+			</form>
+		{{ end }}
+	{{end}}
+
+*/
 module.exports = function(ctrl, args) {
 	var reload = ctrl.reload.bind(ctrl);
 	var save = ctrl.save.bind(ctrl);
