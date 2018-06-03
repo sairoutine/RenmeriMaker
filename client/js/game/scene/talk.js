@@ -47,10 +47,7 @@ SceneTalk.prototype.init = function(){
 	// シーン遷移前の BGM 止める
 	this.core.audio_loader.stopBGM();
 
-	// BGM 再生
-	if (this.serif.getCurrentOption().bgm) {
-		this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
-	}
+	this._afterSerifChanged();
 };
 
 SceneTalk.prototype.beforeDraw = function(){
@@ -61,7 +58,7 @@ SceneTalk.prototype.beforeDraw = function(){
 
 		// トランジションが終わればセリフ送り再開
 		if (this.transition_count === 0) {
-			this.serif.startPrintMessage();
+			this.serif.resumePrintLetter();
 		}
 	}
 
@@ -77,19 +74,22 @@ SceneTalk.prototype.beforeDraw = function(){
 				// セリフを送る
 				this.serif.next();
 
+				// 背景変更があった
 				if (this.serif.isBackgroundChanged()) {
 					// トランジション開始
 					this.transition_count = TRANSITION_COUNT;
 
 					// トランジション中はセリフ送り中断
-					this.serif.cancelPrintMessage();
+					this.serif.pausePrintLetter();
 				}
+
+				this._afterSerifChanged();
 			}
 			else {
 				// トランジション終了
 				this.transition_count = 0;
 				// トランジションが終わればセリフ送り再開
-				this.serif.startPrintMessage();
+				this.serif.resumePrintLetter();
 			}
 		}
 	}
@@ -274,6 +274,18 @@ SceneTalk.prototype._showMessage = function() {
 	}
 
 	ctx.restore();
+};
+
+
+SceneTalk.prototype._afterSerifChanged = function() {
+	while (this.serif.getCurrentMaxLengthLetters() === 0) {
+		// BGM 再生
+		if (this.serif.getCurrentOption().bgm) {
+			this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
+		}
+
+		this.serif.next();
+	}
 };
 
 // 立ち絵＆セリフ終了後
