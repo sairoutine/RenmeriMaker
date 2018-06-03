@@ -1,6 +1,6 @@
 'use strict';
 var m = require('mithril');
-var bg_map = require('../../../game/config/bg');
+var bg_map = require('../../game/config/bg');
 // game 側の assets config からメニュー一覧を生成
 
 var bg_list = [];
