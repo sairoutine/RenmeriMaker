@@ -13228,10 +13228,7 @@ SceneTalk.prototype.init = function () {
 	// シーン遷移前の BGM 止める
 	this.core.audio_loader.stopBGM();
 
-	// BGM 再生
-	if (this.serif.getCurrentOption().bgm) {
-		this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
-	}
+	this._afterSerifChanged();
 };
 
 SceneTalk.prototype.beforeDraw = function () {
@@ -13242,7 +13239,7 @@ SceneTalk.prototype.beforeDraw = function () {
 
 		// トランジションが終わればセリフ送り再開
 		if (this.transition_count === 0) {
-			this.serif.startPrintMessage();
+			this.serif.resumePrintLetter();
 		}
 	}
 
@@ -13256,18 +13253,21 @@ SceneTalk.prototype.beforeDraw = function () {
 				// セリフを送る
 				this.serif.next();
 
+				// 背景変更があった
 				if (this.serif.isBackgroundChanged()) {
 					// トランジション開始
 					this.transition_count = TRANSITION_COUNT;
 
 					// トランジション中はセリフ送り中断
-					this.serif.cancelPrintMessage();
+					this.serif.pausePrintLetter();
 				}
+
+				this._afterSerifChanged();
 			} else {
 				// トランジション終了
 				this.transition_count = 0;
 				// トランジションが終わればセリフ送り再開
-				this.serif.startPrintMessage();
+				this.serif.resumePrintLetter();
 			}
 		}
 	}
@@ -13427,6 +13427,17 @@ SceneTalk.prototype._showMessage = function () {
 	ctx.restore();
 };
 
+SceneTalk.prototype._afterSerifChanged = function () {
+	while (this.serif.getCurrentMaxLengthLetters() === 0) {
+		// BGM 再生
+		if (this.serif.getCurrentOption().bgm) {
+			this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
+		}
+
+		this.serif.next();
+	}
+};
+
 // 立ち絵＆セリフ終了後
 SceneTalk.prototype.notifySerifEnd = function () {
 	// フェードアウトする
@@ -13494,26 +13505,28 @@ var SerifVDom = require('./vdom/serif');
 
 var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"あら奇遇ね\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"こちらこそ\\n蓮子は授業の帰りかしら"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"まぁそんなところよ\\n"},{"define":"serif","pos":"right","exp":"smile","chara":"renko","serif":"このあとお茶でもいかがかしら？\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"あら、ぜひ\\n"}]';
 
+var VdomList = [{ name: "背景変更", value: "background", Klass: BackgroundVDom }, { name: "BGM変更", value: "bgm", Klass: BgmVDom }, { name: "セリフ", value: "serif", Klass: SerifVDom }];
+
 var ViewModel = function ViewModel(args) {
 	this.title = m.prop("");
 	this.description = m.prop("");
+	this.currentAddVdomSelectedIndex = m.prop(0);
 	this.vdom = [];
 	this._string2vdom(DEFAULT_SCRIPT);
 };
 ViewModel.prototype._string2vdom = function (string) {
 	var script_list = JSON.parse(string);
 
-	for (var i = 0, len = script_list.length; i < len; i++) {
+	for (var i = 0, leni = script_list.length; i < leni; i++) {
 		var script = script_list[i];
 
-		if (script.define === "background") {
-			this.vdom.push(new BackgroundVDom(script));
-		} else if (script.define === "bgm") {
-			this.vdom.push(new BgmVDom(script));
-		} else if (script.define === "serif") {
-			this.vdom.push(new SerifVDom(script));
-		} else {
-			throw new Error("Illegal script define: " + script.define);
+		for (var j = 0, lenj = VdomList.length; j < lenj; j++) {
+			var vdomconfig = VdomList[j];
+
+			if (vdomconfig.value === script.define) {
+				this.vdom.push(new vdomconfig.Klass(script));
+				break;
+			}
 		}
 	}
 };
@@ -13603,6 +13616,46 @@ Controller.prototype.save = function () {
 		location.href = "/novel/show/" + result.id;
 	});
 };
+Controller.prototype.delete = function (vdom) {
+	for (var i = 0, len = this.vm.vdom.length; i < len; i++) {
+		if (this.vm.vdom[i] === vdom) {
+			this.vm.vdom.splice(i, 1);
+			return true;
+		}
+	}
+
+	return false;
+};
+Controller.prototype.up = function (vdom) {
+	for (var i = 0, len = this.vm.vdom.length; i < len; i++) {
+		if (this.vm.vdom[i] === vdom) {
+			// 一番上なのでそれ以上 上には移動できない
+			if (i === 0) break;
+
+			this.vm.vdom.splice(i - 1, 2, this.vm.vdom[i], this.vm.vdom[i - 1]);
+			return true;
+		}
+	}
+
+	return false;
+};
+Controller.prototype.down = function (vdom) {
+	for (var i = 0, len = this.vm.vdom.length; i < len; i++) {
+		if (this.vm.vdom[i] === vdom) {
+			// 一番下なのでそれ以上 下には移動できない
+			if (i === this.vm.vdom.length - 1) break;
+
+			this.vm.vdom.splice(i, 2, this.vm.vdom[i + 1], this.vm.vdom[i]);
+			return true;
+		}
+	}
+
+	return false;
+};
+Controller.prototype.addVdom = function () {
+	var vdomconfig = VdomList[this.vm.currentAddVdomSelectedIndex()];
+	this.vm.vdom.push(new vdomconfig.Klass({ type: vdomconfig.value }));
+};
 
 module.exports = {
 	controller: Controller,
@@ -13647,9 +13700,62 @@ module.exports = {
 					for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
 						var vdom = ctrl.vm.vdom[i];
 						vdomlist.push(vdom.toComponent(ctrl));
+
+						(function (vdom) {
+							vdomlist.push({
+								tag: 'span',
+								children: [{
+									tag: 'input',
+									attrs: { type: 'button', value: '\u2613', onclick: function onclick() {
+											if (ctrl.delete(vdom)) {
+												ctrl.reload();
+											}
+										} }
+								}, {
+									tag: 'input',
+									attrs: { type: 'button', value: '\u2191', onclick: function onclick() {
+											if (ctrl.up(vdom)) {
+												ctrl.reload();
+											}
+										} }
+								}, {
+									tag: 'input',
+									attrs: { type: 'button', value: '\u2193', onclick: function onclick() {
+											if (ctrl.down(vdom)) {
+												ctrl.reload();
+											}
+										} }
+								}, {
+									tag: 'br'
+								}]
+							});
+						})(vdom);
 					}
 					return vdomlist;
 				}(), {
+					tag: 'select',
+					children: [function () {
+						var list = [];
+						for (var i = 0, len = VdomList.length; i < len; i++) {
+							var vdomconfig = VdomList[i];
+							list.push({
+								tag: 'option',
+								children: [vdomconfig.name],
+								attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
+							});
+						}
+						return list;
+					}()],
+					attrs: { onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
+				}, {
+					tag: 'input',
+					attrs: { type: 'button', value: '\u8FFD\u52A0', onclick: function onclick() {
+							ctrl.addVdom();
+							ctrl.reload();
+						} }
+				}, {
+					tag: 'hr'
+				}, {
 					tag: 'input',
 					attrs: { type: 'button', value: '\u30EA\u30ED\u30FC\u30C9', onclick: reload }
 				}, {
@@ -13676,24 +13782,32 @@ module.exports = {
 'use strict';
 
 var m = require('mithril');
+var bg_map = require('../../../game/config/bg');
+// game 側の assets config からメニュー一覧を生成
+
+var bg_list = [];
+for (var key in bg_map) {
+	var value = bg_map[key];
+
+	bg_list.push({ name: value.name, value: key });
+}
 
 var Background = function Background(args) {
 	this.define = m.prop(args.define);
-	this.value = m.prop(args.background);
+	this.value = m.prop(args.background || bg_list[0].value);
 };
 Background.prototype.toGameData = function () {
 	return {
 		define: this.define(),
+		serif: "",
 		background: this.value()
 	};
 };
 
-var bg_list = [{ name: "A", value: "nc138477" }, { name: "B", value: "nc14162" }, { name: "C", value: "nc4527" }, { name: "D", value: "nc72006" }, { name: "E", value: "nc7951" }, { name: "F", value: "nc95621" }];
-
 Background.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return {
-		tag: 'div',
+		tag: 'span',
 		children: [{
 			tag: 'select',
 			children: [function () {
@@ -13719,30 +13833,40 @@ Background.prototype.toComponent = function (ctrl) {
 
 module.exports = Background;
 
-},{"mithril":68}],66:[function(require,module,exports){
+},{"../../../game/config/bg":2,"mithril":68}],66:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
 
+var bgm_map = require('../../../game/config/bgm');
+// game 側の assets config からメニュー一覧を生成
+
+var bgm_list = [];
+for (var key in bgm_map) {
+	var value = bgm_map[key];
+
+	bgm_list.push({ name: value.name, value: key });
+}
+
 var Bgm = function Bgm(args) {
+	var bgm = args.option && args.option.bgm ? args.option.bgm : bgm_list[0].value;
 	this.define = m.prop(args.define);
-	this.value = m.prop(args.option.bgm);
+	this.value = m.prop(bgm);
 };
 Bgm.prototype.toGameData = function () {
 	return {
 		define: this.define(),
+		serif: "",
 		option: {
 			bgm: this.value()
 		}
 	};
 };
 
-var bgm_list = [{ name: "A", value: "nc13447" }, { name: "B", value: "nc20349" }, { name: "C", value: "nc22928" }, { name: "D", value: "nc32144" }, { name: "E", value: "nc38444" }, { name: "F", value: "nc41740" }, { name: "G", value: "nc76949" }];
-
 Bgm.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return {
-		tag: 'div',
+		tag: 'span',
 		children: [{
 			tag: 'select',
 			children: [function () {
@@ -13768,18 +13892,31 @@ Bgm.prototype.toComponent = function (ctrl) {
 
 module.exports = Bgm;
 
-},{"mithril":68}],67:[function(require,module,exports){
+},{"../../../game/config/bgm":3,"mithril":68}],67:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
 
+var chara_list = [{ name: "蓮子", value: "renko" }, { name: "メリー", value: "merry" }];
+
+var exp_list = [{ name: "普通", value: "normal" }, { name: "笑", value: "smile" }, { name: "泣", value: "cry" }, { name: "怒", value: "angry" }, { name: "驚", value: "surprised" }];
+
 var Serif = function Serif(args) {
 	this.define = m.prop(args.define);
 	this.pos = m.prop(args.pos);
-	this.exp = m.prop(args.exp);
-	this.chara = m.prop(args.chara);
+	this.exp = m.prop(args.exp || exp_list[0].value);
+	this.chara = m.prop(args.chara || chara_list[0].value);
 
-	this.value = m.prop(args.serif);
+	if (typeof this.pos() === "undefined") {
+		// TODO:
+		if (this.chara() === "renko") {
+			this.pos("right");
+		} else {
+			this.pos("left");
+		}
+	}
+
+	this.value = m.prop(args.serif || "");
 };
 Serif.prototype.toGameData = function () {
 	return {
@@ -13791,14 +13928,10 @@ Serif.prototype.toGameData = function () {
 	};
 };
 
-var chara_list = [{ name: "蓮子", value: "renko" }, { name: "メリー", value: "merry" }];
-
-var exp_list = [{ name: "普通", value: "normal" }, { name: "笑", value: "smile" }, { name: "泣", value: "cry" }, { name: "怒", value: "angry" }, { name: "驚", value: "surprised" }];
-
 Serif.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return {
-		tag: 'div',
+		tag: 'span',
 		children: [{
 			tag: 'select',
 			children: [function () {
@@ -13850,8 +13983,6 @@ Serif.prototype.toComponent = function (ctrl) {
 					self.value(value);
 					ctrl.reload();
 				}) }
-		}, {
-			tag: 'br'
 		}]
 	};
 };
