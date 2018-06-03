@@ -39,6 +39,10 @@ Background.prototype.toComponent = function (ctrl) {
 			return list;
 		})()}
 		</select>
+		<input type="button" value="☓" onclick={function () {
+			ctrl.delete(self);
+			ctrl.reload();
+		}} />
 	</div>;
 };
 

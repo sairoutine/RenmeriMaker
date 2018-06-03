@@ -125,9 +125,16 @@ Controller.prototype.save = function () {
 		location.href = "/novel/show/" + result.id;
 	})
 };
+Controller.prototype.delete = function (vdom) {
+	for (var i = 0, len = this.vm.vdom.length; i < len; i++) {
+		if(this.vm.vdom[i] === vdom) {
+			this.vm.vdom.splice(i, 1);
+			return true;
+		}
+	}
 
-
-
+	return false;
+};
 
 
 

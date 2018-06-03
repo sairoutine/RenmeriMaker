@@ -79,6 +79,10 @@ Serif.prototype.toComponent = function (ctrl) {
 			self.value(value);
 			ctrl.reload();
 		})}></textarea>
+		<input type="button" value="☓" onclick={function () {
+			ctrl.delete(self);
+			ctrl.reload();
+		}} />
 		<br />
 	</div>;
 };
