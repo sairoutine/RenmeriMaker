@@ -7,15 +7,7 @@ var Controller = function(canvas, option) {
 };
 util.inherit(Controller, BaseClass);
 
-// セーブデータを保存する
-Controller.prototype.save = function () {
-	this.vm.create()
-	.then(function(result) {
-		window.alert("保存しました");
-		location.href = "/novel/show/" + result.id;
-	})
-};
-Controller.prototype.isNewMode = function () {
+Controller.prototype.isShowMode = function () {
 	return true;
 };
 

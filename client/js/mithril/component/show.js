@@ -1,9 +1,8 @@
 'use strict';
-//var m = require('../mithril');
+var Controller = require('../controller/show');
+var View = require('../view/common');
 
 module.exports = {
-	controller: function() {},
-	view: function(ctrl, args) {
-	}
+	controller: Controller,
+	view: View,
 };
-

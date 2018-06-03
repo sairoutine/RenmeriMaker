@@ -6,11 +6,15 @@ var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"
 
 
 var ViewModel = function (args) {
+	this.id = m.prop(null);
 	this.title = m.prop("");
 	this.description = m.prop("");
 	this.currentAddVdomSelectedIndex = m.prop(0);
 	this.vdom = [];
 	this._string2vdom(DEFAULT_SCRIPT);
+
+	// csrf token
+	this._csrf_token = window.config.csrf;
 };
 ViewModel.prototype._string2vdom = function (string) {
 	var script_list = JSON.parse(string);
@@ -56,4 +60,48 @@ ViewModel.prototype.addVdomByCurrentSelectedIndex = function () {
 	var vdomconfig = VdomList[this.currentAddVdomSelectedIndex()];
 	this.vdom.push(new vdomconfig.Klass({type: vdomconfig.value}));
 };
+
+ViewModel.prototype.create = function () {
+	var data = this.toPostData()
+
+	var api_url = "/api/v1/novel/create";
+
+	var _csrf_token = this._csrf_token;
+
+	return m.request({
+		method: "POST",
+		url: api_url,
+		data: data,
+		serialize: function(data) {return data},
+		config: function (xhr) {
+			if (_csrf_token) {
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.setRequestHeader("X-CSRF-TOKEN", _csrf_token);
+			}
+		}
+	});
+};
+
+ViewModel.prototype.update = function () {
+	var data = this.toPostData()
+
+	var api_url = "/api/v1/novel/update/" + this.id();
+
+	var _csrf_token = this._csrf_token;
+
+	return m.request({
+		method: "POST",
+		url: api_url,
+		data: data,
+		serialize: function(data) {return data},
+		config: function (xhr) {
+			if (_csrf_token) {
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.setRequestHeader("X-CSRF-TOKEN", _csrf_token);
+			}
+		}
+	});
+};
+
+
 module.exports = ViewModel;
