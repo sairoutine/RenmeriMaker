@@ -135,6 +135,33 @@ Controller.prototype.delete = function (vdom) {
 
 	return false;
 };
+Controller.prototype.up = function (vdom) {
+	for (var i = 0, len = this.vm.vdom.length; i < len; i++) {
+		if(this.vm.vdom[i] === vdom) {
+			// 一番上なのでそれ以上 上には移動できない
+			if (i === 0) break;
+
+			this.vm.vdom.splice(i - 1, 2, this.vm.vdom[i], this.vm.vdom[i - 1]);
+			return true;
+		}
+	}
+
+	return false;
+};
+Controller.prototype.down = function (vdom) {
+	for (var i = 0, len = this.vm.vdom.length; i < len; i++) {
+		if(this.vm.vdom[i] === vdom) {
+			// 一番下なのでそれ以上 下には移動できない
+			if (i === this.vm.vdom.length - 1) break;
+
+			this.vm.vdom.splice(i, 2, this.vm.vdom[i + 1], this.vm.vdom[i]);
+			return true;
+		}
+	}
+
+	return false;
+};
+
 
 
 
@@ -165,10 +192,23 @@ module.exports = {
 						vdomlist.push(vdom.toComponent(ctrl));
 
 						(function (vdom) {
-							vdomlist.push(<span><input type="button" value="☓" onclick={function () {
-								ctrl.delete(vdom);
-								ctrl.reload();
-							}} /><br /></span>);
+							vdomlist.push(<span>
+								<input type="button" value="☓" onclick={function () {
+									if(ctrl.delete(vdom)) {
+										ctrl.reload();
+									}
+								}} />
+								<input type="button" value="↑" onclick={function () {
+									if(ctrl.up(vdom)) {
+										ctrl.reload();
+									}
+								}} />
+								<input type="button" value="↓" onclick={function () {
+									if(ctrl.down(vdom)) {
+										ctrl.reload();
+									}
+								}} />
+								<br /></span>);
 						})(vdom);
 					}
 					return vdomlist;
