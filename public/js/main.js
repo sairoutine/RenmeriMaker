@@ -13471,93 +13471,56 @@ m.route(document.getElementById("root"), "/novel/new", {
 	"/novel/edit/:id": Edit
 });
 
-},{"./mithril/component/edit.js":62,"./mithril/component/new.js":63,"./mithril/component/show.js":64,"mithril":68}],62:[function(require,module,exports){
+},{"./mithril/component/edit.js":62,"./mithril/component/new.js":63,"./mithril/component/show.js":64,"mithril":75}],62:[function(require,module,exports){
 'use strict';
-//var m = require('../mithril');
+
+var Controller = require('../controller/edit');
+var View = require('../view/common');
 
 module.exports = {
-	controller: function controller() {},
-	view: function view(ctrl, args) {
-		/*
-  				{{ if eq .Mode "edit" }}
-  					<form action="/novel/toggle/{{.Id}}" method="post">
-  					<input type="hidden" name="_csrf" value="{{._csrf}}" />
-  					{{ if .IsPrivate }}
-  						<input type="submit" value="公開する" />
-  					{{ else }}
-  						<input type="submit" value="非公開にする" />
-  					{{ end }}
-  					</form>
-  				{{ end }}
-  */
-	}
+	controller: Controller,
+	view: View
 };
 
-},{}],63:[function(require,module,exports){
+},{"../controller/edit":67,"../view/common":73}],63:[function(require,module,exports){
 'use strict';
 
-var m = require('mithril');
+var Controller = require('../controller/new');
+var View = require('../view/common');
+
+module.exports = {
+	controller: Controller,
+	view: View
+};
+
+},{"../controller/new":68,"../view/common":73}],64:[function(require,module,exports){
+'use strict';
+
+var Controller = require('../controller/show');
+var View = require('../view/common');
+
+module.exports = {
+	controller: Controller,
+	view: View
+};
+
+},{"../controller/show":69,"../view/common":73}],65:[function(require,module,exports){
+'use strict';
+
+var BackgroundVDom = require('../vdom/background');
+var BgmVDom = require('../vdom/bgm');
+var SerifVDom = require('../vdom/serif');
+
+module.exports = [{ name: "背景変更", value: "background", Klass: BackgroundVDom }, { name: "BGM変更", value: "bgm", Klass: BgmVDom }, { name: "セリフ", value: "serif", Klass: SerifVDom }];
+
+},{"../vdom/background":70,"../vdom/bgm":71,"../vdom/serif":72}],66:[function(require,module,exports){
+'use strict';
+
 var Game = require('../../game/game');
-
-var BackgroundVDom = require('./vdom/background');
-var BgmVDom = require('./vdom/bgm');
-var SerifVDom = require('./vdom/serif');
-
-var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"あら奇遇ね\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"こちらこそ\\n蓮子は授業の帰りかしら"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"まぁそんなところよ\\n"},{"define":"serif","pos":"right","exp":"smile","chara":"renko","serif":"このあとお茶でもいかがかしら？\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"あら、ぜひ\\n"}]';
-
-var VdomList = [{ name: "背景変更", value: "background", Klass: BackgroundVDom }, { name: "BGM変更", value: "bgm", Klass: BgmVDom }, { name: "セリフ", value: "serif", Klass: SerifVDom }];
-
-var ViewModel = function ViewModel(args) {
-	this.title = m.prop("");
-	this.description = m.prop("");
-	this.currentAddVdomSelectedIndex = m.prop(0);
-	this.vdom = [];
-	this._string2vdom(DEFAULT_SCRIPT);
-};
-ViewModel.prototype._string2vdom = function (string) {
-	var script_list = JSON.parse(string);
-
-	for (var i = 0, leni = script_list.length; i < leni; i++) {
-		var script = script_list[i];
-
-		for (var j = 0, lenj = VdomList.length; j < lenj; j++) {
-			var vdomconfig = VdomList[j];
-
-			if (vdomconfig.value === script.define) {
-				this.vdom.push(new vdomconfig.Klass(script));
-				break;
-			}
-		}
-	}
-};
-ViewModel.prototype._vdom2string = function () {
-	return JSON.stringify(this.toGameData());
-};
-
-ViewModel.prototype.toGameData = function () {
-	var game_data = [];
-	for (var i = 0, len = this.vdom.length; i < len; i++) {
-		var vdom = this.vdom[i];
-		game_data.push(vdom.toGameData());
-	}
-
-	return game_data;
-};
-ViewModel.prototype.toPostData = function () {
-	var serif = this._vdom2string();
-
-	return m.route.buildQueryString({
-		script: serif,
-		title: this.title(),
-		description: this.description()
-	});
-};
+var ViewModel = require('../vm/common');
 
 var Controller = function Controller(args) {
 	this.game = null;
-
-	// csrf token
-	this._csrf_token = window.config.csrf;
 
 	this.vm = new ViewModel();
 };
@@ -13568,6 +13531,10 @@ Controller.prototype.reload = function () {
 	// リロード
 	this.game.reload();
 };
+Controller.prototype.togglePrivate = function () {
+	this.vm.togglePrivate();
+};
+
 Controller.prototype.runGame = function (element, isInitialized, context) {
 	if (!isInitialized) {
 		var game = new Game(element);
@@ -13588,33 +13555,8 @@ Controller.prototype.runGame = function (element, isInitialized, context) {
 	} else {
 		// NOTE: redraw
 		// nothing to do
+		// TODO: try to reload game
 	}
-};
-
-// セーブデータを保存する
-Controller.prototype.save = function () {
-	var data = this.vm.toPostData();
-
-	var api_url = "/api/v1/novel/create";
-
-	var _csrf_token = this._csrf_token;
-	m.request({
-		method: "POST",
-		url: api_url,
-		data: data,
-		serialize: function serialize(data) {
-			return data;
-		},
-		config: function config(xhr) {
-			if (_csrf_token) {
-				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
-				xhr.setRequestHeader("X-CSRF-TOKEN", _csrf_token);
-			}
-		}
-	}).then(function (result) {
-		window.alert("保存しました");
-		location.href = "/novel/show/" + result.id;
-	});
 };
 Controller.prototype.delete = function (vdom) {
 	for (var i = 0, len = this.vm.vdom.length; i < len; i++) {
@@ -13653,136 +13595,91 @@ Controller.prototype.down = function (vdom) {
 	return false;
 };
 Controller.prototype.addVdom = function () {
-	var vdomconfig = VdomList[this.vm.currentAddVdomSelectedIndex()];
-	this.vm.vdom.push(new vdomconfig.Klass({ type: vdomconfig.value }));
+	this.vm.addVdomByCurrentSelectedIndex();
 };
 
-module.exports = {
-	controller: Controller,
-	view: function view(ctrl, args) {
-		var reload = ctrl.reload.bind(ctrl);
-		var save = ctrl.save.bind(ctrl);
-		var runGame = ctrl.runGame.bind(ctrl);
-
-		return {
-			tag: 'div',
-			children: [{
-				tag: 'div',
-				attrs: { id: 'debug' }
-			}, {
-				tag: 'div',
-				children: [{
-					tag: 'canvas',
-					attrs: { id: 'mainCanvas', width: '640', height: '480', config: runGame }
-				}],
-				attrs: { id: 'canvasdiv' }
-			}, {
-				tag: 'hr'
-			}, {
-				tag: 'div',
-				children: [{
-					tag: 'b',
-					children: ['\u7DE8\u96C6']
-				}, {
-					tag: 'br'
-				}, '\u30BF\u30A4\u30C8\u30EB\uFF1A', {
-					tag: 'input',
-					attrs: { type: 'text', value: ctrl.vm.title(), onchange: m.withAttr("value", ctrl.vm.title) }
-				}, {
-					tag: 'br'
-				}, '\u7D39\u4ECB\u6587\uFF1A', {
-					tag: 'textarea',
-					attrs: { value: ctrl.vm.description(), onchange: m.withAttr("value", ctrl.vm.description) }
-				}, {
-					tag: 'br'
-				}, function () {
-					var vdomlist = [];
-					for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
-						var vdom = ctrl.vm.vdom[i];
-						vdomlist.push(vdom.toComponent(ctrl));
-
-						(function (vdom) {
-							vdomlist.push({
-								tag: 'span',
-								children: [{
-									tag: 'input',
-									attrs: { type: 'button', value: '\u2613', onclick: function onclick() {
-											if (ctrl.delete(vdom)) {
-												ctrl.reload();
-											}
-										} }
-								}, {
-									tag: 'input',
-									attrs: { type: 'button', value: '\u2191', onclick: function onclick() {
-											if (ctrl.up(vdom)) {
-												ctrl.reload();
-											}
-										} }
-								}, {
-									tag: 'input',
-									attrs: { type: 'button', value: '\u2193', onclick: function onclick() {
-											if (ctrl.down(vdom)) {
-												ctrl.reload();
-											}
-										} }
-								}, {
-									tag: 'br'
-								}]
-							});
-						})(vdom);
-					}
-					return vdomlist;
-				}(), {
-					tag: 'select',
-					children: [function () {
-						var list = [];
-						for (var i = 0, len = VdomList.length; i < len; i++) {
-							var vdomconfig = VdomList[i];
-							list.push({
-								tag: 'option',
-								children: [vdomconfig.name],
-								attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
-							});
-						}
-						return list;
-					}()],
-					attrs: { onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
-				}, {
-					tag: 'input',
-					attrs: { type: 'button', value: '\u8FFD\u52A0', onclick: function onclick() {
-							ctrl.addVdom();
-							ctrl.reload();
-						} }
-				}, {
-					tag: 'hr'
-				}, {
-					tag: 'input',
-					attrs: { type: 'button', value: '\u30EA\u30ED\u30FC\u30C9', onclick: reload }
-				}, {
-					tag: 'input',
-					attrs: { type: 'button', value: '\u30BB\u30FC\u30D6', onclick: save }
-				}, {
-					tag: 'br'
-				}]
-			}]
-		};
-	}
+Controller.prototype.isShowMode = function () {
+	return false;
 };
+Controller.prototype.isEditMode = function () {
+	return false;
+};
+Controller.prototype.isNewMode = function () {
+	return false;
+};
+Controller.prototype.save = function () {};
 
-},{"../../game/game":5,"./vdom/background":65,"./vdom/bgm":66,"./vdom/serif":67,"mithril":68}],64:[function(require,module,exports){
+module.exports = Controller;
+
+},{"../../game/game":5,"../vm/common":74}],67:[function(require,module,exports){
 'use strict';
-//var m = require('../mithril');
 
-module.exports = {
-	controller: function controller() {},
-	view: function view(ctrl, args) {}
+var util = require('../../game/hakurei').util;
+var BaseClass = require('../controller/base');
+
+var Controller = function Controller(canvas, option) {
+	BaseClass.apply(this, arguments);
+};
+util.inherit(Controller, BaseClass);
+
+// セーブデータを保存する
+Controller.prototype.save = function () {
+	this.vm.update().then(function (result) {
+		window.alert("保存しました");
+	});
+};
+Controller.prototype.isEditMode = function () {
+	return true;
 };
 
-},{}],65:[function(require,module,exports){
+module.exports = Controller;
+
+},{"../../game/hakurei":6,"../controller/base":66}],68:[function(require,module,exports){
+'use strict';
+
+var util = require('../../game/hakurei').util;
+var BaseClass = require('../controller/base');
+
+var Controller = function Controller(canvas, option) {
+	BaseClass.apply(this, arguments);
+};
+util.inherit(Controller, BaseClass);
+
+// セーブデータを保存する
+Controller.prototype.save = function () {
+	this.vm.create().then(function (result) {
+		window.alert("保存しました");
+		location.href = "/novel/show/" + result.id;
+	});
+};
+Controller.prototype.isNewMode = function () {
+	return true;
+};
+
+module.exports = Controller;
+
+},{"../../game/hakurei":6,"../controller/base":66}],69:[function(require,module,exports){
+'use strict';
+
+var util = require('../../game/hakurei').util;
+var BaseClass = require('../controller/base');
+
+var Controller = function Controller(canvas, option) {
+	BaseClass.apply(this, arguments);
+};
+util.inherit(Controller, BaseClass);
+
+Controller.prototype.isShowMode = function () {
+	return true;
+};
+
+module.exports = Controller;
+
+},{"../../game/hakurei":6,"../controller/base":66}],70:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
-var bg_map = require('../../../game/config/bg');
+var bg_map = require('../../game/config/bg');
 // game 側の assets config からメニュー一覧を生成
 
 var bg_list = [];
@@ -13833,12 +13730,12 @@ Background.prototype.toComponent = function (ctrl) {
 
 module.exports = Background;
 
-},{"../../../game/config/bg":2,"mithril":68}],66:[function(require,module,exports){
+},{"../../game/config/bg":2,"mithril":75}],71:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
 
-var bgm_map = require('../../../game/config/bgm');
+var bgm_map = require('../../game/config/bgm');
 // game 側の assets config からメニュー一覧を生成
 
 var bgm_list = [];
@@ -13892,7 +13789,7 @@ Bgm.prototype.toComponent = function (ctrl) {
 
 module.exports = Bgm;
 
-},{"../../../game/config/bgm":3,"mithril":68}],67:[function(require,module,exports){
+},{"../../game/config/bgm":3,"mithril":75}],72:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
@@ -13989,7 +13886,261 @@ Serif.prototype.toComponent = function (ctrl) {
 
 module.exports = Serif;
 
-},{"mithril":68}],68:[function(require,module,exports){
+},{"mithril":75}],73:[function(require,module,exports){
+'use strict';
+
+var m = require('mithril');
+var VdomList = require('../config/vdomlist');
+
+/*
+	<hr />
+	タイトル:{{.Novel.Title}}<br />
+	説明:{{.Novel.Description}}<br />
+	投稿者:<a href="/user/show/{{.Novel.User.ID}}">{{.Novel.User.DispName}}</a><br />
+	<hr />
+	{{ range $emoji := .Novel.Emojis }}
+		<img src="/image/emoji/{{$emoji.FileName}}" width="24" height="24">{{$emoji.Count}}
+	{{ end }}
+	<hr />
+	{{if .IsOwner }}
+		<a href="/novel/edit/{{.Novel.ID}}">ノベル編集</a><br />
+	{{else}}
+		{{ range $key, $value := .EmojiMap }}
+			<form action="/novel/emoji/{{$.Novel.ID}}/add/{{$key}}" method="post" style="display:inline;">
+			<input type="hidden" name="_csrf" value="{{$._csrf}}" />
+			<input type="image" src="/image/emoji/{{$value}}" value="" name="submit" width="24" height="24" />
+			</form>
+		{{ end }}
+	{{end}}
+
+*/
+module.exports = function (ctrl, args) {
+	var reload = ctrl.reload.bind(ctrl);
+	var save = ctrl.save.bind(ctrl);
+	var togglePrivate = ctrl.togglePrivate.bind(ctrl);
+	var runGame = ctrl.runGame.bind(ctrl);
+
+	return {
+		tag: 'div',
+		children: [{
+			tag: 'canvas',
+			attrs: { width: '640', height: '480', config: runGame }
+		}, {
+			tag: 'hr'
+		}, {
+			tag: 'div',
+			children: [{
+				tag: 'b',
+				children: ['\u7DE8\u96C6']
+			}, {
+				tag: 'br'
+			}, '\u30BF\u30A4\u30C8\u30EB\uFF1A', {
+				tag: 'input',
+				attrs: { type: 'text', value: ctrl.vm.title(), onchange: m.withAttr("value", ctrl.vm.title) }
+			}, {
+				tag: 'br'
+			}, '\u7D39\u4ECB\u6587\uFF1A', {
+				tag: 'textarea',
+				attrs: { value: ctrl.vm.description(), onchange: m.withAttr("value", ctrl.vm.description) }
+			}, {
+				tag: 'br'
+			}, function () {
+				var vdomlist = [];
+				for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
+					var vdom = ctrl.vm.vdom[i];
+					vdomlist.push(vdom.toComponent(ctrl));
+
+					(function (vdom) {
+						vdomlist.push({
+							tag: 'span',
+							children: [{
+								tag: 'input',
+								attrs: { type: 'button', value: '\u2613', onclick: function onclick() {
+										if (ctrl.delete(vdom)) {
+											ctrl.reload();
+										}
+									} }
+							}, {
+								tag: 'input',
+								attrs: { type: 'button', value: '\u2191', onclick: function onclick() {
+										if (ctrl.up(vdom)) {
+											ctrl.reload();
+										}
+									} }
+							}, {
+								tag: 'input',
+								attrs: { type: 'button', value: '\u2193', onclick: function onclick() {
+										if (ctrl.down(vdom)) {
+											ctrl.reload();
+										}
+									} }
+							}, {
+								tag: 'br'
+							}]
+						});
+					})(vdom);
+				}
+				return vdomlist;
+			}(), {
+				tag: 'select',
+				children: [function () {
+					var list = [];
+					for (var i = 0, len = VdomList.length; i < len; i++) {
+						var vdomconfig = VdomList[i];
+						list.push({
+							tag: 'option',
+							children: [vdomconfig.name],
+							attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
+						});
+					}
+					return list;
+				}()],
+				attrs: { onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
+			}, {
+				tag: 'input',
+				attrs: { type: 'button', value: '\u8FFD\u52A0', onclick: function onclick() {
+						ctrl.addVdom();
+						ctrl.reload();
+					} }
+			}, {
+				tag: 'hr'
+			}, {
+				tag: 'div',
+				children: ['\u73FE\u5728:', ctrl.vm.isPrivate() ? "非公開" : "公開", {
+					tag: 'input',
+					attrs: { type: 'button', value: '\u516C\u958B\uFF0F\u975E\u516C\u958B\u306E\u5909\u66F4', onclick: togglePrivate }
+				}],
+				attrs: { style: { display: ctrl.isEditMode() ? 'block' : 'none' } }
+			}, {
+				tag: 'input',
+				attrs: { type: 'button', value: '\u30EA\u30ED\u30FC\u30C9', onclick: reload }
+			}, {
+				tag: 'input',
+				attrs: { type: 'button', value: '\u30BB\u30FC\u30D6', onclick: save }
+			}, {
+				tag: 'br'
+			}]
+		}]
+	};
+};
+
+},{"../config/vdomlist":65,"mithril":75}],74:[function(require,module,exports){
+'use strict';
+
+var m = require('mithril');
+var VdomList = require('../config/vdomlist');
+var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"あら奇遇ね\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"こちらこそ\\n蓮子は授業の帰りかしら"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"まぁそんなところよ\\n"},{"define":"serif","pos":"right","exp":"smile","chara":"renko","serif":"このあとお茶でもいかがかしら？\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"あら、ぜひ\\n"}]';
+
+var ViewModel = function ViewModel(args) {
+	this.id = m.prop(null);
+	this.isPrivate = m.prop(true);
+	this.title = m.prop("");
+	this.description = m.prop("");
+	this.currentAddVdomSelectedIndex = m.prop(0);
+	this.vdom = [];
+	this._string2vdom(DEFAULT_SCRIPT);
+
+	// csrf token
+	this._csrf_token = window.config.csrf;
+};
+ViewModel.prototype._string2vdom = function (string) {
+	var script_list = JSON.parse(string);
+
+	for (var i = 0, leni = script_list.length; i < leni; i++) {
+		var script = script_list[i];
+
+		for (var j = 0, lenj = VdomList.length; j < lenj; j++) {
+			var vdomconfig = VdomList[j];
+
+			if (vdomconfig.value === script.define) {
+				this.vdom.push(new vdomconfig.Klass(script));
+				break;
+			}
+		}
+	}
+};
+ViewModel.prototype._vdom2string = function () {
+	return JSON.stringify(this.toGameData());
+};
+
+ViewModel.prototype.toGameData = function () {
+	var game_data = [];
+	for (var i = 0, len = this.vdom.length; i < len; i++) {
+		var vdom = this.vdom[i];
+		game_data.push(vdom.toGameData());
+	}
+
+	return game_data;
+};
+ViewModel.prototype.toPostData = function () {
+	var serif = this._vdom2string();
+
+	return m.route.buildQueryString({
+		script: serif,
+		title: this.title(),
+		description: this.description(),
+		isPrivate: this.isPrivate() ? 1 : 0
+	});
+};
+
+ViewModel.prototype.addVdomByCurrentSelectedIndex = function () {
+	var vdomconfig = VdomList[this.currentAddVdomSelectedIndex()];
+	this.vdom.push(new vdomconfig.Klass({ type: vdomconfig.value }));
+};
+
+ViewModel.prototype.create = function () {
+	var data = this.toPostData();
+
+	var api_url = "/api/v1/novel/create";
+
+	var _csrf_token = this._csrf_token;
+
+	return m.request({
+		method: "POST",
+		url: api_url,
+		data: data,
+		serialize: function serialize(data) {
+			return data;
+		},
+		config: function config(xhr) {
+			if (_csrf_token) {
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.setRequestHeader("X-CSRF-TOKEN", _csrf_token);
+			}
+		}
+	});
+};
+
+ViewModel.prototype.update = function () {
+	var data = this.toPostData();
+
+	var api_url = "/api/v1/novel/update/" + this.id();
+
+	var _csrf_token = this._csrf_token;
+
+	return m.request({
+		method: "POST",
+		url: api_url,
+		data: data,
+		serialize: function serialize(data) {
+			return data;
+		},
+		config: function config(xhr) {
+			if (_csrf_token) {
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.setRequestHeader("X-CSRF-TOKEN", _csrf_token);
+			}
+		}
+	});
+};
+
+ViewModel.prototype.togglePrivate = function () {
+	this.isPrivate(!this.isPrivate());
+};
+
+module.exports = ViewModel;
+
+},{"../config/vdomlist":65,"mithril":75}],75:[function(require,module,exports){
 ;(function (global, factory) { // eslint-disable-line
 	"use strict"
 	/* eslint-disable no-undef */
