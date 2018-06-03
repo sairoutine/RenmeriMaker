@@ -14,6 +14,10 @@ Controller.prototype.reload = function () {
 	// リロード
 	this.game.reload();
 };
+Controller.prototype.togglePrivate = function () {
+	this.vm.togglePrivate();
+};
+
 Controller.prototype.runGame = function(element, isInitialized, context) {
 	if (!isInitialized) {
 		var game = new Game(element);

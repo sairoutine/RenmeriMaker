@@ -3,19 +3,6 @@ var m = require('mithril');
 var VdomList = require('../config/vdomlist');
 
 
-/*
-				{{ if eq .Mode "edit" }}
-					<form action="/novel/toggle/{{.Id}}" method="post">
-					<input type="hidden" name="_csrf" value="{{._csrf}}" />
-					{{ if .IsPrivate }}
-						<input type="submit" value="公開する" />
-					{{ else }}
-						<input type="submit" value="非公開にする" />
-					{{ end }}
-					</form>
-				{{ end }}
-*/
-
 
 /*
 	<hr />
@@ -42,6 +29,7 @@ var VdomList = require('../config/vdomlist');
 module.exports = function(ctrl, args) {
 	var reload = ctrl.reload.bind(ctrl);
 	var save = ctrl.save.bind(ctrl);
+	var togglePrivate = ctrl.togglePrivate.bind(ctrl);
 	var runGame = ctrl.runGame.bind(ctrl);
 
 	return <div>
@@ -96,6 +84,12 @@ module.exports = function(ctrl, args) {
 				ctrl.reload();
 			}} />
 			<hr />
+
+            <div style={ { display: ctrl.isEditMode() ? 'block' : 'none'} }>
+				現在:{ ctrl.vm.isPrivate() ? "非公開" : "公開" }
+				<input type="button" value="公開／非公開の変更" onclick={togglePrivate}/>
+			</div>
+
 			<input type="button" value="リロード" onclick={reload} />
 			<input type="button" value="セーブ" onclick={save} />
 			<br />

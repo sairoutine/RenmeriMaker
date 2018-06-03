@@ -7,6 +7,7 @@ var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"
 
 var ViewModel = function (args) {
 	this.id = m.prop(null);
+	this.isPrivate = m.prop(true);
 	this.title = m.prop("");
 	this.description = m.prop("");
 	this.currentAddVdomSelectedIndex = m.prop(0);
@@ -53,6 +54,7 @@ ViewModel.prototype.toPostData = function () {
 		script: serif,
 		title: this.title(),
 		description: this.description(),
+		isPrivate: this.isPrivate() ? 1 : 0,
 	});
 };
 
@@ -103,5 +105,8 @@ ViewModel.prototype.update = function () {
 	});
 };
 
+ViewModel.prototype.togglePrivate = function () {
+	this.isPrivate(!this.isPrivate());
+};
 
 module.exports = ViewModel;
