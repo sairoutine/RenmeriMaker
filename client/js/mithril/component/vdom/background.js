@@ -13,11 +13,12 @@ for (var key in bg_map) {
 
 var Background = function (args) {
 	this.define = m.prop(args.define);
-	this.value = m.prop(args.background);
+	this.value = m.prop(args.background || bg_list[0].value);
 };
 Background.prototype.toGameData = function () {
 	return {
 		define: this.define(),
+		serif: "",
 		background: this.value(),
 	};
 };

@@ -19,10 +19,20 @@ var exp_list = [
 var Serif = function (args) {
 	this.define = m.prop(args.define);
 	this.pos = m.prop(args.pos);
-	this.exp = m.prop(args.exp);
-	this.chara = m.prop(args.chara);
+	this.exp = m.prop(args.exp || exp_list[0].value);
+	this.chara = m.prop(args.chara || chara_list[0].value);
 
-	this.value = m.prop(args.serif);
+	if (typeof this.pos() === "undefined") {
+		// TODO:
+		if (this.chara() === "renko") {
+			this.pos("right");
+		}
+		else {
+			this.pos("left");
+		}
+	}
+
+	this.value = m.prop(args.serif || "");
 };
 Serif.prototype.toGameData = function () {
 	return {

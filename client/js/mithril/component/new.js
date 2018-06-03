@@ -8,29 +8,33 @@ var SerifVDom = require('./vdom/serif');
 
 var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"あら奇遇ね\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"こちらこそ\\n蓮子は授業の帰りかしら"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"まぁそんなところよ\\n"},{"define":"serif","pos":"right","exp":"smile","chara":"renko","serif":"このあとお茶でもいかがかしら？\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"あら、ぜひ\\n"}]';
 
+var VdomList = [
+	{name: "背景変更", value: "background", Klass: BackgroundVDom},
+	{name: "BGM変更", value: "bgm", Klass: BgmVDom},
+	{name: "セリフ", value: "serif", Klass: SerifVDom},
+];
+
+
 var ViewModel = function (args) {
 	this.title = m.prop("");
 	this.description = m.prop("");
+	this.currentAddVdomSelectedIndex = m.prop(0);
 	this.vdom = [];
 	this._string2vdom(DEFAULT_SCRIPT);
 };
 ViewModel.prototype._string2vdom = function (string) {
 	var script_list = JSON.parse(string);
 
-	for (var i = 0, len = script_list.length; i < len; i++) {
+	for (var i = 0, leni = script_list.length; i < leni; i++) {
 		var script = script_list[i];
 
-		if (script.define === "background") {
-			this.vdom.push(new BackgroundVDom(script));
-		}
-		else if (script.define === "bgm") {
-			this.vdom.push(new BgmVDom(script));
-		}
-		else if (script.define === "serif") {
-			this.vdom.push(new SerifVDom(script));
-		}
-		else {
-			throw new Error("Illegal script define: " + script.define);
+		for (var j = 0, lenj = VdomList.length; j < lenj; j++) {
+			var vdomconfig = VdomList[j];
+
+			if (vdomconfig.value === script.define) {
+				this.vdom.push(new vdomconfig.Klass(script));
+				break;
+			}
 		}
 	}
 };
@@ -161,6 +165,10 @@ Controller.prototype.down = function (vdom) {
 
 	return false;
 };
+Controller.prototype.addVdom = function () {
+	var vdomconfig = VdomList[this.vm.currentAddVdomSelectedIndex()];
+	this.vm.vdom.push(new vdomconfig.Klass({type: vdomconfig.value}));
+};
 
 
 
@@ -214,6 +222,21 @@ module.exports = {
 					return vdomlist;
 				})()}
 
+				<select onchange={m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex)}>
+				{(function () {
+					var list = [];
+					for (var i = 0, len = VdomList.length; i < len; i++) {
+						var vdomconfig = VdomList[i];
+						list.push(<option value={vdomconfig.value} selected={i === ctrl.vm.currentAddVdomSelectedIndex()}>{vdomconfig.name}</option>);
+					}
+					return list;
+				})()}
+				</select>
+				<input type="button" value="追加" onclick={function () {
+					ctrl.addVdom();
+					ctrl.reload();
+				}} />
+				<hr />
 				<input type="button" value="リロード" onclick={reload} />
 				<input type="button" value="セーブ" onclick={save} />
 				<br />
