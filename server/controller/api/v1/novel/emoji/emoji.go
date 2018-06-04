@@ -37,5 +37,5 @@ func Add(c *gin.Context) {
 			count=count+1
 	`, novelId, emojiType)
 
-	c.Redirect(http.StatusMovedPermanently, "/novel/show/"+novelId)
+	util.RenderJSON(c, http.StatusOK, gin.H{})
 }

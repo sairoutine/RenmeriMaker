@@ -82,6 +82,13 @@ Controller.prototype.down = function (vdom) {
 Controller.prototype.addVdom = function () {
 	this.vm.addVdomByCurrentSelectedIndex();
 };
+Controller.prototype.addEmoji = function (type) {
+	this.vm.addEmoji(type)
+	.then(function () {
+		location.reload();
+	});
+};
+
 
 
 Controller.prototype.isShowMode = function () {

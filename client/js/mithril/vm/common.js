@@ -8,10 +8,13 @@ var User = function (args) {
 	args = args || {};
 	this.id = m.prop(args.ID);
 	this.dispName = m.prop(args.DispName);
+	this.fileName = m.prop(args.FileName);
 };
 
 var Emoji = function (args) {
 	args = args || {};
+	this.fileName = m.prop(args.FileName);
+	this.count = m.prop(args.Count);
 };
 
 var ViewModel = function (args) {
@@ -21,6 +24,8 @@ var ViewModel = function (args) {
 	this.description = m.prop("");
 	this.user = m.prop(new User());
 	this.emojis = m.prop([]);
+	this.isOwner = m.prop(false);
+	this.emojiMap = m.prop([]);
 
 	this.vdom = [];
 	this.currentAddVdomSelectedIndex = m.prop(0);
@@ -49,10 +54,12 @@ ViewModel.prototype.loadFromAPI = function (id) {
 		self.title(response.Title);
 		self.description(response.Description);
 		self.user(new User(response.User));
+		self.isOwner(response.IsOwner);
+		self.emojiMap(response.EmojiMap);
 
 		var emojis = [];
 		for (var i = 0, len = response.Emojis.length; i < len; i++) {
-			emojis.push(new Emoji(response.emojis[i]));
+			emojis.push(new Emoji(response.Emojis[i]));
 		}
 		self.emojis(emojis);
 
@@ -138,6 +145,22 @@ ViewModel.prototype.update = function () {
 		url: api_url,
 		data: data,
 		serialize: function(data) {return data},
+		config: function (xhr) {
+			if (_csrf_token) {
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.setRequestHeader("X-CSRF-TOKEN", _csrf_token);
+			}
+		}
+	});
+};
+ViewModel.prototype.addEmoji = function (type) {
+	var api_url = "/api/v1/novel/emoji/" + this.id() + "/add/" + type;
+
+	var _csrf_token = this._csrf_token;
+
+	return m.request({
+		method: "POST",
+		url: api_url,
 		config: function (xhr) {
 			if (_csrf_token) {
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
