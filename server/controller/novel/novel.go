@@ -4,7 +4,6 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
-	"github.com/sairoutine/RenmeriMaker/server/constant"
 	"github.com/sairoutine/RenmeriMaker/server/model"
 	"github.com/sairoutine/RenmeriMaker/server/util"
 	"net/http"
@@ -21,14 +20,7 @@ func New(c *gin.Context) {
 		return
 	}
 
-	util.RenderHTML(c, http.StatusOK, "novel/new.tmpl", gin.H{
-		"Mode":        constant.ScriptNewMode,
-		"Id":          0,  // nil
-		"Title":       "", // nil
-		"Description": "", // nil
-		"Script":      "", // nil
-
-	})
+	util.RenderHTML(c, http.StatusOK, "novel/new.tmpl", gin.H{})
 
 }
 func Edit(c *gin.Context) {
@@ -54,14 +46,7 @@ func Edit(c *gin.Context) {
 		return
 	}
 
-	util.RenderHTML(c, http.StatusOK, "novel/edit.tmpl", gin.H{
-		"Mode":        constant.ScriptEditMode,
-		"Id":          novel.ID,
-		"Title":       novel.Title,
-		"Description": novel.Description,
-		"Script":      novel.Script,
-		"IsPrivate":   novel.IsPrivate,
-	})
+	util.RenderHTML(c, http.StatusOK, "novel/edit.tmpl", gin.H{})
 }
 
 func Show(c *gin.Context) {
@@ -69,7 +54,7 @@ func Show(c *gin.Context) {
 	id := c.Param("id")
 
 	novel := model.Novel{}
-	recordNotFound := db.Preload("User").Preload("Emojis").Where(&model.Novel{ID: util.String2Uint64(id)}).First(&novel).RecordNotFound()
+	recordNotFound := db.Where(&model.Novel{ID: util.String2Uint64(id)}).First(&novel).RecordNotFound()
 
 	// 存在しないノベルならエラー
 	if recordNotFound {
@@ -93,15 +78,5 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	util.RenderHTML(c, http.StatusOK, "novel/show.tmpl", gin.H{
-		"Novel":       novel,
-		"Id":          novel.ID,
-		"Title":       novel.Title,
-		"Description": novel.Description,
-		"Script":      novel.Script,
-		"Mode":        constant.ScriptShowMode,
-		"IsOwner":     isOwner,
-		"EmojiMap":    constant.EmojiMap,
-	})
-
+	util.RenderHTML(c, http.StatusOK, "novel/show.tmpl", gin.H{})
 }

@@ -55,6 +55,8 @@ func (s *Server) SetupRouter() {
 			apiV1Novel.POST("/create", controllerApiV1Novel.Create)
 			// ノベル更新
 			apiV1Novel.POST("/update/:id", controllerApiV1Novel.Update)
+			// ノベル表示
+			apiV1Novel.GET("/show/:id", controllerApiV1Novel.Show)
 		}
 	}
 

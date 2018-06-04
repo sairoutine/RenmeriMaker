@@ -112,3 +112,49 @@ func Update(c *gin.Context) {
 		"id": novel.ID,
 	})
 }
+
+func Show(c *gin.Context) {
+	db := c.MustGet("DB").(*gorm.DB)
+	id := c.Param("id")
+
+	novel := model.Novel{}
+	recordNotFound := db.Preload("User").Preload("Emojis").Where(&model.Novel{ID: util.String2Uint64(id)}).First(&novel).RecordNotFound()
+
+	// 存在しないノベルならエラー
+	if recordNotFound {
+		util.RenderNotFound(c)
+		return
+	}
+
+	// ログイン情報を取得
+	session := sessions.Default(c)
+	loginUserId, ok := session.Get("user_id").(uint64)
+
+	// 自分が作ったノベルかどうか
+	isOwner := false
+	if ok && novel.UserID == loginUserId {
+		isOwner = true
+	}
+
+	// 自分が作ったノベルでなく、非公開ならエラー
+	if !isOwner && novel.IsPrivate {
+		util.RenderNotFound(c)
+		return
+	}
+
+	util.RenderJSON(c, http.StatusOK, gin.H{
+		"Id":          novel.ID,
+		"Title":       novel.Title,
+		"Description": novel.Description,
+		"Script":      novel.Script,
+		"IsPrivate":   novel.IsPrivate,
+		"User": map[string]interface{}{
+			"ID":       novel.User.ID,
+			"DispName": novel.User.DispName,
+		},
+		"Emojis":   novel.Emojis,
+		"IsOwner":  isOwner,
+		"EmojiMap": constant.EmojiMap,
+	})
+
+}
