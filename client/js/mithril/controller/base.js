@@ -6,6 +6,7 @@ var Controller = function (args) {
 	this.game = null;
 
 	this.vm = new ViewModel();
+	this.load();
 };
 Controller.prototype.reload = function () {
 	// ゲームのセリフ更新
@@ -91,6 +92,8 @@ Controller.prototype.isEditMode = function () {
 };
 Controller.prototype.isNewMode = function () {
 	return false;
+};
+Controller.prototype.load = function () {
 };
 Controller.prototype.save = function () {
 };

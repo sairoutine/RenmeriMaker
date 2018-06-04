@@ -4,9 +4,13 @@ var BaseClass = require('../controller/base');
 
 var Controller = function(canvas, option) {
 	BaseClass.apply(this, arguments);
+
 };
 util.inherit(Controller, BaseClass);
 
+Controller.prototype.load = function () {
+	this.vm.loadFromDefault();
+};
 // セーブデータを保存する
 Controller.prototype.save = function () {
 	this.vm.create()

@@ -10,12 +10,34 @@ var ViewModel = function (args) {
 	this.isPrivate = m.prop(true);
 	this.title = m.prop("");
 	this.description = m.prop("");
-	this.currentAddVdomSelectedIndex = m.prop(0);
 	this.vdom = [];
-	this._string2vdom(DEFAULT_SCRIPT);
+	this.currentAddVdomSelectedIndex = m.prop(0);
 
 	// csrf token
 	this._csrf_token = window.config.csrf;
+};
+ViewModel.prototype.loadFromDefault = function () {
+    var deferred = m.deferred();
+
+	this._string2vdom(DEFAULT_SCRIPT);
+
+	deferred.resolve();
+    return deferred.promise;
+};
+ViewModel.prototype.loadFromAPI = function (id) {
+	var api_url = "/api/v1/novel/show/" + id;
+
+	var self = this;
+	return m.request({
+		method: "GET",
+		url: api_url,
+	}).then(function (response) {
+		self.id = m.prop(response.Id);
+		self.isPrivate = m.prop(response.IsPrivate);
+		self.title = m.prop(response.Title);
+		self.description = m.prop(response.Description);
+		self._string2vdom(response.Script);
+	});
 };
 ViewModel.prototype._string2vdom = function (string) {
 	var script_list = JSON.parse(string);
