@@ -4,12 +4,24 @@ var m = require('mithril');
 var VdomList = require('../config/vdomlist');
 var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"あら奇遇ね\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"こちらこそ\\n蓮子は授業の帰りかしら"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"まぁそんなところよ\\n"},{"define":"serif","pos":"right","exp":"smile","chara":"renko","serif":"このあとお茶でもいかがかしら？\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"あら、ぜひ\\n"}]';
 
+var User = function (args) {
+	args = args || {};
+	this.id = m.prop(args.ID);
+	this.dispName = m.prop(args.DispName);
+};
+
+var Emoji = function (args) {
+	args = args || {};
+};
 
 var ViewModel = function (args) {
 	this.id = m.prop(null);
 	this.isPrivate = m.prop(true);
 	this.title = m.prop("");
 	this.description = m.prop("");
+	this.user = m.prop(new User());
+	this.emojis = m.prop([]);
+
 	this.vdom = [];
 	this.currentAddVdomSelectedIndex = m.prop(0);
 
@@ -32,10 +44,18 @@ ViewModel.prototype.loadFromAPI = function (id) {
 		method: "GET",
 		url: api_url,
 	}).then(function (response) {
-		self.id = m.prop(response.Id);
-		self.isPrivate = m.prop(response.IsPrivate);
-		self.title = m.prop(response.Title);
-		self.description = m.prop(response.Description);
+		self.id(response.Id);
+		self.isPrivate(response.IsPrivate);
+		self.title(response.Title);
+		self.description(response.Description);
+		self.user(new User(response.User));
+
+		var emojis = [];
+		for (var i = 0, len = response.Emojis.length; i < len; i++) {
+			emojis.push(new Emoji(response.emojis[i]));
+		}
+		self.emojis(emojis);
+
 		self._string2vdom(response.Script);
 	});
 };
