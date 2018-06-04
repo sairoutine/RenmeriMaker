@@ -13523,6 +13523,7 @@ var Controller = function Controller(args) {
 	this.game = null;
 
 	this.vm = new ViewModel();
+	this.load();
 };
 Controller.prototype.reload = function () {
 	// ゲームのセリフ更新
@@ -13597,6 +13598,11 @@ Controller.prototype.down = function (vdom) {
 Controller.prototype.addVdom = function () {
 	this.vm.addVdomByCurrentSelectedIndex();
 };
+Controller.prototype.addEmoji = function (type) {
+	this.vm.addEmoji(type).then(function () {
+		location.reload();
+	});
+};
 
 Controller.prototype.isShowMode = function () {
 	return false;
@@ -13607,6 +13613,7 @@ Controller.prototype.isEditMode = function () {
 Controller.prototype.isNewMode = function () {
 	return false;
 };
+Controller.prototype.load = function () {};
 Controller.prototype.save = function () {};
 
 module.exports = Controller;
@@ -13614,6 +13621,7 @@ module.exports = Controller;
 },{"../../game/game":5,"../vm/common":74}],67:[function(require,module,exports){
 'use strict';
 
+var m = require('mithril');
 var util = require('../../game/hakurei').util;
 var BaseClass = require('../controller/base');
 
@@ -13621,6 +13629,11 @@ var Controller = function Controller(canvas, option) {
 	BaseClass.apply(this, arguments);
 };
 util.inherit(Controller, BaseClass);
+
+Controller.prototype.load = function () {
+	var id = m.route.param("id");
+	this.vm.loadFromAPI(id);
+};
 
 // セーブデータを保存する
 Controller.prototype.save = function () {
@@ -13634,7 +13647,7 @@ Controller.prototype.isEditMode = function () {
 
 module.exports = Controller;
 
-},{"../../game/hakurei":6,"../controller/base":66}],68:[function(require,module,exports){
+},{"../../game/hakurei":6,"../controller/base":66,"mithril":75}],68:[function(require,module,exports){
 'use strict';
 
 var util = require('../../game/hakurei').util;
@@ -13645,6 +13658,9 @@ var Controller = function Controller(canvas, option) {
 };
 util.inherit(Controller, BaseClass);
 
+Controller.prototype.load = function () {
+	this.vm.loadFromDefault();
+};
 // セーブデータを保存する
 Controller.prototype.save = function () {
 	this.vm.create().then(function (result) {
@@ -13661,6 +13677,7 @@ module.exports = Controller;
 },{"../../game/hakurei":6,"../controller/base":66}],69:[function(require,module,exports){
 'use strict';
 
+var m = require('mithril');
 var util = require('../../game/hakurei').util;
 var BaseClass = require('../controller/base');
 
@@ -13669,13 +13686,18 @@ var Controller = function Controller(canvas, option) {
 };
 util.inherit(Controller, BaseClass);
 
+Controller.prototype.load = function () {
+	var id = m.route.param("id");
+	this.vm.loadFromAPI(id);
+};
+
 Controller.prototype.isShowMode = function () {
 	return true;
 };
 
 module.exports = Controller;
 
-},{"../../game/hakurei":6,"../controller/base":66}],70:[function(require,module,exports){
+},{"../../game/hakurei":6,"../controller/base":66,"mithril":75}],70:[function(require,module,exports){
 'use strict';
 
 var m = require('mithril');
@@ -13892,28 +13914,6 @@ module.exports = Serif;
 var m = require('mithril');
 var VdomList = require('../config/vdomlist');
 
-/*
-	<hr />
-	タイトル:{{.Novel.Title}}<br />
-	説明:{{.Novel.Description}}<br />
-	投稿者:<a href="/user/show/{{.Novel.User.ID}}">{{.Novel.User.DispName}}</a><br />
-	<hr />
-	{{ range $emoji := .Novel.Emojis }}
-		<img src="/image/emoji/{{$emoji.FileName}}" width="24" height="24">{{$emoji.Count}}
-	{{ end }}
-	<hr />
-	{{if .IsOwner }}
-		<a href="/novel/edit/{{.Novel.ID}}">ノベル編集</a><br />
-	{{else}}
-		{{ range $key, $value := .EmojiMap }}
-			<form action="/novel/emoji/{{$.Novel.ID}}/add/{{$key}}" method="post" style="display:inline;">
-			<input type="hidden" name="_csrf" value="{{$._csrf}}" />
-			<input type="image" src="/image/emoji/{{$value}}" value="" name="submit" width="24" height="24" />
-			</form>
-		{{ end }}
-	{{end}}
-
-*/
 module.exports = function (ctrl, args) {
 	var reload = ctrl.reload.bind(ctrl);
 	var save = ctrl.save.bind(ctrl);
@@ -13926,10 +13926,77 @@ module.exports = function (ctrl, args) {
 			tag: 'canvas',
 			attrs: { width: '640', height: '480', config: runGame }
 		}, {
-			tag: 'hr'
+			tag: 'div',
+			children: [{
+				tag: 'hr'
+			}, '\u30BF\u30A4\u30C8\u30EB:', ctrl.vm.title(), {
+				tag: 'br'
+			}, '\u8AAC\u660E:', ctrl.vm.description(), {
+				tag: 'br'
+			}, '\u6295\u7A3F\u8005:', {
+				tag: 'a',
+				children: [ctrl.vm.user().dispName()],
+				attrs: { href: "/user/show/" + ctrl.vm.user().id() }
+			}, {
+				tag: 'br'
+			}, {
+				tag: 'hr'
+			}, function () {
+				var list = [];
+				for (var i = 0, len = ctrl.vm.emojis().length; i < len; i++) {
+					var emoji = ctrl.vm.emojis()[i];
+					list.push({
+						tag: 'span',
+						children: [{
+							tag: 'img',
+							attrs: { src: "/image/emoji/" + emoji.fileName(), width: '24', height: '24' }
+						}, emoji.count()]
+					});
+				}
+				return list;
+			}(), {
+				tag: 'hr'
+			}, {
+				tag: 'div',
+				children: [{
+					tag: 'a',
+					children: ['\u30CE\u30D9\u30EB\u7DE8\u96C6'],
+					attrs: { href: "/novel/edit/" + ctrl.vm.id() }
+				}, {
+					tag: 'br'
+				}],
+				attrs: { style: { display: ctrl.vm.isOwner() ? 'block' : 'none' } }
+			}, {
+				tag: 'div',
+				children: [function () {
+					var list = [];
+					for (var key in ctrl.vm.emojiMap()) {
+						var filename = ctrl.vm.emojiMap()[key];
+						var onsubmit = function (key) {
+							return function (e) {
+								e.preventDefault();
+								ctrl.addEmoji(key);
+							};
+						}(key);
+						list.push({
+							tag: 'form',
+							children: [{
+								tag: 'input',
+								attrs: { type: 'image', src: "/image/emoji/" + filename, name: 'submit', width: '24', height: '24' }
+							}],
+							attrs: { style: 'display:inline;', onsubmit: onsubmit }
+						});
+					}
+					return list;
+				}()],
+				attrs: { style: { display: !ctrl.vm.isOwner() ? 'block' : 'none' } }
+			}],
+			attrs: { style: { display: ctrl.isShowMode() ? 'block' : 'none' } }
 		}, {
 			tag: 'div',
 			children: [{
+				tag: 'hr'
+			}, {
 				tag: 'b',
 				children: ['\u7DE8\u96C6']
 			}, {
@@ -14019,7 +14086,8 @@ module.exports = function (ctrl, args) {
 				attrs: { type: 'button', value: '\u30BB\u30FC\u30D6', onclick: save }
 			}, {
 				tag: 'br'
-			}]
+			}],
+			attrs: { style: { display: ctrl.isEditMode() || ctrl.isNewMode() ? 'block' : 'none' } }
 		}]
 	};
 };
@@ -14031,17 +14099,67 @@ var m = require('mithril');
 var VdomList = require('../config/vdomlist');
 var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"あら奇遇ね\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"こちらこそ\\n蓮子は授業の帰りかしら"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"まぁそんなところよ\\n"},{"define":"serif","pos":"right","exp":"smile","chara":"renko","serif":"このあとお茶でもいかがかしら？\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"あら、ぜひ\\n"}]';
 
+var User = function User(args) {
+	args = args || {};
+	this.id = m.prop(args.ID);
+	this.dispName = m.prop(args.DispName);
+	this.fileName = m.prop(args.FileName);
+};
+
+var Emoji = function Emoji(args) {
+	args = args || {};
+	this.fileName = m.prop(args.FileName);
+	this.count = m.prop(args.Count);
+};
+
 var ViewModel = function ViewModel(args) {
 	this.id = m.prop(null);
 	this.isPrivate = m.prop(true);
 	this.title = m.prop("");
 	this.description = m.prop("");
-	this.currentAddVdomSelectedIndex = m.prop(0);
+	this.user = m.prop(new User());
+	this.emojis = m.prop([]);
+	this.isOwner = m.prop(false);
+	this.emojiMap = m.prop([]);
+
 	this.vdom = [];
-	this._string2vdom(DEFAULT_SCRIPT);
+	this.currentAddVdomSelectedIndex = m.prop(0);
 
 	// csrf token
 	this._csrf_token = window.config.csrf;
+};
+ViewModel.prototype.loadFromDefault = function () {
+	var deferred = m.deferred();
+
+	this._string2vdom(DEFAULT_SCRIPT);
+
+	deferred.resolve();
+	return deferred.promise;
+};
+ViewModel.prototype.loadFromAPI = function (id) {
+	var api_url = "/api/v1/novel/show/" + id;
+
+	var self = this;
+	return m.request({
+		method: "GET",
+		url: api_url
+	}).then(function (response) {
+		self.id(response.Id);
+		self.isPrivate(response.IsPrivate);
+		self.title(response.Title);
+		self.description(response.Description);
+		self.user(new User(response.User));
+		self.isOwner(response.IsOwner);
+		self.emojiMap(response.EmojiMap);
+
+		var emojis = [];
+		for (var i = 0, len = response.Emojis.length; i < len; i++) {
+			emojis.push(new Emoji(response.Emojis[i]));
+		}
+		self.emojis(emojis);
+
+		self._string2vdom(response.Script);
+	});
 };
 ViewModel.prototype._string2vdom = function (string) {
 	var script_list = JSON.parse(string);
@@ -14125,6 +14243,22 @@ ViewModel.prototype.update = function () {
 		serialize: function serialize(data) {
 			return data;
 		},
+		config: function config(xhr) {
+			if (_csrf_token) {
+				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
+				xhr.setRequestHeader("X-CSRF-TOKEN", _csrf_token);
+			}
+		}
+	});
+};
+ViewModel.prototype.addEmoji = function (type) {
+	var api_url = "/api/v1/novel/emoji/" + this.id() + "/add/" + type;
+
+	var _csrf_token = this._csrf_token;
+
+	return m.request({
+		method: "POST",
+		url: api_url,
 		config: function config(xhr) {
 			if (_csrf_token) {
 				xhr.setRequestHeader("Content-type", "application/x-www-form-urlencoded");
