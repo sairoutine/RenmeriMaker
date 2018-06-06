@@ -12,9 +12,6 @@ import (
 func (s *Server) SetupRouter() {
 	r := s.Engine
 
-	// テンプレート
-	r.LoadHTMLGlob("../template/**/*")
-
 	// トップページ
 	r.GET("/", controllerRoot.Index)
 

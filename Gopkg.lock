@@ -54,6 +54,12 @@
 
 [[projects]]
   branch = "master"
+  name = "github.com/gin-contrib/multitemplate"
+  packages = ["."]
+  revision = "d2d1ac3f563eac04b11ba01db7ac9f0eb9dc3a94"
+
+[[projects]]
+  branch = "master"
   name = "github.com/gin-contrib/sessions"
   packages = [
     ".",
@@ -192,6 +198,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "8382ff07cf847f36bce912794192e38b710e68f23675be6be9f4227a7e3de3e8"
+  inputs-digest = "2ec44d80a42020d5e92e593eca0d71650b9c25259000478885290644867e890d"
   solver-name = "gps-cdcl"
   solver-version = 1
