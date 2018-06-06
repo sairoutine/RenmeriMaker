@@ -2,13 +2,11 @@ package server
 
 import (
 	"github.com/gin-contrib/multitemplate"
-	"html/template"
 	"path/filepath"
 )
 
 func (s *Server) SetupTemplate() {
 	r := s.Engine
-
 	templatesDir := "../template"
 	r.HTMLRender = loadTemplates(
 		templatesDir,
@@ -32,7 +30,7 @@ func loadTemplates(templatesDir, includeDir, layoutFile string) multitemplate.Re
 	for _, temp := range templateFiles {
 		files := append([]string{layoutFile, temp}, includes...)
 		rel, _ := filepath.Rel(templatesDir, temp)
-		r.Add(rel, template.Must(template.ParseFiles(files...)))
+		r.AddFromFiles(rel, files...)
 	}
 	return r
 }
