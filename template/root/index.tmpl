@@ -1,21 +1,4 @@
 {{ define "content" }}
-<html><h1>
-		蓮メリメーカー
-</h1>
-<p>
-<a href="/about">アバウト</a><br />
-<hr />
-{{ if .isLogin }}
-	<a href="/logout">ログアウト</a><br />
-{{ else }}
-	<a href="/twitter/auth">ログイン</a><br />
-{{ end }}
-<hr />
-<a href="/user/show/me">自分のプロフィール</a><br />
-<hr />
-<a href="/novel/new">ノベル新規作成</a><br />
-<hr />
-
 {{ range .novels }}
 	タイトル:{{.Title}}<br />
 	説明:{{.Description}}<br />
@@ -24,6 +7,4 @@
 	<hr />
 {{ end }}
 {{.pagination}}
-</p>
-</html>
 {{ end }}
