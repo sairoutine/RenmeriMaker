@@ -21,16 +21,16 @@
 </head>
 <body>
 	<!-- Navbar -->
-	<div class="mdl-layout mdl-js-layout">
+	<div class="mdl-layout mdl-js-layout mdl-layout--fixed-header">
 	  <header class="mdl-layout__header">
 		<div class="mdl-layout__header-row">
 		  <span class="mdl-layout-title">蓮メリメーカー</span>
 		  <div class="mdl-layout-spacer"></div>
 		  <nav class="mdl-navigation">
 			{{ if .isLogin }}
-			<a class="mdl-navigation__link" href="/logout"><i class="material-icons">input</i>ログアウト</a><br />
+			<a class="mdl-navigation__link" href="/logout"><i class="material-icons">input</i>&nbsp;ログアウト</a><br />
 			{{ else }}
-			<a class="mdl-navigation__link" href="/twitter/auth"><i class="material-icons">input</i>ログイン</a><br />
+			<a class="mdl-navigation__link" href="/twitter/auth"><i class="material-icons">input</i>&nbsp;ログイン</a><br />
 			{{ end }}
 		  </nav>
 		</div>

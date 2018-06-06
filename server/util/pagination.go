@@ -21,26 +21,26 @@ func GenereatePagination(p int, count int, limit int) template.HTML {
 		switch p.Type {
 		case simpagin.PageLeft:
 			if p.Number == 0 {
-				return `<li class="disabled"><span>&laquo;</span></li>`
+				return `<span class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" disabled>&laquo;</span>`
 			}
-			return fmt.Sprintf(`<li><a href="?p=%d">&laquo;</a></li>`, p.Number)
+			return fmt.Sprintf(`<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" href="?p=%d">&laquo;</a>`, p.Number)
 		case simpagin.PageMiddle:
 			if p.IsActive {
-				return fmt.Sprintf(`<li class="active"><span>%d</span></li>`, p.Number)
+				return fmt.Sprintf(`<span class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--accent">%d</span>`, p.Number)
 			}
-			return fmt.Sprintf(`<li><a href="?p=%d">%d</a></li>`, p.Number, p.Number)
+			return fmt.Sprintf(`<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" href="?p=%d">%d</a>`, p.Number, p.Number)
 		case simpagin.PageRight:
 			if p.Number == 0 {
-				return `<li class="disabled"><span>&raquo;</span></li>`
+				return `<span class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" disabled>&raquo;</span>`
 			}
-			return fmt.Sprintf(`<li><a href="?p=%d">&raquo;</a></li>`, p.Number)
+			return fmt.Sprintf(`<a class="mdl-button mdl-js-button mdl-button--raised mdl-js-ripple-effect mdl-button--colored" href="?p=%d">&raquo;</a>`, p.Number)
 		}
 		return ""
 	})
 
-	retStr := pg.LeftPage.String()
+	retStr := pg.LeftPage.String() + "&nbsp;"
 	for _, page := range pg.PageList {
-		retStr += page.String()
+		retStr += page.String() + "&nbsp;"
 	}
 
 	retStr += pg.RightPage.String()

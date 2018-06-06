@@ -1,10 +1,41 @@
 {{ define "content" }}
+<style>
+.mdl-card__media > img {
+	width: 100%;
+}
+.mdl-card__media {
+    margin: 0;
+}
+.mdl-card__actions {
+  display: flex;
+  box-sizing:border-box;
+  align-items: center;
+}
+</style>
+<div class="content-grid mdl-grid">
 {{ range .novels }}
-	タイトル:{{.Title}}<br />
-	説明:{{.Description}}<br />
-	投稿者:<a href="/user/show/{{.User.ID}}">{{.User.DispName}}</a><br />
-	<a href="/novel/show/{{.ID}}">ノベル詳細</a><br />
-	<hr />
+<div class="mdl-card mdl-cell mdl-cell--3-col mdl-shadow--2dp">
+  <figure class="mdl-card__media">
+    <img src="http://design-ec.com/d/e_others_48/l_e_others_480.png" alt="" />
+  </figure>
+  <div class="mdl-card__title">
+    <h1 class="mdl-card__title-text">{{.Title}}</h1>
+  </div>
+  <div class="mdl-card__supporting-text">
+    <p>
+	{{.Description}}
+    <div class="mdl-layout-spacer"></div>
+	投稿者:<a href="/user/show/{{.User.ID}}" class="mdl-typography--text-right">{{.User.DispName}}</a><br />
+	</p>
+  </div>
+  <div class="mdl-card__actions mdl-card--border">
+    <div class="mdl-layout-spacer"></div>
+    <a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/novel/show/{{.ID}}">読む&nbsp;<i class="material-icons">play_circle_outline</i></a>
+  </div>
+</div>
 {{ end }}
+</div>
+<p class="mdl-typography--text-center">
 {{.pagination}}
+</p>
 {{ end }}
