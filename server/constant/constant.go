@@ -26,3 +26,8 @@ const (
 	DefaultTitle       = "タイトルなし"
 	DefaultDescription = "なし"
 )
+
+const (
+	// 1ページの表示件数
+	PAGE_PER_LIMIT = 8
+)

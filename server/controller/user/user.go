@@ -4,13 +4,11 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/sairoutine/RenmeriMaker/server/constant"
 	"github.com/sairoutine/RenmeriMaker/server/model"
 	"github.com/sairoutine/RenmeriMaker/server/util"
 	"net/http"
 )
-
-// 1ページの表示件数
-const LIMIT = 10
 
 func Show(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
@@ -58,18 +56,18 @@ func Show(c *gin.Context) {
 	count := 0
 	if isMe {
 		// 自分のプロフィールの場合、公開／非公開のノベルを表示
-		db.Preload("User").Where(map[string]interface{}{"user_id": id}).Limit(LIMIT).Offset((p - 1) * LIMIT).Find(&novels)
+		db.Preload("User").Where(map[string]interface{}{"user_id": id}).Limit(constant.PAGE_PER_LIMIT).Offset((p - 1) * constant.PAGE_PER_LIMIT).Find(&novels)
 
 		db.Model(&model.Novel{}).Where(map[string]interface{}{"user_id": id}).Count(&count)
 	} else {
 		// 他人のプロフィールの場合、公開のノベルのみを表示
-		db.Preload("User").Where(map[string]interface{}{"user_id": id, "is_private": false}).Limit(LIMIT).Offset((p - 1) * LIMIT).Find(&novels)
+		db.Preload("User").Where(map[string]interface{}{"user_id": id, "is_private": false}).Limit(constant.PAGE_PER_LIMIT).Offset((p - 1) * constant.PAGE_PER_LIMIT).Find(&novels)
 
 		db.Model(&model.Novel{}).Where(map[string]interface{}{"user_id": id, "is_private": false}).Count(&count)
 	}
 
 	// ページングHTML
-	retHTML := util.GenereatePagination(p, count, LIMIT)
+	retHTML := util.GenereatePagination(p, count, constant.PAGE_PER_LIMIT)
 
 	util.RenderHTML(c, http.StatusOK, "user/show.tmpl", gin.H{
 		"ID":         user.ID,

@@ -4,13 +4,11 @@ import (
 	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/sairoutine/RenmeriMaker/server/constant"
 	"github.com/sairoutine/RenmeriMaker/server/model"
 	"github.com/sairoutine/RenmeriMaker/server/util"
 	"net/http"
 )
-
-// 1ページの表示件数
-const LIMIT = 10
 
 func Index(c *gin.Context) {
 	db := c.MustGet("DB").(*gorm.DB)
@@ -38,10 +36,10 @@ func Index(c *gin.Context) {
 
 	// ノベル一覧
 	novels := []model.Novel{}
-	db.Preload("User").Where(map[string]interface{}{"is_private": false}).Limit(LIMIT).Offset((p - 1) * LIMIT).Find(&novels)
+	db.Preload("User").Where(map[string]interface{}{"is_private": false}).Limit(constant.PAGE_PER_LIMIT).Offset((p - 1) * constant.PAGE_PER_LIMIT).Find(&novels)
 
 	// ページングHTML
-	retHTML := util.GenereatePagination(p, count, LIMIT)
+	retHTML := util.GenereatePagination(p, count, constant.PAGE_PER_LIMIT)
 
 	util.RenderHTML(c, http.StatusOK, "root/index.tmpl", gin.H{
 		"novels":     novels,
