@@ -1,15 +1,18 @@
 {{ define "content" }}
-<html><h1>
-		500
-</h1>
-<p>
-	Internal Server Error
-</p>
-{{ if .isDebug }}
-	<pre>
-	{{ .message }}
-	{{ .stacktrace }}
-	</pre>
-{{ end }}
-</html>
+<div class="content-grid mdl-grid">
+<div class="mdl-card mdl-cell mdl-cell--12-col mdl-shadow--2dp">
+  <div class="mdl-card__title" style="background: #3F51B5;">
+    <h1 class="mdl-card__title-text mdl-color-text--white">500 Internal Server Error</h1>
+  </div>
+  <div class="mdl-card__supporting-text mdl-color-text--black">
+	サーバー内部でエラーが発生しました<br />
+	{{ if .isDebug }}
+		<pre>
+		{{ .message }}
+		{{ .stacktrace }}
+		</pre>
+	{{ end }}
+  </div>
+</div>
+</div>
 {{ end }}
