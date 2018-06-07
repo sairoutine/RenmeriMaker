@@ -13923,75 +13923,90 @@ module.exports = function (ctrl, args) {
 	return {
 		tag: 'div',
 		children: [{
-			tag: 'canvas',
-			attrs: { width: '640', height: '480', config: runGame }
+			tag: 'div',
+			attrs: { className: 'mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone' }
 		}, {
 			tag: 'div',
 			children: [{
-				tag: 'hr'
-			}, '\u30BF\u30A4\u30C8\u30EB:', ctrl.vm.title(), {
-				tag: 'br'
-			}, '\u8AAC\u660E:', ctrl.vm.description(), {
-				tag: 'br'
-			}, '\u6295\u7A3F\u8005:', {
-				tag: 'a',
-				children: [ctrl.vm.user().dispName()],
-				attrs: { href: "/user/show/" + ctrl.vm.user().id() }
-			}, {
-				tag: 'br'
-			}, {
-				tag: 'hr'
-			}, function () {
-				var list = [];
-				for (var i = 0, len = ctrl.vm.emojis().length; i < len; i++) {
-					var emoji = ctrl.vm.emojis()[i];
-					list.push({
-						tag: 'span',
-						children: [{
-							tag: 'img',
-							attrs: { src: "/image/emoji/" + emoji.fileName(), width: '24', height: '24' }
-						}, emoji.count()]
-					});
-				}
-				return list;
-			}(), {
-				tag: 'hr'
+				tag: 'div',
+				children: [{
+					tag: 'canvas',
+					attrs: { width: '640', height: '480', config: runGame, style: 'width: 100%; max-width: 640px;height: auto;' }
+				}, {
+					tag: 'div',
+					children: [{
+						tag: 'hr'
+					}, '\u30BF\u30A4\u30C8\u30EB:', ctrl.vm.title(), {
+						tag: 'br'
+					}, '\u8AAC\u660E:', ctrl.vm.description(), {
+						tag: 'br'
+					}, '\u6295\u7A3F\u8005:', {
+						tag: 'a',
+						children: [ctrl.vm.user().dispName()],
+						attrs: { href: "/user/show/" + ctrl.vm.user().id() }
+					}, {
+						tag: 'br'
+					}, {
+						tag: 'hr'
+					}, function () {
+						var list = [];
+						for (var i = 0, len = ctrl.vm.emojis().length; i < len; i++) {
+							var emoji = ctrl.vm.emojis()[i];
+							var onsubmit = function (emoji) {
+								return function (e) {
+									e.preventDefault();
+									ctrl.addEmoji(emoji.type());
+								};
+							}(emoji);
+
+							if (ctrl.vm.isOwner()) {
+								list.push({
+									tag: 'span',
+									children: [{
+										tag: 'img',
+										attrs: { src: "/image/emoji/" + emoji.fileName(), width: '24', height: '24' }
+									}, emoji.count()]
+								});
+							} else {
+								list.push({
+									tag: 'form',
+									children: [{
+										tag: 'input',
+										attrs: { type: 'image', src: "/image/emoji/" + emoji.fileName(), name: 'submit', width: '24', height: '24' }
+									}, emoji.count()],
+									attrs: { style: 'display:inline;', onsubmit: onsubmit }
+								});
+							}
+						}
+						return list;
+					}()],
+					attrs: { style: { display: ctrl.isShowMode() ? 'block' : 'none' } }
+				}],
+				attrs: { className: 'mdl-card__supporting-text mdl-color-text--black' }
 			}, {
 				tag: 'div',
 				children: [{
-					tag: 'a',
-					children: ['\u30CE\u30D9\u30EB\u7DE8\u96C6'],
-					attrs: { href: "/novel/edit/" + ctrl.vm.id() }
-				}, {
-					tag: 'br'
+					tag: 'div',
+					children: [{
+						tag: 'div',
+						attrs: { className: 'mdl-layout-spacer' }
+					}, {
+						tag: 'a',
+						children: ['\u7DE8\u96C6\xA0', {
+							tag: 'i',
+							children: ['build'],
+							attrs: { className: 'material-icons' }
+						}],
+						attrs: { className: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect', href: "/novel/edit/" + ctrl.vm.id() }
+					}],
+					attrs: { className: 'mdl-card__actions mdl-card--border' }
 				}],
-				attrs: { style: { display: ctrl.vm.isOwner() ? 'block' : 'none' } }
-			}, {
-				tag: 'div',
-				children: [function () {
-					var list = [];
-					for (var key in ctrl.vm.emojiMap()) {
-						var filename = ctrl.vm.emojiMap()[key];
-						var onsubmit = function (key) {
-							return function (e) {
-								e.preventDefault();
-								ctrl.addEmoji(key);
-							};
-						}(key);
-						list.push({
-							tag: 'form',
-							children: [{
-								tag: 'input',
-								attrs: { type: 'image', src: "/image/emoji/" + filename, name: 'submit', width: '24', height: '24' }
-							}],
-							attrs: { style: 'display:inline;', onsubmit: onsubmit }
-						});
-					}
-					return list;
-				}()],
-				attrs: { style: { display: !ctrl.vm.isOwner() ? 'block' : 'none' } }
+				attrs: { style: { display: ctrl.isShowMode() && ctrl.vm.isOwner() ? 'block' : 'none' } }
 			}],
-			attrs: { style: { display: ctrl.isShowMode() ? 'block' : 'none' } }
+			attrs: { className: 'mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp' }
+		}, {
+			tag: 'div',
+			attrs: { className: 'mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone' }
 		}, {
 			tag: 'div',
 			children: [{
@@ -14088,7 +14103,8 @@ module.exports = function (ctrl, args) {
 				tag: 'br'
 			}],
 			attrs: { style: { display: ctrl.isEditMode() || ctrl.isNewMode() ? 'block' : 'none' } }
-		}]
+		}],
+		attrs: { className: 'content-grid mdl-grid' }
 	};
 };
 
@@ -14110,6 +14126,7 @@ var Emoji = function Emoji(args) {
 	args = args || {};
 	this.fileName = m.prop(args.FileName);
 	this.count = m.prop(args.Count);
+	this.type = m.prop(args.Type);
 };
 
 var ViewModel = function ViewModel(args) {
@@ -14120,7 +14137,6 @@ var ViewModel = function ViewModel(args) {
 	this.user = m.prop(new User());
 	this.emojis = m.prop([]);
 	this.isOwner = m.prop(false);
-	this.emojiMap = m.prop([]);
 
 	this.vdom = [];
 	this.currentAddVdomSelectedIndex = m.prop(0);
@@ -14150,7 +14166,6 @@ ViewModel.prototype.loadFromAPI = function (id) {
 		self.description(response.Description);
 		self.user(new User(response.User));
 		self.isOwner(response.IsOwner);
-		self.emojiMap(response.EmojiMap);
 
 		var emojis = [];
 		for (var i = 0, len = response.Emojis.length; i < len; i++) {
