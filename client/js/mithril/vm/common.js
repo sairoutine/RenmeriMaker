@@ -14,7 +14,8 @@ var User = function (args) {
 var Emoji = function (args) {
 	args = args || {};
 	this.fileName = m.prop(args.FileName);
-	this.count = m.prop(args.Count);
+	this.count    = m.prop(args.Count);
+	this.type     = m.prop(args.Type);
 };
 
 var ViewModel = function (args) {
@@ -25,7 +26,6 @@ var ViewModel = function (args) {
 	this.user = m.prop(new User());
 	this.emojis = m.prop([]);
 	this.isOwner = m.prop(false);
-	this.emojiMap = m.prop([]);
 
 	this.vdom = [];
 	this.currentAddVdomSelectedIndex = m.prop(0);
@@ -55,7 +55,6 @@ ViewModel.prototype.loadFromAPI = function (id) {
 		self.description(response.Description);
 		self.user(new User(response.User));
 		self.isOwner(response.IsOwner);
-		self.emojiMap(response.EmojiMap);
 
 		var emojis = [];
 		for (var i = 0, len = response.Emojis.length; i < len; i++) {

@@ -8,49 +8,54 @@ module.exports = function(ctrl, args) {
 	var togglePrivate = ctrl.togglePrivate.bind(ctrl);
 	var runGame = ctrl.runGame.bind(ctrl);
 
-	return <div>
-		<canvas width="640" height="480" config={runGame}></canvas>
+	return <div class="content-grid mdl-grid">
+		<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+		<div class="mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp">
+			<div class="mdl-card__supporting-text mdl-color-text--black">
+				<canvas width="640" height="480" config={runGame} style="width: 100%; max-width: 640px;height: auto;"></canvas>
+				<div style={ { display: ctrl.isShowMode() ? 'block' : 'none'} }>
+					<hr />
+					タイトル:{ ctrl.vm.title() }<br />
+					説明:{ ctrl.vm.description() }<br />
+					投稿者:<a href={"/user/show/" + ctrl.vm.user().id()}>{ctrl.vm.user().dispName()}</a><br />
+					<hr/>
+					{(function () {
+						var list = [];
+						for (var i = 0, len = ctrl.vm.emojis().length; i < len; i++) {
+							var emoji = ctrl.vm.emojis()[i];
+							var onsubmit = (function (emoji) {
+								return function (e) {
+									e.preventDefault();
+									ctrl.addEmoji(emoji.type());
+								};
+							})(emoji);
 
-		<div style={ { display: ctrl.isShowMode() ? 'block' : 'none'} }>
-			<hr />
-			タイトル:{ ctrl.vm.title() }<br />
-			説明:{ ctrl.vm.description() }<br />
-			投稿者:<a href={"/user/show/" + ctrl.vm.user().id()}>{ctrl.vm.user().dispName()}</a><br />
-			<hr />
-			{(function () {
-				var list = [];
-				for (var i = 0, len = ctrl.vm.emojis().length; i < len; i++) {
-					var emoji = ctrl.vm.emojis()[i];
-					list.push(<span>
-						<img src={"/image/emoji/" + emoji.fileName() } width="24" height="24" />
-						{emoji.count()}
-					</span>);
-				}
-				return list;
-			})()}
-			<hr />
-			<div style={ { display: ctrl.vm.isOwner() ? 'block' : 'none'} }>
-				<a href={"/novel/edit/" + ctrl.vm.id() }>ノベル編集</a><br />
+							if (ctrl.vm.isOwner()) {
+								list.push(<span>
+									<img src={"/image/emoji/" + emoji.fileName() } width="24" height="24" />
+									{emoji.count()}
+								</span>);
+							}
+							else {
+								list.push(<form style="display:inline;" onsubmit={onsubmit}>
+									<input type="image" src={"/image/emoji/" + emoji.fileName()} name="submit" width="24" height="24" />
+									{emoji.count()}
+								</form>);
+							}
+						}
+						return list;
+					})()}
+				</div>
 			</div>
-			<div style={ { display: !ctrl.vm.isOwner() ? 'block' : 'none'} }>
-			{(function () {
-				var list = [];
-				for (var key in ctrl.vm.emojiMap()) {
-					var filename = ctrl.vm.emojiMap()[key];
-					var onsubmit = (function (key) {
-						return function (e) {
-							e.preventDefault();
-							ctrl.addEmoji(key);
-						};
-					})(key);
-					list.push(<form style="display:inline;" onsubmit={onsubmit}>
-						<input type="image" src={"/image/emoji/" + filename} name="submit" width="24" height="24" />
-					</form>);
-				}
-				return list;
-			})()}
+			<div style={ { display: ctrl.isShowMode() && ctrl.vm.isOwner() ? 'block' : 'none'} }>
+				<div class="mdl-card__actions mdl-card--border">
+					<div class="mdl-layout-spacer"></div>
+					<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href={"/novel/edit/" + ctrl.vm.id() }>編集&nbsp;<i class="material-icons">build</i></a>
+				</div>
 			</div>
 		</div>
+		<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+
 		<div style={ { display: ctrl.isEditMode() || ctrl.isNewMode() ? 'block' : 'none'} }>
 			<hr />
 			<b>編集</b><br />
