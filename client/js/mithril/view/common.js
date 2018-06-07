@@ -107,10 +107,8 @@ module.exports = function(ctrl, args) {
 			}} />
 			<hr />
 
-			<div style={ { display: ctrl.isEditMode() ? 'block' : 'none'} }>
-				現在:{ ctrl.vm.isPrivate() ? "非公開" : "公開" }
-				<input type="button" value="公開／非公開の変更" onclick={togglePrivate}/>
-			</div>
+			現在:{ ctrl.vm.isPrivate() ? "非公開" : "公開" }
+			<input type="button" value="公開／非公開の変更" onclick={togglePrivate}/>
 
 			<input type="button" value="リロード" onclick={reload} />
 			<input type="button" value="セーブ" onclick={save} />
