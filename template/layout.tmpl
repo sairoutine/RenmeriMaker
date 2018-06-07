@@ -27,7 +27,7 @@
 		  <span class="mdl-layout-title">蓮メリメーカー</span>
 		  <div class="mdl-layout-spacer"></div>
 		  <nav class="mdl-navigation">
-			{{ if .isLogin }}
+			{{ if ._isLogin }}
 			<a class="mdl-navigation__link" href="/logout"><i class="material-icons">input</i>&nbsp;ログアウト</a><br />
 			{{ else }}
 			<a class="mdl-navigation__link" href="/twitter/auth"><i class="material-icons">input</i>&nbsp;ログイン</a><br />
@@ -38,7 +38,7 @@
 	  <div class="mdl-layout__drawer">
 		<span class="mdl-layout-title">蓮メリメーカー</span>
 		<nav class="mdl-navigation">
-			{{ if .isLogin }}
+			{{ if ._isLogin }}
 			<a class="mdl-navigation__link" href="/user/show/me">自分のプロフィール</a><br />
 			<a class="mdl-navigation__link" href="/novel/new">新規作成</a><br />
 			{{ end }}

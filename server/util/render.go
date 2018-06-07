@@ -1,6 +1,7 @@
 package util
 
 import (
+	"github.com/gin-contrib/sessions"
 	"github.com/gin-gonic/gin"
 	csrf "github.com/utrack/gin-csrf"
 	"net/http"
@@ -10,6 +11,14 @@ import (
 func RenderHTML(c *gin.Context, code int, name string, obj gin.H) {
 	if obj == nil {
 		obj = gin.H{}
+	}
+
+	//is login
+	session := sessions.Default(c)
+	_, ok := session.Get("user_id").(uint64)
+
+	if ok {
+		obj["_isLogin"] = true
 	}
 
 	// csrf token
