@@ -158,7 +158,6 @@ func Show(c *gin.Context) {
 	emojiInterfaceList := []interface{}{}
 	for i := range constant.EmojiList {
 		key := constant.EmojiList[i]["key"]
-
 		emojiModel := emojiTypeToModelMap[key]
 
 		emojiInterface := util.StructToMap(&emojiModel)
