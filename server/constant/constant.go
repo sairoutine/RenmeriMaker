@@ -6,20 +6,67 @@ const (
 	ScriptNewMode  = "new"
 )
 
-var EmojiMap = map[string]string{
-	"100":        "100_Emoji.png",
-	"Clap":       "Clapping_Hands_Emoji.png",
-	"HeartEyes":  "Heart_Eyes_Emoji.png",
-	"Hug":        "Hugging_Face_Emoji.png",
-	"Kiss":       "Kiss_Emoji_with_Closed_Eyes.png",
-	"Cry":        "Loudly_Crying_Face_Emoji.png",
-	"Pray":       "Praying_Emoji.png",
-	"Smile":      "Smiling_Emoji_with_Smiling_Eyes.png",
-	"Halo":       "Smiling_Face_with_Halo.png",
-	"Heart":      "Sparkling_Pink_Heart_Emoji.png",
-	"Star":       "Star_Emoji.png",
-	"Sunglasses": "Sunglasses_Emoji.png",
-	"Joy":        "Tears_of_Joy_Emoji.png",
+var EmojiList = []map[string]string{
+	{
+		"key":   "100",
+		"value": "100_Emoji.png",
+	},
+	{
+		"key":   "Clap",
+		"value": "Clapping_Hands_Emoji.png",
+	},
+	{
+		"key":   "HeartEyes",
+		"value": "Heart_Eyes_Emoji.png",
+	},
+	{
+		"key":   "Hug",
+		"value": "Hugging_Face_Emoji.png",
+	},
+	{
+		"key":   "Kiss",
+		"value": "Kiss_Emoji_with_Closed_Eyes.png",
+	},
+	{
+		"key":   "Cry",
+		"value": "Loudly_Crying_Face_Emoji.png",
+	},
+	{
+		"key":   "Pray",
+		"value": "Praying_Emoji.png",
+	},
+	{
+		"key":   "Smile",
+		"value": "Smiling_Emoji_with_Smiling_Eyes.png",
+	},
+	{
+		"key":   "Halo",
+		"value": "Smiling_Face_with_Halo.png",
+	},
+	{
+		"key":   "Heart",
+		"value": "Sparkling_Pink_Heart_Emoji.png",
+	},
+	{
+		"key":   "Star",
+		"value": "Star_Emoji.png",
+	},
+	{
+		"key":   "Sunglasses",
+		"value": "Sunglasses_Emoji.png",
+	},
+	{
+		"key":   "Joy",
+		"value": "Tears_of_Joy_Emoji.png",
+	},
+}
+
+var EmojiMap = map[string]string{}
+
+func init() {
+	for i := range EmojiList {
+		EmojiMap[EmojiList[i]["key"]] = EmojiList[i]["value"]
+	}
 }
 
 const (

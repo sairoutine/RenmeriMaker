@@ -142,26 +142,29 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	emojisList := novel.Emojis
-	emojisMap := map[string]model.Emoji{}
-
-	for i := range emojisList {
-		emojisMap[emojisList[i].Type] = emojisList[i]
+	// list -> map に変換
+	emojiTypeToModelMap := map[string]model.Emoji{}
+	for i := range novel.Emojis {
+		emojiTypeToModelMap[novel.Emojis[i].Type] = novel.Emojis[i]
 	}
 
-	emojisMapList := []interface{}{}
+	// DBに存在しなかった絵文字を追加
 	for key, _ := range constant.EmojiMap {
-		if _, ok := emojisMap[key]; !ok {
-			emojisMap[key] = model.NewEmoji(novel.ID, key)
+		if _, ok := emojiTypeToModelMap[key]; !ok {
+			emojiTypeToModelMap[key] = model.NewEmoji(novel.ID, key)
 		}
+	}
 
-		emojiStruct := emojisMap[key]
+	emojiInterfaceList := []interface{}{}
+	for i := range constant.EmojiList {
+		key := constant.EmojiList[i]["key"]
 
-		emoji := util.StructToMap(&emojiStruct)
+		emojiModel := emojiTypeToModelMap[key]
 
-		emoji["FileName"] = emojiStruct.FileName()
+		emojiInterface := util.StructToMap(&emojiModel)
+		emojiInterface["FileName"] = emojiModel.FileName()
 
-		emojisMapList = append(emojisMapList, emoji)
+		emojiInterfaceList = append(emojiInterfaceList, emojiInterface)
 	}
 
 	util.RenderJSON(c, http.StatusOK, gin.H{
@@ -174,7 +177,7 @@ func Show(c *gin.Context) {
 			"ID":       novel.User.ID,
 			"DispName": novel.User.DispName,
 		},
-		"Emojis":  emojisMapList,
+		"Emojis":  emojiInterfaceList,
 		"IsOwner": isOwner,
 	})
 
