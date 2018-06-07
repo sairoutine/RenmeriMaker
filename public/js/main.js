@@ -14086,13 +14086,9 @@ module.exports = function (ctrl, args) {
 					} }
 			}, {
 				tag: 'hr'
-			}, {
-				tag: 'div',
-				children: ['\u73FE\u5728:', ctrl.vm.isPrivate() ? "非公開" : "公開", {
-					tag: 'input',
-					attrs: { type: 'button', value: '\u516C\u958B\uFF0F\u975E\u516C\u958B\u306E\u5909\u66F4', onclick: togglePrivate }
-				}],
-				attrs: { style: { display: ctrl.isEditMode() ? 'block' : 'none' } }
+			}, '\u73FE\u5728:', ctrl.vm.isPrivate() ? "非公開" : "公開", {
+				tag: 'input',
+				attrs: { type: 'button', value: '\u516C\u958B\uFF0F\u975E\u516C\u958B\u306E\u5909\u66F4', onclick: togglePrivate }
 			}, {
 				tag: 'input',
 				attrs: { type: 'button', value: '\u30EA\u30ED\u30FC\u30C9', onclick: reload }
