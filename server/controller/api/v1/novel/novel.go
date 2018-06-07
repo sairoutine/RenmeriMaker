@@ -142,10 +142,26 @@ func Show(c *gin.Context) {
 		return
 	}
 
-	// 返り値に関数の値追加
-	emojis := util.StructArrayToMapArray(novel.Emojis)
-	for i := range emojis {
-		emojis[i]["FileName"] = novel.Emojis[i].FileName()
+	emojisList := novel.Emojis
+	emojisMap := map[string]model.Emoji{}
+
+	for i := range emojisList {
+		emojisMap[emojisList[i].Type] = emojisList[i]
+	}
+
+	emojisMapList := []interface{}{}
+	for key, _ := range constant.EmojiMap {
+		if _, ok := emojisMap[key]; !ok {
+			emojisMap[key] = model.NewEmoji(novel.ID, key)
+		}
+
+		emojiStruct := emojisMap[key]
+
+		emoji := util.StructToMap(&emojiStruct)
+
+		emoji["FileName"] = emojiStruct.FileName()
+
+		emojisMapList = append(emojisMapList, emoji)
 	}
 
 	util.RenderJSON(c, http.StatusOK, gin.H{
@@ -158,9 +174,8 @@ func Show(c *gin.Context) {
 			"ID":       novel.User.ID,
 			"DispName": novel.User.DispName,
 		},
-		"Emojis":   emojis,
-		"IsOwner":  isOwner,
-		"EmojiMap": constant.EmojiMap,
+		"Emojis":  emojisMapList,
+		"IsOwner": isOwner,
 	})
 
 }

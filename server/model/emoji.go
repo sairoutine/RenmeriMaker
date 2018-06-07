@@ -16,3 +16,11 @@ type Emoji struct {
 func (e *Emoji) FileName() string {
 	return constant.EmojiMap[e.Type]
 }
+
+func NewEmoji(novelID uint64, typ string) Emoji {
+	return Emoji{
+		NovelID: novelID,
+		Type:    typ,
+		Count:   0,
+	}
+}

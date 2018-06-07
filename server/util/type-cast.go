@@ -25,6 +25,20 @@ func String2Int(str string) int {
 	return i
 }
 
+func StructToMap(data interface{}) map[string]interface{} {
+	result := make(map[string]interface{})
+	elem := reflect.ValueOf(data).Elem()
+	size := elem.NumField()
+
+	for i := 0; i < size; i++ {
+		field := elem.Type().Field(i).Name
+		value := elem.Field(i).Interface()
+		result[field] = value
+	}
+
+	return result
+}
+
 func StructArrayToMapArray(data interface{}) []map[string]interface{} {
 	rv := reflect.ValueOf(data)
 	maps := make([]map[string]interface{}, 0, rv.Len())
