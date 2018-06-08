@@ -32,16 +32,16 @@ module.exports = function(ctrl, args) {
 								})(emoji);
 
 								if (ctrl.vm.isOwner()) {
-									list.push(<span>
-										<img src={"/image/emoji/" + emoji.fileName() } width="24" height="24" />
-										{emoji.count()}
+									list.push(<span class="mdl-chip">
+										<img src={"/image/emoji/" + emoji.fileName() } width="24" height="24"  />
+										<span class="mdl-chip__text" style="font-size: 18px">{"　"+emoji.count()}</span>
 									</span>);
 								}
 								else {
-									list.push(<form style="display:inline;" onsubmit={onsubmit}>
-										<input type="image" src={"/image/emoji/" + emoji.fileName()} name="submit" width="24" height="24" />
-										{emoji.count()}
-									</form>);
+									list.push(<button class="mdl-chip" style="cursor: pointer;" onclick={onsubmit}>
+										<img src={"/image/emoji/" + emoji.fileName() } width="24" height="24"  />
+										<span class="mdl-chip__text" style="font-size: 18px">{"　"+emoji.count()}</span>
+									</button>);
 								}
 							}
 							return list;
