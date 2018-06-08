@@ -21,6 +21,14 @@ func (s *Server) SetupMiddleware() {
 		store = memstore.NewStore([]byte("secret"))
 	}
 
+	if gin.Mode() == gin.DebugMode {
+		// 開発環境ではブラウザ側のキャッシュを無効にする
+		r.Use(func(c *gin.Context) {
+			c.Writer.Header().Set("Cache-Control", "no-cache")
+			c.Next()
+		})
+	}
+
 	// セッション
 	r.Use(sessions.Sessions("renmeri_maker_session", store))
 
