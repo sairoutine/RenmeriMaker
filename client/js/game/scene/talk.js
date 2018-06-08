@@ -278,7 +278,7 @@ SceneTalk.prototype._showMessage = function() {
 
 
 SceneTalk.prototype._afterSerifChanged = function() {
-	while (this.serif.getCurrentMaxLengthLetters() === 0) {
+	while (!this.serif.isEnd() && this.serif.getCurrentMaxLengthLetters() === 0) {
 		// BGM 再生
 		if (this.serif.getCurrentOption().bgm) {
 			this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
