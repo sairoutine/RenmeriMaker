@@ -61,11 +61,17 @@ module.exports = function(ctrl, args) {
 		<div class="content-grid mdl-grid" style={ { display: ctrl.isEditMode() || ctrl.isNewMode() ? '' : 'none'} }>
 			<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
 			<div class="mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp">
+				<div class="mdl-card__title">
+					<h1 class="mdl-card__title-text">編集</h1>
+				</div>
+
 				<div class="mdl-card__supporting-text mdl-color-text--black">
-					<b>編集</b><br />
 					タイトル：<input type="text" value={ctrl.vm.title()} onchange={m.withAttr("value", ctrl.vm.title)} /><br />
 					紹介文：<textarea value={ctrl.vm.description()} onchange={m.withAttr("value", ctrl.vm.description)}></textarea><br />
+					現在:{ ctrl.vm.isPrivate() ? "非公開" : "公開" }
+					<input type="button" value="公開／非公開の変更" onclick={togglePrivate}/>
 
+					<hr />
 					{(function () {
 						var vdomlist = [];
 						for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
@@ -109,16 +115,26 @@ module.exports = function(ctrl, args) {
 						ctrl.addVdom();
 						ctrl.reload();
 					}} />
-					<hr />
-
-					現在:{ ctrl.vm.isPrivate() ? "非公開" : "公開" }
-					<input type="button" value="公開／非公開の変更" onclick={togglePrivate}/>
-
+				</div>
+				<div class="mdl-card__actions mdl-card--border">
+					<div class="mdl-layout-spacer"></div>
 					<input type="button" value="リロード" onclick={reload} />
 					<input type="button" value="セーブ" onclick={save} />
 				</div>
+
 			</div>
 			<div class="mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone"></div>
+		</div>
+		<div id="snackbar" class="mdl-js-snackbar mdl-snackbar" config={function (element, isInitialized, context) {
+			if(isInitialized) return;
+			window.componentHandler.upgradeElement(element);
+
+			context.onunload = function() {
+				window.componentHandler.downgradeElements(element);
+			};
+		}}>
+			<div class="mdl-snackbar__text"></div>
+			<button class="mdl-snackbar__action" type="button"></button>
 		</div>
 	</div>;
 };
