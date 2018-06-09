@@ -13,12 +13,27 @@ Controller.prototype.load = function () {
 };
 // セーブデータを保存する
 Controller.prototype.save = function () {
+	if(this.vm.isSaveLocked()) return;
+
+	this.vm.saveLock();
+
+	var self = this;
 	this.vm.create()
 	.then(function(result) {
-		window.alert("保存しました");
-		location.href = "/novel/show/" + result.id;
-	})
+		var snackbarContainer = window.document.querySelector('#snackbar');
+		var data = {
+			message: '保存しました',
+			timeout: 1000,
+		};
+		snackbarContainer.MaterialSnackbar.showSnackbar(data);
+
+		setTimeout(function() {
+			self.vm.saveUnLock();
+			location.href = "/novel/show/" + result.id;
+		}, 1000);
+	});
 };
+
 Controller.prototype.isNewMode = function () {
 	return true;
 };
