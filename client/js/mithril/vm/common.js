@@ -30,6 +30,8 @@ var ViewModel = function (args) {
 	this.vdom = [];
 	this.currentAddVdomSelectedIndex = m.prop(0);
 
+	this._isSaveLocked = m.prop(false);
+
 	// csrf token
 	this._csrf_token = window.config.csrf;
 };
@@ -172,5 +174,23 @@ ViewModel.prototype.addEmoji = function (type) {
 ViewModel.prototype.togglePrivate = function () {
 	this.isPrivate(!this.isPrivate());
 };
+
+ViewModel.prototype.isSaveLocked = function () {
+	return this._isSaveLocked();
+};
+
+ViewModel.prototype.saveLock = function () {
+	return this._isSaveLocked(true);
+};
+
+ViewModel.prototype.saveUnLock = function () {
+	return this._isSaveLocked(false);
+};
+
+
+
+
+
+
 
 module.exports = ViewModel;
