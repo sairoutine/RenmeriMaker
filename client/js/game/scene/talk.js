@@ -133,6 +133,9 @@ SceneTalk.prototype.draw = function(){
 SceneTalk.prototype._showBackground = function(){
 	var ctx = this.core.ctx;
 	var background_name = this.serif.getCurrentBackgroundImageName();
+
+	if(!background_name) return;
+
 	var background = this.core.image_loader.getImage(background_name);
 
 	var bgWidth = background.width;
