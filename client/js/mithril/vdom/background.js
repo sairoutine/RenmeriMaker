@@ -25,8 +25,8 @@ Background.prototype.toGameData = function () {
 
 Background.prototype.toComponent = function (ctrl) {
 	var self = this;
-	return <span>
-		<select onchange={m.withAttr("value", function (value) {
+	return <div class="mdl-textfield mdl-js-textfield">
+		<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
 			self.value(value);
 			ctrl.reload();
 		})}>
@@ -40,7 +40,7 @@ Background.prototype.toComponent = function (ctrl) {
 			return list;
 		})()}
 		</select>
-	</span>;
+	</div>;
 };
 
 module.exports = Background;

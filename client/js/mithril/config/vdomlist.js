@@ -4,7 +4,7 @@ var BgmVDom = require('../vdom/bgm');
 var SerifVDom = require('../vdom/serif');
 
 module.exports = [
+	{name: "セリフ", value: "serif", Klass: SerifVDom},
 	{name: "背景変更", value: "background", Klass: BackgroundVDom},
 	{name: "BGM変更", value: "bgm", Klass: BgmVDom},
-	{name: "セリフ", value: "serif", Klass: SerifVDom},
 ];

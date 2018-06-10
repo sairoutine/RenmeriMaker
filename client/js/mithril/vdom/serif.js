@@ -14,9 +14,10 @@ var exp_list = [
 	{name: "驚", value: "surprised"},
 ];
 
-
+var _id = 0;
 
 var Serif = function (args) {
+	this.id = m.prop(++_id);
 	this.define = m.prop(args.define);
 	this.pos = m.prop(args.pos);
 	this.exp = m.prop(args.exp || exp_list[0].value);
@@ -47,7 +48,8 @@ Serif.prototype.toGameData = function () {
 Serif.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return <span>
-		<select onchange={m.withAttr("value", function (value) {
+		<div class="mdl-textfield mdl-js-textfield">
+		<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
 			self.chara(value);
 
 			// TODO:
@@ -70,7 +72,7 @@ Serif.prototype.toComponent = function (ctrl) {
 		})()}
 		</select>
 
-		<select onchange={m.withAttr("value", function (value) {
+		<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
 			self.exp(value);
 			ctrl.reload();
 		})}>
@@ -84,11 +86,22 @@ Serif.prototype.toComponent = function (ctrl) {
 			return list;
 		})()}
 		</select>
+		</div>
 
-		<textarea value={self.value()} onchange={m.withAttr("value", function (value) {
+		<div class="mdl-textfield mdl-js-textfield" config={function (element, isInitialized, context) {
+			if(isInitialized) return;
+			window.componentHandler.upgradeElement(element);
+
+			context.onunload = function() {
+				window.componentHandler.downgradeElements(element);
+			};
+		}}>
+		<textarea class="mdl-textfield__input" rows= "3" id={self.id()} value={self.value()} onchange={m.withAttr("value", function (value) {
 			self.value(value);
 			ctrl.reload();
 		})}></textarea>
+		<label class="mdl-textfield__label" for={self.id()}>紹介文</label>
+		</div>
 	</span>;
 };
 

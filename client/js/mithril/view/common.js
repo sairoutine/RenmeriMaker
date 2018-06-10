@@ -14,6 +14,11 @@ module.exports = function(ctrl, args) {
 			<div class="mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp">
 				<div class="mdl-card__supporting-text mdl-color-text--black">
 					<canvas width="640" height="480" config={runGame} style="width: 100%; max-width: 640px;height: auto;"></canvas>
+					<div style={ { display: ctrl.isNewMode() || ctrl.isEditMode() ? 'block' : 'none'} }>
+						<hr />
+						<input type="button" value="リロード" onclick={reload} class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" />
+					</div>
+
 					<div style={ { display: ctrl.isShowMode() ? 'block' : 'none'} }>
 						<hr />
 						タイトル:{ ctrl.vm.title() }<br />
@@ -64,14 +69,7 @@ module.exports = function(ctrl, args) {
 				<div class="mdl-card__title">
 					<h1 class="mdl-card__title-text">編集</h1>
 				</div>
-
 				<div class="mdl-card__supporting-text mdl-color-text--black">
-					タイトル：<input type="text" value={ctrl.vm.title()} onchange={m.withAttr("value", ctrl.vm.title)} /><br />
-					紹介文：<textarea value={ctrl.vm.description()} onchange={m.withAttr("value", ctrl.vm.description)}></textarea><br />
-					現在:{ ctrl.vm.isPrivate() ? "非公開" : "公開" }
-					<input type="button" value="公開／非公開の変更" onclick={togglePrivate}/>
-
-					<hr />
 					{(function () {
 						var vdomlist = [];
 						for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
@@ -80,46 +78,73 @@ module.exports = function(ctrl, args) {
 
 							(function (vdom) {
 								vdomlist.push(<span>
-									<input type="button" value="☓" onclick={function () {
-										if(ctrl.delete(vdom)) {
-											ctrl.reload();
-										}
-									}} />
-									<input type="button" value="↑" onclick={function () {
+									<button onclick={function () {
 										if(ctrl.up(vdom)) {
 											ctrl.reload();
 										}
-									}} />
-									<input type="button" value="↓" onclick={function () {
+									}} class="mdl-button mdl-js-button mdl-button--icon">
+										<i class="material-icons">keyboard_arrow_up</i>
+									</button>
+									<button onclick={function () {
 										if(ctrl.down(vdom)) {
 											ctrl.reload();
 										}
-									}} />
-									<br /></span>);
+									}} class="mdl-button mdl-js-button mdl-button--icon">
+										<i class="material-icons">keyboard_arrow_down</i>
+									</button>
+									<button onclick={function () {
+										if(ctrl.delete(vdom)) {
+											ctrl.reload();
+										}
+									}} class="mdl-button mdl-js-button mdl-button--icon">
+										<i class="material-icons">delete_forever</i>
+									</button>
+									<hr /></span>);
 							})(vdom);
 						}
 						return vdomlist;
 					})()}
 
-					<select onchange={m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex)}>
-					{(function () {
-						var list = [];
-						for (var i = 0, len = VdomList.length; i < len; i++) {
-							var vdomconfig = VdomList[i];
-							list.push(<option value={vdomconfig.value} selected={i === ctrl.vm.currentAddVdomSelectedIndex()}>{vdomconfig.name}</option>);
-						}
-						return list;
-					})()}
-					</select>
-					<input type="button" value="追加" onclick={function () {
+					<div class="mdl-textfield mdl-js-textfield">
+						追加：<select class="mdl-textfield__input" onchange={m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex)}>
+						{(function () {
+							var list = [];
+							for (var i = 0, len = VdomList.length; i < len; i++) {
+								var vdomconfig = VdomList[i];
+								list.push(<option value={vdomconfig.value} selected={i === ctrl.vm.currentAddVdomSelectedIndex()}>{vdomconfig.name}</option>);
+							}
+							return list;
+						})()}
+						</select>
+					</div>
+					<button onclick={function () {
 						ctrl.addVdom();
 						ctrl.reload();
-					}} />
+					}} class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+						<i class="material-icons">add</i>
+					</button>
+				</div>
+				<div class="mdl-card__actions mdl-card--border">
+					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+						<input class="mdl-textfield__input" type="text" id="title" value={ctrl.vm.title()} onchange={m.withAttr("value", ctrl.vm.title)} />
+						<label class="mdl-textfield__label" for="title">タイトル</label>
+					</div>
+					<br />
+					<div class="mdl-textfield mdl-js-textfield  mdl-textfield--floating-label">
+						<textarea class="mdl-textfield__input" type="text" rows= "3" id="description" value={ctrl.vm.description()} onchange={m.withAttr("value", ctrl.vm.description)}></textarea>
+						<label class="mdl-textfield__label" for="description">紹介文</label>
+					</div>
+
+					<label class="mdl-switch mdl-js-switch mdl-js-ripple-effect" for="switch-1">
+						<input type="checkbox" id="switch-1" class="mdl-switch__input" onclick={togglePrivate} checked={!ctrl.vm.isPrivate()} />
+						<span class="mdl-switch__label">
+							{ ctrl.vm.isPrivate() ? "非公開" : "公開" }
+						</span>
+					</label>
 				</div>
 				<div class="mdl-card__actions mdl-card--border">
 					<div class="mdl-layout-spacer"></div>
-					<input type="button" value="リロード" onclick={reload} />
-					<input type="button" value="セーブ" onclick={save} />
+					<input type="button" value="セーブ" onclick={save} class="mdl-button mdl-js-button mdl-button--raised mdl-button--colored" />
 				</div>
 
 			</div>
