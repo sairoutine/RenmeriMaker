@@ -6,7 +6,7 @@ debug:
         port: 3306
         database: your_database
     application:
-        host: localhost:8082
+        host: localhost:8080
 release:
     mysql:
         protocol: tcp
