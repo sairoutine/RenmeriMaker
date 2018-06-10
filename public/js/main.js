@@ -13916,7 +13916,13 @@ Serif.prototype.toComponent = function (ctrl) {
 						}
 						ctrl.reload();
 					}) }
-			}, {
+			}],
+			attrs: { className: 'mdl-textfield mdl-js-textfield' }
+		}, {
+			tag: 'br'
+		}, {
+			tag: 'div',
+			children: [{
 				tag: 'select',
 				children: [function () {
 					var list = [];
@@ -13938,6 +13944,8 @@ Serif.prototype.toComponent = function (ctrl) {
 			}],
 			attrs: { className: 'mdl-textfield mdl-js-textfield' }
 		}, {
+			tag: 'br'
+		}, {
 			tag: 'div',
 			children: [{
 				tag: 'textarea',
@@ -13947,10 +13955,10 @@ Serif.prototype.toComponent = function (ctrl) {
 					}) }
 			}, {
 				tag: 'label',
-				children: ['\u7D39\u4ECB\u6587'],
+				children: ['\u30BB\u30EA\u30D5'],
 				attrs: { className: 'mdl-textfield__label', 'for': self.id() }
 			}],
-			attrs: { className: 'mdl-textfield mdl-js-textfield', config: function config(element, isInitialized, context) {
+			attrs: { className: 'mdl-textfield mdl-js-textfield', style: 'display: block;width:100%;', config: function config(element, isInitialized, context) {
 					if (isInitialized) return;
 					window.componentHandler.upgradeElement(element);
 
@@ -14102,59 +14110,70 @@ module.exports = function (ctrl, args) {
 					attrs: { className: 'mdl-card__title' }
 				}, {
 					tag: 'div',
-					children: [function () {
-						var vdomlist = [];
-						for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
-							var vdom = ctrl.vm.vdom[i];
-							vdomlist.push(vdom.toComponent(ctrl));
+					children: [{
+						tag: 'table',
+						children: [{
+							tag: 'tbody',
+							children: [function () {
+								var vdomlist = [];
+								for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
+									var vdom = ctrl.vm.vdom[i];
 
-							(function (vdom) {
-								vdomlist.push({
-									tag: 'span',
-									children: [{
-										tag: 'button',
-										children: [{
-											tag: 'i',
-											children: ['keyboard_arrow_up'],
-											attrs: { className: 'material-icons' }
-										}],
-										attrs: { onclick: function onclick() {
-												if (ctrl.up(vdom)) {
-													ctrl.reload();
-												}
-											}, className: 'mdl-button mdl-js-button mdl-button--icon' }
-									}, {
-										tag: 'button',
-										children: [{
-											tag: 'i',
-											children: ['keyboard_arrow_down'],
-											attrs: { className: 'material-icons' }
-										}],
-										attrs: { onclick: function onclick() {
-												if (ctrl.down(vdom)) {
-													ctrl.reload();
-												}
-											}, className: 'mdl-button mdl-js-button mdl-button--icon' }
-									}, {
-										tag: 'button',
-										children: [{
-											tag: 'i',
-											children: ['delete_forever'],
-											attrs: { className: 'material-icons' }
-										}],
-										attrs: { onclick: function onclick() {
-												if (ctrl.delete(vdom)) {
-													ctrl.reload();
-												}
-											}, className: 'mdl-button mdl-js-button mdl-button--icon' }
-									}, {
-										tag: 'hr'
-									}]
-								});
-							})(vdom);
-						}
-						return vdomlist;
-					}(), {
+									(function (vdom) {
+										vdomlist.push({
+											tag: 'tr',
+											children: [{
+												tag: 'td',
+												children: [{
+													tag: 'button',
+													children: [{
+														tag: 'i',
+														children: ['delete_forever'],
+														attrs: { className: 'material-icons' }
+													}],
+													attrs: { onclick: function onclick() {
+															if (ctrl.delete(vdom)) {
+																ctrl.reload();
+															}
+														}, className: 'mdl-button mdl-js-button mdl-button--icon' }
+												}, {
+													tag: 'button',
+													children: [{
+														tag: 'i',
+														children: ['keyboard_arrow_up'],
+														attrs: { className: 'material-icons' }
+													}],
+													attrs: { onclick: function onclick() {
+															if (ctrl.up(vdom)) {
+																ctrl.reload();
+															}
+														}, className: 'mdl-button mdl-js-button mdl-button--icon' }
+												}, {
+													tag: 'button',
+													children: [{
+														tag: 'i',
+														children: ['keyboard_arrow_down'],
+														attrs: { className: 'material-icons' }
+													}],
+													attrs: { onclick: function onclick() {
+															if (ctrl.down(vdom)) {
+																ctrl.reload();
+															}
+														}, className: 'mdl-button mdl-js-button mdl-button--icon' }
+												}],
+												attrs: { className: 'mdl-data-table__cell--non-numeric' }
+											}, {
+												tag: 'td',
+												children: [vdom.toComponent(ctrl)]
+											}]
+										});
+									})(vdom);
+								}
+								return vdomlist;
+							}()]
+						}],
+						attrs: { className: 'mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp' }
+					}, {
 						tag: 'div',
 						children: ['\u8FFD\u52A0\uFF1A', {
 							tag: 'select',
