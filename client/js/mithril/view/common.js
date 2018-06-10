@@ -70,14 +70,16 @@ module.exports = function(ctrl, args) {
 					<h1 class="mdl-card__title-text">編集</h1>
 				</div>
 				<div class="mdl-card__supporting-text mdl-color-text--black">
+					<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+					<tbody>
 					{(function () {
 						var vdomlist = [];
 						for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
 							var vdom = ctrl.vm.vdom[i];
 
 							(function (vdom) {
-								vdomlist.push(<span>
-									<hr />
+								vdomlist.push(<tr>
+									<td class="mdl-data-table__cell--non-numeric">
 									<button onclick={function () {
 										if(ctrl.delete(vdom)) {
 											ctrl.reload();
@@ -99,12 +101,17 @@ module.exports = function(ctrl, args) {
 									}} class="mdl-button mdl-js-button mdl-button--icon">
 										<i class="material-icons">keyboard_arrow_down</i>
 									</button>
+									</td>
+									<td>
 									{vdom.toComponent(ctrl)}
-								</span>);
+									</td>
+								</tr>);
 							})(vdom);
 						}
 						return vdomlist;
 					})()}
+					</tbody>
+					</table>
 
 					<div class="mdl-textfield mdl-js-textfield">
 						追加：<select class="mdl-textfield__input" onchange={m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex)}>

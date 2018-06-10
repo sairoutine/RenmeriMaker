@@ -49,46 +49,51 @@ Serif.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return <span>
 		<div class="mdl-textfield mdl-js-textfield">
-		<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
-			self.chara(value);
+			<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
+				self.chara(value);
 
-			// TODO:
-			if (value === "renko") {
-				self.pos("right");
-			}
-			else {
-				self.pos("left");
-			}
-			ctrl.reload();
-		})}>
-		{(function () {
-			var list = [];
-			for (var i = 0, len = chara_list.length; i < len; i++) {
-				var chara = chara_list[i];
+				// TODO:
+				if (value === "renko") {
+					self.pos("right");
+				}
+				else {
+					self.pos("left");
+				}
+				ctrl.reload();
+			})}>
+				{(function () {
+					var list = [];
+					for (var i = 0, len = chara_list.length; i < len; i++) {
+						var chara = chara_list[i];
 
-				list.push(<option value={chara.value} selected={ chara.value === self.chara() }>{chara.name}</option>);
-			}
-			return list;
-		})()}
-		</select>
+						list.push(<option value={chara.value} selected={ chara.value === self.chara() }>{chara.name}</option>);
+					}
+					return list;
+				})()}
+			</select>
+		</div>
+		<br />
 
-		<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
-			self.exp(value);
-			ctrl.reload();
-		})}>
-		{(function () {
-			var list = [];
-			for (var i = 0, len = exp_list.length; i < len; i++) {
-				var exp = exp_list[i];
+		<div class="mdl-textfield mdl-js-textfield">
+			<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
+				self.exp(value);
+				ctrl.reload();
+			})}>
+				{(function () {
+					var list = [];
+					for (var i = 0, len = exp_list.length; i < len; i++) {
+						var exp = exp_list[i];
 
-				list.push(<option value={exp.value} selected={ exp.value === self.exp() }>{exp.name}</option>);
-			}
-			return list;
-		})()}
-		</select>
+						list.push(<option value={exp.value} selected={ exp.value === self.exp() }>{exp.name}</option>);
+					}
+					return list;
+				})()}
+			</select>
 		</div>
 
-		<div class="mdl-textfield mdl-js-textfield" config={function (element, isInitialized, context) {
+		<br />
+
+		<div class="mdl-textfield mdl-js-textfield" style="display: block;width:100%;" config={function (element, isInitialized, context) {
 			if(isInitialized) return;
 			window.componentHandler.upgradeElement(element);
 
@@ -96,11 +101,11 @@ Serif.prototype.toComponent = function (ctrl) {
 				window.componentHandler.downgradeElements(element);
 			};
 		}}>
-		<textarea class="mdl-textfield__input" rows= "3" id={self.id()} value={self.value()} onchange={m.withAttr("value", function (value) {
-			self.value(value);
-			ctrl.reload();
-		})}></textarea>
-		<label class="mdl-textfield__label" for={self.id()}>紹介文</label>
+			<textarea class="mdl-textfield__input" rows= "3" id={self.id()} value={self.value()} onchange={m.withAttr("value", function (value) {
+				self.value(value);
+				ctrl.reload();
+			})}></textarea>
+			<label class="mdl-textfield__label" for={self.id()}>セリフ</label>
 		</div>
 	</span>;
 };
