@@ -3,11 +3,15 @@ package middleware
 import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
+	"github.com/sairoutine/RenmeriMaker/server/settings"
 )
 
 func ConnectDB() gin.HandlerFunc {
+	setting := settings.LoadSetting()
+	dsn := setting.MySQLConnection()
+
 	return func(c *gin.Context) {
-		db, err := gorm.Open("mysql", "root@tcp(localhost:3307)/renmeri_maker?parseTime=true")
+		db, err := gorm.Open("mysql", dsn)
 		if err != nil {
 			panic(err.Error())
 		}

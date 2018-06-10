@@ -7,16 +7,20 @@ import (
 )
 
 func main() {
-	db, err := gorm.Open("mysql", "root@tcp(localhost:3307)/?charset=utf8&parseTime=True&loc=Local")
+	setting := settings.LoadSetting()
+	dsn := setting.MySQLConnectionWithoutDatabase()
+	dbName := setting.MySQL.Database
+
+	db, err := gorm.Open("mysql", dsn)
 	if err != nil {
 		panic(err.Error())
 	}
 
 	defer db.Close()
 
-	db.Exec("drop database  IF EXISTS renmeri_maker;")
-	db.Exec("create database renmeri_maker;")
-	db.Exec("USE renmeri_maker")
+	db.Exec("drop database  IF EXISTS " + dbName + ";")
+	db.Exec("create database " + dbName + ";")
+	db.Exec("USE " + dbName)
 
 	db = db.Set("gorm:table_options", "ENGINE=InnoDB")
 

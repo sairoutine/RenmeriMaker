@@ -1,0 +1,14 @@
+debug:
+    mysql:
+        protocol: tcp
+        host: localhost
+        user: root
+        port: 3306
+        database: your_database
+release:
+    mysql:
+        protocol: tcp
+        host: localhost
+        user: root
+        port: 3306
+        database: your_database
