@@ -12,6 +12,14 @@ import (
 func (s *Server) SetupMiddleware() {
 	r := s.Engine
 
+	if gin.Mode() == gin.DebugMode {
+		// 開発環境ではブラウザ側のキャッシュを無効にする
+		r.Use(func(c *gin.Context) {
+			c.Writer.Header().Set("Cache-Control", "no-cache")
+			c.Next()
+		})
+	}
+
 	var store sessions.Store
 	if gin.Mode() == gin.DebugMode {
 		// 開発環境の場合、cookie にsession データを保存する
@@ -19,14 +27,6 @@ func (s *Server) SetupMiddleware() {
 	} else {
 		// 本番環境の場合、cookie には session_id しか保存しない
 		store = memstore.NewStore([]byte("secret"))
-	}
-
-	if gin.Mode() == gin.DebugMode {
-		// 開発環境ではブラウザ側のキャッシュを無効にする
-		r.Use(func(c *gin.Context) {
-			c.Writer.Header().Set("Cache-Control", "no-cache")
-			c.Next()
-		})
 	}
 
 	// セッション
