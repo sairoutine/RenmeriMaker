@@ -23,7 +23,7 @@ func main() {
 	db.Exec("create database " + dbName + ";")
 	db.Exec("USE " + dbName)
 
-	db = db.Set("gorm:table_options", "ENGINE=InnoDB")
+	db = db.Set("gorm:table_options", "ENGINE=InnoDB CHARSET=utf8")
 
 	db.AutoMigrate(
 		&model.User{},
