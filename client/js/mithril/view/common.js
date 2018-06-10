@@ -74,10 +74,17 @@ module.exports = function(ctrl, args) {
 						var vdomlist = [];
 						for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
 							var vdom = ctrl.vm.vdom[i];
-							vdomlist.push(vdom.toComponent(ctrl));
 
 							(function (vdom) {
 								vdomlist.push(<span>
+									<hr />
+									<button onclick={function () {
+										if(ctrl.delete(vdom)) {
+											ctrl.reload();
+										}
+									}} class="mdl-button mdl-js-button mdl-button--icon">
+										<i class="material-icons">delete_forever</i>
+									</button>
 									<button onclick={function () {
 										if(ctrl.up(vdom)) {
 											ctrl.reload();
@@ -92,14 +99,8 @@ module.exports = function(ctrl, args) {
 									}} class="mdl-button mdl-js-button mdl-button--icon">
 										<i class="material-icons">keyboard_arrow_down</i>
 									</button>
-									<button onclick={function () {
-										if(ctrl.delete(vdom)) {
-											ctrl.reload();
-										}
-									}} class="mdl-button mdl-js-button mdl-button--icon">
-										<i class="material-icons">delete_forever</i>
-									</button>
-									<hr /></span>);
+									{vdom.toComponent(ctrl)}
+								</span>);
 							})(vdom);
 						}
 						return vdomlist;
