@@ -10,6 +10,7 @@ import (
 	"github.com/gin-gonic/gin"
 	"github.com/jinzhu/gorm"
 	"github.com/sairoutine/RenmeriMaker/server/model"
+	"github.com/sairoutine/RenmeriMaker/server/settings"
 	"github.com/sairoutine/RenmeriMaker/server/util"
 	"net/http"
 	"os"
@@ -30,11 +31,15 @@ func (s *Server) SetupTwitterOAuth() {
 		panic("TWITTER_CONSUMER_KEY and TWITTER_CONSUMER_SECRET environment is require.")
 	}
 
+	// callback url
+	setting := settings.LoadSetting()
+	host := setting.Application.Host
+
 	config := oauth1.Config{
 		ConsumerKey:    *consumerKey,
 		ConsumerSecret: *consumerSecret,
 		Endpoint:       oauth1Twitter.AuthorizeEndpoint,
-		CallbackURL:    "http://localhost:8082/twitter/callback",
+		CallbackURL:    "http://" + host + "/twitter/callback",
 	}
 
 	// requestTokenを取得して Twitter OAuth認証ページにリダイレクト

@@ -11,7 +11,8 @@ import (
 type Settings map[string]Setting
 
 type Setting struct {
-	MySQL MySQLSetting
+	MySQL       MySQLSetting
+	Application ApplicationSetting
 }
 
 type MySQLSetting struct {
@@ -20,6 +21,10 @@ type MySQLSetting struct {
 	Port     int
 	User     string
 	Database string
+}
+
+type ApplicationSetting struct {
+	Host string
 }
 
 const MySQLOption = "?charset=utf8&parseTime=True&loc=Local"
