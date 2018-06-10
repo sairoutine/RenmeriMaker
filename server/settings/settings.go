@@ -24,16 +24,20 @@ type MySQLSetting struct {
 
 const MySQLOption = "?charset=utf8&parseTime=True&loc=Local"
 
-func LoadSetting() Setting {
-	buf, err := ioutil.ReadFile("../config/database.yml")
-	if err != nil {
-		panic(err)
-	}
+var settings Settings = nil
 
-	settings := Settings{}
-	err = yaml.Unmarshal(buf, &settings)
-	if err != nil {
-		panic(err.Error())
+func LoadSetting() Setting {
+	if settings == nil {
+		buf, err := ioutil.ReadFile("../config/database.yml")
+		if err != nil {
+			panic(err)
+		}
+
+		settings = Settings{}
+		err = yaml.Unmarshal(buf, &settings)
+		if err != nil {
+			panic(err.Error())
+		}
 	}
 
 	return settings[gin.Mode()]
