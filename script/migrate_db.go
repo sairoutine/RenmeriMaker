@@ -4,6 +4,7 @@ import (
 	"github.com/jinzhu/gorm"
 	_ "github.com/jinzhu/gorm/dialects/mysql"
 	model "github.com/sairoutine/RenmeriMaker/server/model"
+	"github.com/sairoutine/RenmeriMaker/server/settings"
 )
 
 func main() {
