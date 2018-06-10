@@ -13310,6 +13310,9 @@ SceneTalk.prototype.draw = function () {
 SceneTalk.prototype._showBackground = function () {
 	var ctx = this.core.ctx;
 	var background_name = this.serif.getCurrentBackgroundImageName();
+
+	if (!background_name) return;
+
 	var background = this.core.image_loader.getImage(background_name);
 
 	var bgWidth = background.width;
@@ -13428,7 +13431,7 @@ SceneTalk.prototype._showMessage = function () {
 };
 
 SceneTalk.prototype._afterSerifChanged = function () {
-	while (this.serif.getCurrentMaxLengthLetters() === 0) {
+	while (!this.serif.isEnd() && this.serif.getCurrentMaxLengthLetters() === 0) {
 		// BGM 再生
 		if (this.serif.getCurrentOption().bgm) {
 			this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
@@ -13511,7 +13514,7 @@ var BackgroundVDom = require('../vdom/background');
 var BgmVDom = require('../vdom/bgm');
 var SerifVDom = require('../vdom/serif');
 
-module.exports = [{ name: "背景変更", value: "background", Klass: BackgroundVDom }, { name: "BGM変更", value: "bgm", Klass: BgmVDom }, { name: "セリフ", value: "serif", Klass: SerifVDom }];
+module.exports = [{ name: "セリフ", value: "serif", Klass: SerifVDom }, { name: "背景変更", value: "background", Klass: BackgroundVDom }, { name: "BGM変更", value: "bgm", Klass: BgmVDom }];
 
 },{"../vdom/background":70,"../vdom/bgm":71,"../vdom/serif":72}],66:[function(require,module,exports){
 'use strict';
@@ -13637,8 +13640,22 @@ Controller.prototype.load = function () {
 
 // セーブデータを保存する
 Controller.prototype.save = function () {
+	if (this.vm.isSaveLocked()) return;
+
+	this.vm.saveLock();
+
+	var self = this;
 	this.vm.update().then(function (result) {
-		window.alert("保存しました");
+		var snackbarContainer = window.document.querySelector('#snackbar');
+		var data = {
+			message: '保存しました',
+			timeout: 1000
+		};
+		snackbarContainer.MaterialSnackbar.showSnackbar(data);
+
+		setTimeout(function () {
+			self.vm.saveUnLock();
+		}, 1000);
 	});
 };
 Controller.prototype.isEditMode = function () {
@@ -13663,11 +13680,26 @@ Controller.prototype.load = function () {
 };
 // セーブデータを保存する
 Controller.prototype.save = function () {
+	if (this.vm.isSaveLocked()) return;
+
+	this.vm.saveLock();
+
+	var self = this;
 	this.vm.create().then(function (result) {
-		window.alert("保存しました");
-		location.href = "/novel/show/" + result.id;
+		var snackbarContainer = window.document.querySelector('#snackbar');
+		var data = {
+			message: '保存しました',
+			timeout: 1000
+		};
+		snackbarContainer.MaterialSnackbar.showSnackbar(data);
+
+		setTimeout(function () {
+			self.vm.saveUnLock();
+			location.href = "/novel/show/" + result.id;
+		}, 1000);
 	});
 };
+
 Controller.prototype.isNewMode = function () {
 	return true;
 };
@@ -13726,7 +13758,7 @@ Background.prototype.toGameData = function () {
 Background.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return {
-		tag: 'span',
+		tag: 'div',
 		children: [{
 			tag: 'select',
 			children: [function () {
@@ -13742,11 +13774,12 @@ Background.prototype.toComponent = function (ctrl) {
 				}
 				return list;
 			}()],
-			attrs: { onchange: m.withAttr("value", function (value) {
+			attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("value", function (value) {
 					self.value(value);
 					ctrl.reload();
 				}) }
-		}]
+		}],
+		attrs: { className: 'mdl-textfield mdl-js-textfield' }
 	};
 };
 
@@ -13785,7 +13818,7 @@ Bgm.prototype.toGameData = function () {
 Bgm.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return {
-		tag: 'span',
+		tag: 'div',
 		children: [{
 			tag: 'select',
 			children: [function () {
@@ -13801,11 +13834,12 @@ Bgm.prototype.toComponent = function (ctrl) {
 				}
 				return list;
 			}()],
-			attrs: { onchange: m.withAttr("value", function (value) {
+			attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("value", function (value) {
 					self.value(value);
 					ctrl.reload();
 				}) }
-		}]
+		}],
+		attrs: { className: 'mdl-textfield mdl-js-textfield' }
 	};
 };
 
@@ -13820,7 +13854,10 @@ var chara_list = [{ name: "蓮子", value: "renko" }, { name: "メリー", value
 
 var exp_list = [{ name: "普通", value: "normal" }, { name: "笑", value: "smile" }, { name: "泣", value: "cry" }, { name: "怒", value: "angry" }, { name: "驚", value: "surprised" }];
 
+var _id = 0;
+
 var Serif = function Serif(args) {
+	this.id = m.prop(++_id);
 	this.define = m.prop(args.define);
 	this.pos = m.prop(args.pos);
 	this.exp = m.prop(args.exp || exp_list[0].value);
@@ -13852,56 +13889,75 @@ Serif.prototype.toComponent = function (ctrl) {
 	return {
 		tag: 'span',
 		children: [{
-			tag: 'select',
-			children: [function () {
-				var list = [];
-				for (var i = 0, len = chara_list.length; i < len; i++) {
-					var chara = chara_list[i];
+			tag: 'div',
+			children: [{
+				tag: 'select',
+				children: [function () {
+					var list = [];
+					for (var i = 0, len = chara_list.length; i < len; i++) {
+						var chara = chara_list[i];
 
-					list.push({
-						tag: 'option',
-						children: [chara.name],
-						attrs: { value: chara.value, selected: chara.value === self.chara() }
-					});
-				}
-				return list;
-			}()],
-			attrs: { onchange: m.withAttr("value", function (value) {
-					self.chara(value);
-
-					// TODO:
-					if (value === "renko") {
-						self.pos("right");
-					} else {
-						self.pos("left");
+						list.push({
+							tag: 'option',
+							children: [chara.name],
+							attrs: { value: chara.value, selected: chara.value === self.chara() }
+						});
 					}
-					ctrl.reload();
-				}) }
-		}, {
-			tag: 'select',
-			children: [function () {
-				var list = [];
-				for (var i = 0, len = exp_list.length; i < len; i++) {
-					var exp = exp_list[i];
+					return list;
+				}()],
+				attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("value", function (value) {
+						self.chara(value);
 
-					list.push({
-						tag: 'option',
-						children: [exp.name],
-						attrs: { value: exp.value, selected: exp.value === self.exp() }
-					});
-				}
-				return list;
-			}()],
-			attrs: { onchange: m.withAttr("value", function (value) {
-					self.exp(value);
-					ctrl.reload();
-				}) }
+						// TODO:
+						if (value === "renko") {
+							self.pos("right");
+						} else {
+							self.pos("left");
+						}
+						ctrl.reload();
+					}) }
+			}, {
+				tag: 'select',
+				children: [function () {
+					var list = [];
+					for (var i = 0, len = exp_list.length; i < len; i++) {
+						var exp = exp_list[i];
+
+						list.push({
+							tag: 'option',
+							children: [exp.name],
+							attrs: { value: exp.value, selected: exp.value === self.exp() }
+						});
+					}
+					return list;
+				}()],
+				attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("value", function (value) {
+						self.exp(value);
+						ctrl.reload();
+					}) }
+			}],
+			attrs: { className: 'mdl-textfield mdl-js-textfield' }
 		}, {
-			tag: 'textarea',
-			attrs: { value: self.value(), onchange: m.withAttr("value", function (value) {
-					self.value(value);
-					ctrl.reload();
-				}) }
+			tag: 'div',
+			children: [{
+				tag: 'textarea',
+				attrs: { className: 'mdl-textfield__input', rows: '3', id: self.id(), value: self.value(), onchange: m.withAttr("value", function (value) {
+						self.value(value);
+						ctrl.reload();
+					}) }
+			}, {
+				tag: 'label',
+				children: ['\u7D39\u4ECB\u6587'],
+				attrs: { className: 'mdl-textfield__label', 'for': self.id() }
+			}],
+			attrs: { className: 'mdl-textfield mdl-js-textfield', config: function config(element, isInitialized, context) {
+					if (isInitialized) return;
+					window.componentHandler.upgradeElement(element);
+
+					context.onunload = function () {
+						window.componentHandler.downgradeElements(element);
+					};
+				} }
 		}]
 	};
 };
@@ -13924,183 +13980,286 @@ module.exports = function (ctrl, args) {
 		tag: 'div',
 		children: [{
 			tag: 'div',
-			attrs: { className: 'mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone' }
+			children: [{
+				tag: 'div',
+				attrs: { className: 'mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone' }
+			}, {
+				tag: 'div',
+				children: [{
+					tag: 'div',
+					children: [{
+						tag: 'canvas',
+						attrs: { width: '640', height: '480', config: runGame, style: 'width: 100%; max-width: 640px;height: auto;' }
+					}, {
+						tag: 'div',
+						children: [{
+							tag: 'hr'
+						}, {
+							tag: 'input',
+							attrs: { type: 'button', value: '\u30EA\u30ED\u30FC\u30C9', onclick: reload, className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' }
+						}],
+						attrs: { style: { display: ctrl.isNewMode() || ctrl.isEditMode() ? 'block' : 'none' } }
+					}, {
+						tag: 'div',
+						children: [{
+							tag: 'hr'
+						}, '\u30BF\u30A4\u30C8\u30EB:', ctrl.vm.title(), {
+							tag: 'br'
+						}, '\u8AAC\u660E:', ctrl.vm.description(), {
+							tag: 'br'
+						}, '\u6295\u7A3F\u8005:', {
+							tag: 'a',
+							children: [ctrl.vm.user().dispName()],
+							attrs: { href: "/user/show/" + ctrl.vm.user().id() }
+						}, {
+							tag: 'br'
+						}, {
+							tag: 'hr'
+						}, function () {
+							var list = [];
+							for (var i = 0, len = ctrl.vm.emojis().length; i < len; i++) {
+								var emoji = ctrl.vm.emojis()[i];
+								var onsubmit = function (emoji) {
+									return function (e) {
+										e.preventDefault();
+										ctrl.addEmoji(emoji.type());
+									};
+								}(emoji);
+
+								if (ctrl.vm.isOwner()) {
+									list.push({
+										tag: 'span',
+										children: [{
+											tag: 'img',
+											attrs: { src: "/image/emoji/" + emoji.fileName(), width: '24', height: '24' }
+										}, {
+											tag: 'span',
+											children: ["　" + emoji.count()],
+											attrs: { className: 'mdl-chip__text', style: 'font-size: 18px' }
+										}],
+										attrs: { className: 'mdl-chip' }
+									});
+								} else {
+									list.push({
+										tag: 'button',
+										children: [{
+											tag: 'img',
+											attrs: { src: "/image/emoji/" + emoji.fileName(), width: '24', height: '24' }
+										}, {
+											tag: 'span',
+											children: ["　" + emoji.count()],
+											attrs: { className: 'mdl-chip__text', style: 'font-size: 18px' }
+										}],
+										attrs: { className: 'mdl-chip', style: 'cursor: pointer;', onclick: onsubmit }
+									});
+								}
+							}
+							return list;
+						}()],
+						attrs: { style: { display: ctrl.isShowMode() ? 'block' : 'none' } }
+					}],
+					attrs: { className: 'mdl-card__supporting-text mdl-color-text--black' }
+				}, {
+					tag: 'div',
+					children: [{
+						tag: 'div',
+						children: [{
+							tag: 'div',
+							attrs: { className: 'mdl-layout-spacer' }
+						}, {
+							tag: 'a',
+							children: ['\u7DE8\u96C6\xA0', {
+								tag: 'i',
+								children: ['build'],
+								attrs: { className: 'material-icons' }
+							}],
+							attrs: { className: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect', href: "/novel/edit/" + ctrl.vm.id() }
+						}],
+						attrs: { className: 'mdl-card__actions mdl-card--border' }
+					}],
+					attrs: { style: { display: ctrl.isShowMode() && ctrl.vm.isOwner() ? 'block' : 'none' } }
+				}],
+				attrs: { className: 'mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp' }
+			}, {
+				tag: 'div',
+				attrs: { className: 'mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone' }
+			}],
+			attrs: { className: 'content-grid mdl-grid' }
 		}, {
 			tag: 'div',
 			children: [{
 				tag: 'div',
-				children: [{
-					tag: 'canvas',
-					attrs: { width: '640', height: '480', config: runGame, style: 'width: 100%; max-width: 640px;height: auto;' }
-				}, {
-					tag: 'div',
-					children: [{
-						tag: 'hr'
-					}, '\u30BF\u30A4\u30C8\u30EB:', ctrl.vm.title(), {
-						tag: 'br'
-					}, '\u8AAC\u660E:', ctrl.vm.description(), {
-						tag: 'br'
-					}, '\u6295\u7A3F\u8005:', {
-						tag: 'a',
-						children: [ctrl.vm.user().dispName()],
-						attrs: { href: "/user/show/" + ctrl.vm.user().id() }
-					}, {
-						tag: 'br'
-					}, {
-						tag: 'hr'
-					}, function () {
-						var list = [];
-						for (var i = 0, len = ctrl.vm.emojis().length; i < len; i++) {
-							var emoji = ctrl.vm.emojis()[i];
-							var onsubmit = function (emoji) {
-								return function (e) {
-									e.preventDefault();
-									ctrl.addEmoji(emoji.type());
-								};
-							}(emoji);
-
-							if (ctrl.vm.isOwner()) {
-								list.push({
-									tag: 'span',
-									children: [{
-										tag: 'img',
-										attrs: { src: "/image/emoji/" + emoji.fileName(), width: '24', height: '24' }
-									}, emoji.count()]
-								});
-							} else {
-								list.push({
-									tag: 'form',
-									children: [{
-										tag: 'input',
-										attrs: { type: 'image', src: "/image/emoji/" + emoji.fileName(), name: 'submit', width: '24', height: '24' }
-									}, emoji.count()],
-									attrs: { style: 'display:inline;', onsubmit: onsubmit }
-								});
-							}
-						}
-						return list;
-					}()],
-					attrs: { style: { display: ctrl.isShowMode() ? 'block' : 'none' } }
-				}],
-				attrs: { className: 'mdl-card__supporting-text mdl-color-text--black' }
+				attrs: { className: 'mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone' }
 			}, {
 				tag: 'div',
 				children: [{
+					tag: 'div',
+					children: [{
+						tag: 'h1',
+						children: ['\u7DE8\u96C6'],
+						attrs: { className: 'mdl-card__title-text' }
+					}],
+					attrs: { className: 'mdl-card__title' }
+				}, {
+					tag: 'div',
+					children: [function () {
+						var vdomlist = [];
+						for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
+							var vdom = ctrl.vm.vdom[i];
+							vdomlist.push(vdom.toComponent(ctrl));
+
+							(function (vdom) {
+								vdomlist.push({
+									tag: 'span',
+									children: [{
+										tag: 'button',
+										children: [{
+											tag: 'i',
+											children: ['keyboard_arrow_up'],
+											attrs: { className: 'material-icons' }
+										}],
+										attrs: { onclick: function onclick() {
+												if (ctrl.up(vdom)) {
+													ctrl.reload();
+												}
+											}, className: 'mdl-button mdl-js-button mdl-button--icon' }
+									}, {
+										tag: 'button',
+										children: [{
+											tag: 'i',
+											children: ['keyboard_arrow_down'],
+											attrs: { className: 'material-icons' }
+										}],
+										attrs: { onclick: function onclick() {
+												if (ctrl.down(vdom)) {
+													ctrl.reload();
+												}
+											}, className: 'mdl-button mdl-js-button mdl-button--icon' }
+									}, {
+										tag: 'button',
+										children: [{
+											tag: 'i',
+											children: ['delete_forever'],
+											attrs: { className: 'material-icons' }
+										}],
+										attrs: { onclick: function onclick() {
+												if (ctrl.delete(vdom)) {
+													ctrl.reload();
+												}
+											}, className: 'mdl-button mdl-js-button mdl-button--icon' }
+									}, {
+										tag: 'hr'
+									}]
+								});
+							})(vdom);
+						}
+						return vdomlist;
+					}(), {
+						tag: 'div',
+						children: ['\u8FFD\u52A0\uFF1A', {
+							tag: 'select',
+							children: [function () {
+								var list = [];
+								for (var i = 0, len = VdomList.length; i < len; i++) {
+									var vdomconfig = VdomList[i];
+									list.push({
+										tag: 'option',
+										children: [vdomconfig.name],
+										attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
+									});
+								}
+								return list;
+							}()],
+							attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
+						}],
+						attrs: { className: 'mdl-textfield mdl-js-textfield' }
+					}, {
+						tag: 'button',
+						children: [{
+							tag: 'i',
+							children: ['add'],
+							attrs: { className: 'material-icons' }
+						}],
+						attrs: { onclick: function onclick() {
+								ctrl.addVdom();
+								ctrl.reload();
+							}, className: 'mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored' }
+					}],
+					attrs: { className: 'mdl-card__supporting-text mdl-color-text--black' }
+				}, {
+					tag: 'div',
+					children: [{
+						tag: 'div',
+						children: [{
+							tag: 'input',
+							attrs: { className: 'mdl-textfield__input', type: 'text', id: 'title', value: ctrl.vm.title(), onchange: m.withAttr("value", ctrl.vm.title) }
+						}, {
+							tag: 'label',
+							children: ['\u30BF\u30A4\u30C8\u30EB'],
+							attrs: { className: 'mdl-textfield__label', 'for': 'title' }
+						}],
+						attrs: { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label' }
+					}, {
+						tag: 'br'
+					}, {
+						tag: 'div',
+						children: [{
+							tag: 'textarea',
+							attrs: { className: 'mdl-textfield__input', type: 'text', rows: '3', id: 'description', value: ctrl.vm.description(), onchange: m.withAttr("value", ctrl.vm.description) }
+						}, {
+							tag: 'label',
+							children: ['\u7D39\u4ECB\u6587'],
+							attrs: { className: 'mdl-textfield__label', 'for': 'description' }
+						}],
+						attrs: { className: 'mdl-textfield mdl-js-textfield  mdl-textfield--floating-label' }
+					}, {
+						tag: 'label',
+						children: [{
+							tag: 'input',
+							attrs: { type: 'checkbox', id: 'switch-1', className: 'mdl-switch__input', onclick: togglePrivate, checked: !ctrl.vm.isPrivate() }
+						}, {
+							tag: 'span',
+							children: [ctrl.vm.isPrivate() ? "非公開" : "公開"],
+							attrs: { className: 'mdl-switch__label' }
+						}],
+						attrs: { className: 'mdl-switch mdl-js-switch mdl-js-ripple-effect', 'for': 'switch-1' }
+					}],
+					attrs: { className: 'mdl-card__actions mdl-card--border' }
+				}, {
 					tag: 'div',
 					children: [{
 						tag: 'div',
 						attrs: { className: 'mdl-layout-spacer' }
 					}, {
-						tag: 'a',
-						children: ['\u7DE8\u96C6\xA0', {
-							tag: 'i',
-							children: ['build'],
-							attrs: { className: 'material-icons' }
-						}],
-						attrs: { className: 'mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect', href: "/novel/edit/" + ctrl.vm.id() }
+						tag: 'input',
+						attrs: { type: 'button', value: '\u30BB\u30FC\u30D6', onclick: save, className: 'mdl-button mdl-js-button mdl-button--raised mdl-button--colored' }
 					}],
 					attrs: { className: 'mdl-card__actions mdl-card--border' }
 				}],
-				attrs: { style: { display: ctrl.isShowMode() && ctrl.vm.isOwner() ? 'block' : 'none' } }
+				attrs: { className: 'mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp' }
+			}, {
+				tag: 'div',
+				attrs: { className: 'mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone' }
 			}],
-			attrs: { className: 'mdl-card mdl-cell mdl-cell--8-col mdl-shadow--2dp' }
-		}, {
-			tag: 'div',
-			attrs: { className: 'mdl-cell mdl-cell--2-col mdl-cell--hide-tablet mdl-cell--hide-phone' }
+			attrs: { className: 'content-grid mdl-grid', style: { display: ctrl.isEditMode() || ctrl.isNewMode() ? '' : 'none' } }
 		}, {
 			tag: 'div',
 			children: [{
-				tag: 'hr'
+				tag: 'div',
+				attrs: { className: 'mdl-snackbar__text' }
 			}, {
-				tag: 'b',
-				children: ['\u7DE8\u96C6']
-			}, {
-				tag: 'br'
-			}, '\u30BF\u30A4\u30C8\u30EB\uFF1A', {
-				tag: 'input',
-				attrs: { type: 'text', value: ctrl.vm.title(), onchange: m.withAttr("value", ctrl.vm.title) }
-			}, {
-				tag: 'br'
-			}, '\u7D39\u4ECB\u6587\uFF1A', {
-				tag: 'textarea',
-				attrs: { value: ctrl.vm.description(), onchange: m.withAttr("value", ctrl.vm.description) }
-			}, {
-				tag: 'br'
-			}, function () {
-				var vdomlist = [];
-				for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
-					var vdom = ctrl.vm.vdom[i];
-					vdomlist.push(vdom.toComponent(ctrl));
-
-					(function (vdom) {
-						vdomlist.push({
-							tag: 'span',
-							children: [{
-								tag: 'input',
-								attrs: { type: 'button', value: '\u2613', onclick: function onclick() {
-										if (ctrl.delete(vdom)) {
-											ctrl.reload();
-										}
-									} }
-							}, {
-								tag: 'input',
-								attrs: { type: 'button', value: '\u2191', onclick: function onclick() {
-										if (ctrl.up(vdom)) {
-											ctrl.reload();
-										}
-									} }
-							}, {
-								tag: 'input',
-								attrs: { type: 'button', value: '\u2193', onclick: function onclick() {
-										if (ctrl.down(vdom)) {
-											ctrl.reload();
-										}
-									} }
-							}, {
-								tag: 'br'
-							}]
-						});
-					})(vdom);
-				}
-				return vdomlist;
-			}(), {
-				tag: 'select',
-				children: [function () {
-					var list = [];
-					for (var i = 0, len = VdomList.length; i < len; i++) {
-						var vdomconfig = VdomList[i];
-						list.push({
-							tag: 'option',
-							children: [vdomconfig.name],
-							attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
-						});
-					}
-					return list;
-				}()],
-				attrs: { onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
-			}, {
-				tag: 'input',
-				attrs: { type: 'button', value: '\u8FFD\u52A0', onclick: function onclick() {
-						ctrl.addVdom();
-						ctrl.reload();
-					} }
-			}, {
-				tag: 'hr'
-			}, '\u73FE\u5728:', ctrl.vm.isPrivate() ? "非公開" : "公開", {
-				tag: 'input',
-				attrs: { type: 'button', value: '\u516C\u958B\uFF0F\u975E\u516C\u958B\u306E\u5909\u66F4', onclick: togglePrivate }
-			}, {
-				tag: 'input',
-				attrs: { type: 'button', value: '\u30EA\u30ED\u30FC\u30C9', onclick: reload }
-			}, {
-				tag: 'input',
-				attrs: { type: 'button', value: '\u30BB\u30FC\u30D6', onclick: save }
-			}, {
-				tag: 'br'
+				tag: 'button',
+				attrs: { className: 'mdl-snackbar__action', type: 'button' }
 			}],
-			attrs: { style: { display: ctrl.isEditMode() || ctrl.isNewMode() ? 'block' : 'none' } }
-		}],
-		attrs: { className: 'content-grid mdl-grid' }
+			attrs: { id: 'snackbar', className: 'mdl-js-snackbar mdl-snackbar', config: function config(element, isInitialized, context) {
+					if (isInitialized) return;
+					window.componentHandler.upgradeElement(element);
+
+					context.onunload = function () {
+						window.componentHandler.downgradeElements(element);
+					};
+				} }
+		}]
 	};
 };
 
@@ -14136,6 +14295,8 @@ var ViewModel = function ViewModel(args) {
 
 	this.vdom = [];
 	this.currentAddVdomSelectedIndex = m.prop(0);
+
+	this._isSaveLocked = m.prop(false);
 
 	// csrf token
 	this._csrf_token = window.config.csrf;
@@ -14281,6 +14442,18 @@ ViewModel.prototype.addEmoji = function (type) {
 
 ViewModel.prototype.togglePrivate = function () {
 	this.isPrivate(!this.isPrivate());
+};
+
+ViewModel.prototype.isSaveLocked = function () {
+	return this._isSaveLocked();
+};
+
+ViewModel.prototype.saveLock = function () {
+	return this._isSaveLocked(true);
+};
+
+ViewModel.prototype.saveUnLock = function () {
+	return this._isSaveLocked(false);
 };
 
 module.exports = ViewModel;
