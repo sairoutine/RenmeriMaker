@@ -1,9 +1,6 @@
 package server
 
 import (
-	"github.com/gin-contrib/sessions"
-	"github.com/gin-contrib/sessions/cookie"
-	"github.com/gin-contrib/sessions/memstore"
 	"github.com/gin-contrib/static"
 	"github.com/gin-gonic/gin"
 	middleware "github.com/sairoutine/RenmeriMaker/server/middleware"
@@ -20,17 +17,8 @@ func (s *Server) SetupMiddleware() {
 		})
 	}
 
-	var store sessions.Store
-	if gin.Mode() == gin.DebugMode {
-		// 開発環境の場合、cookie にsession データを保存する
-		store = cookie.NewStore([]byte("secret"))
-	} else {
-		// 本番環境の場合、cookie には session_id しか保存しない
-		store = memstore.NewStore([]byte("secret"))
-	}
-
 	// セッション
-	r.Use(sessions.Sessions("renmeri_maker_session", store))
+	r.Use(middleware.Session())
 
 	// stack stace 表示
 	r.Use(middleware.Recovery())
