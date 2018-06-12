@@ -48,6 +48,7 @@ Serif.prototype.toGameData = function () {
 Serif.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return <span>
+		<b>セリフ</b><br />
 		<div class="mdl-textfield mdl-js-textfield">
 			<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
 				self.chara(value);
