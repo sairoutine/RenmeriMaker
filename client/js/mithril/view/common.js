@@ -70,7 +70,7 @@ module.exports = function(ctrl, args) {
 					<h1 class="mdl-card__title-text">編集</h1>
 				</div>
 				<div class="mdl-card__supporting-text mdl-color-text--black">
-					<table class="mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp">
+					<table class="mdl-data-table mdl-js-data-table mdl-shadow--2dp">
 					<tbody>
 					{(function () {
 						var vdomlist = [];
@@ -110,27 +110,31 @@ module.exports = function(ctrl, args) {
 						}
 						return vdomlist;
 					})()}
+						<tr>
+							<td class="mdl-data-table__cell--non-numeric">スクリプト追加</td>
+							<td>
+								<div class="mdl-textfield mdl-js-textfield">
+									<select class="mdl-textfield__input" onchange={m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex)}>
+									{(function () {
+										var list = [];
+										for (var i = 0, len = VdomList.length; i < len; i++) {
+											var vdomconfig = VdomList[i];
+											list.push(<option value={vdomconfig.value} selected={i === ctrl.vm.currentAddVdomSelectedIndex()}>{vdomconfig.name}</option>);
+										}
+										return list;
+									})()}
+									</select>
+								</div>
+								<button onclick={function () {
+									ctrl.addVdom();
+									ctrl.reload();
+								}} class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+									<i class="material-icons">add</i>
+								</button>
+							</td>
+						</tr>
 					</tbody>
 					</table>
-
-					<div class="mdl-textfield mdl-js-textfield">
-						追加：<select class="mdl-textfield__input" onchange={m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex)}>
-						{(function () {
-							var list = [];
-							for (var i = 0, len = VdomList.length; i < len; i++) {
-								var vdomconfig = VdomList[i];
-								list.push(<option value={vdomconfig.value} selected={i === ctrl.vm.currentAddVdomSelectedIndex()}>{vdomconfig.name}</option>);
-							}
-							return list;
-						})()}
-						</select>
-					</div>
-					<button onclick={function () {
-						ctrl.addVdom();
-						ctrl.reload();
-					}} class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-						<i class="material-icons">add</i>
-					</button>
 				</div>
 				<div class="mdl-card__actions mdl-card--border">
 					<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
