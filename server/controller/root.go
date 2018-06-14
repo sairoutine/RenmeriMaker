@@ -23,7 +23,7 @@ func Index(c *gin.Context) {
 
 	// ログイン情報を取得
 	session := sessions.Default(c)
-	_, ok := session.Get("user_id").(uint64)
+	LoginUserID, ok := session.Get("user_id").(uint64)
 
 	isLogin := false
 	if ok {
@@ -42,9 +42,10 @@ func Index(c *gin.Context) {
 	retHTML := util.GenereatePagination(p, count, constant.PAGE_PER_LIMIT)
 
 	util.RenderHTML(c, http.StatusOK, "root/index.tmpl", gin.H{
-		"novels":     novels,
-		"isLogin":    isLogin,
-		"pagination": retHTML,
+		"novels":      novels,
+		"isLogin":     isLogin,
+		"LoginUserID": LoginUserID,
+		"pagination":  retHTML,
 	})
 }
 
