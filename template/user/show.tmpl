@@ -37,7 +37,11 @@
 	  </div>
 	  <div class="mdl-card__actions mdl-card--border">
 		<div class="mdl-layout-spacer"></div>
-		<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/novel/show/{{.ID}}">読む&nbsp;<i class="material-icons">play_circle_outline</i></a>
+		{{ if eq .User.ID .UserID }}
+			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/novel/edit/{{.ID}}">編集&nbsp;<i class="material-icons">build</i></a>
+		{{ else }}
+			<a class="mdl-button mdl-button--colored mdl-js-button mdl-js-ripple-effect" href="/novel/show/{{.ID}}">読む&nbsp;<i class="material-icons">play_circle_outline</i></a>
+		{{ end }}
 	  </div>
 	</div>
 	{{ end }}
