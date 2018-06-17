@@ -2430,14 +2430,14 @@ ScenarioManager.prototype._printLetter = function () {
 	// get A letter to add
 	var letter = current_message_letter_list[this._letter_idx++];
 
+	// initialize if needed
+	if (!this._current_printed_sentences[this._sentences_line_num]) {
+		this._current_printed_sentences[this._sentences_line_num] = "";
+	}
+
 	if (letter === "\n") {
 		this._sentences_line_num++;
 	} else {
-		// initialize if needed
-		if (!this._current_printed_sentences[this._sentences_line_num]) {
-			this._current_printed_sentences[this._sentences_line_num] = "";
-		}
-
 		// print A letter
 		this._current_printed_sentences[this._sentences_line_num] += letter;
 	}
@@ -13758,28 +13758,36 @@ Background.prototype.toGameData = function () {
 Background.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return {
-		tag: 'div',
+		tag: 'span',
 		children: [{
-			tag: 'select',
-			children: [function () {
-				var list = [];
-				for (var i = 0, len = bg_list.length; i < len; i++) {
-					var bg = bg_list[i];
+			tag: 'b',
+			children: ['\u80CC\u666F\u5909\u66F4']
+		}, {
+			tag: 'br'
+		}, {
+			tag: 'div',
+			children: [{
+				tag: 'select',
+				children: [function () {
+					var list = [];
+					for (var i = 0, len = bg_list.length; i < len; i++) {
+						var bg = bg_list[i];
 
-					list.push({
-						tag: 'option',
-						children: [bg.name],
-						attrs: { value: bg.value, selected: bg.value === self.value() }
-					});
-				}
-				return list;
-			}()],
-			attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("value", function (value) {
-					self.value(value);
-					ctrl.reload();
-				}) }
-		}],
-		attrs: { className: 'mdl-textfield mdl-js-textfield' }
+						list.push({
+							tag: 'option',
+							children: [bg.name],
+							attrs: { value: bg.value, selected: bg.value === self.value() }
+						});
+					}
+					return list;
+				}()],
+				attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("value", function (value) {
+						self.value(value);
+						ctrl.reload();
+					}) }
+			}],
+			attrs: { className: 'mdl-textfield mdl-js-textfield' }
+		}]
 	};
 };
 
@@ -13818,28 +13826,36 @@ Bgm.prototype.toGameData = function () {
 Bgm.prototype.toComponent = function (ctrl) {
 	var self = this;
 	return {
-		tag: 'div',
+		tag: 'span',
 		children: [{
-			tag: 'select',
-			children: [function () {
-				var list = [];
-				for (var i = 0, len = bgm_list.length; i < len; i++) {
-					var bgm = bgm_list[i];
+			tag: 'b',
+			children: ['BGM\u5909\u66F4']
+		}, {
+			tag: 'br'
+		}, {
+			tag: 'div',
+			children: [{
+				tag: 'select',
+				children: [function () {
+					var list = [];
+					for (var i = 0, len = bgm_list.length; i < len; i++) {
+						var bgm = bgm_list[i];
 
-					list.push({
-						tag: 'option',
-						children: [bgm.name],
-						attrs: { value: bgm.value, selected: bgm.value === self.value() }
-					});
-				}
-				return list;
-			}()],
-			attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("value", function (value) {
-					self.value(value);
-					ctrl.reload();
-				}) }
-		}],
-		attrs: { className: 'mdl-textfield mdl-js-textfield' }
+						list.push({
+							tag: 'option',
+							children: [bgm.name],
+							attrs: { value: bgm.value, selected: bgm.value === self.value() }
+						});
+					}
+					return list;
+				}()],
+				attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("value", function (value) {
+						self.value(value);
+						ctrl.reload();
+					}) }
+			}],
+			attrs: { className: 'mdl-textfield mdl-js-textfield' }
+		}]
 	};
 };
 
@@ -13889,6 +13905,11 @@ Serif.prototype.toComponent = function (ctrl) {
 	return {
 		tag: 'span',
 		children: [{
+			tag: 'b',
+			children: ['\u30BB\u30EA\u30D5']
+		}, {
+			tag: 'br'
+		}, {
 			tag: 'div',
 			children: [{
 				tag: 'select',
@@ -14170,39 +14191,49 @@ module.exports = function (ctrl, args) {
 									})(vdom);
 								}
 								return vdomlist;
-							}()]
+							}(), {
+								tag: 'tr',
+								children: [{
+									tag: 'td',
+									children: ['\u30B9\u30AF\u30EA\u30D7\u30C8\u8FFD\u52A0'],
+									attrs: { className: 'mdl-data-table__cell--non-numeric' }
+								}, {
+									tag: 'td',
+									children: [{
+										tag: 'div',
+										children: [{
+											tag: 'select',
+											children: [function () {
+												var list = [];
+												for (var i = 0, len = VdomList.length; i < len; i++) {
+													var vdomconfig = VdomList[i];
+													list.push({
+														tag: 'option',
+														children: [vdomconfig.name],
+														attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
+													});
+												}
+												return list;
+											}()],
+											attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
+										}],
+										attrs: { className: 'mdl-textfield mdl-js-textfield' }
+									}, {
+										tag: 'button',
+										children: [{
+											tag: 'i',
+											children: ['add'],
+											attrs: { className: 'material-icons' }
+										}],
+										attrs: { onclick: function onclick() {
+												ctrl.addVdom();
+												ctrl.reload();
+											}, className: 'mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored' }
+									}]
+								}]
+							}]
 						}],
-						attrs: { className: 'mdl-data-table mdl-js-data-table mdl-data-table--selectable mdl-shadow--2dp' }
-					}, {
-						tag: 'div',
-						children: ['\u8FFD\u52A0\uFF1A', {
-							tag: 'select',
-							children: [function () {
-								var list = [];
-								for (var i = 0, len = VdomList.length; i < len; i++) {
-									var vdomconfig = VdomList[i];
-									list.push({
-										tag: 'option',
-										children: [vdomconfig.name],
-										attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
-									});
-								}
-								return list;
-							}()],
-							attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
-						}],
-						attrs: { className: 'mdl-textfield mdl-js-textfield' }
-					}, {
-						tag: 'button',
-						children: [{
-							tag: 'i',
-							children: ['add'],
-							attrs: { className: 'material-icons' }
-						}],
-						attrs: { onclick: function onclick() {
-								ctrl.addVdom();
-								ctrl.reload();
-							}, className: 'mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored' }
+						attrs: { className: 'mdl-data-table mdl-js-data-table mdl-shadow--2dp' }
 					}],
 					attrs: { className: 'mdl-card__supporting-text mdl-color-text--black' }
 				}, {
