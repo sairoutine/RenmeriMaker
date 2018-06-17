@@ -13744,8 +13744,11 @@ for (var key in bg_map) {
 }
 
 var Background = function Background(args) {
-	this.define = m.prop(args.define);
 	this.value = m.prop(args.background || bg_list[0].value);
+};
+
+Background.prototype.define = function () {
+	return "background";
 };
 Background.prototype.toGameData = function () {
 	return {
@@ -13810,9 +13813,12 @@ for (var key in bgm_map) {
 
 var Bgm = function Bgm(args) {
 	var bgm = args.option && args.option.bgm ? args.option.bgm : bgm_list[0].value;
-	this.define = m.prop(args.define);
 	this.value = m.prop(bgm);
 };
+Bgm.prototype.define = function () {
+	return "bgm";
+};
+
 Bgm.prototype.toGameData = function () {
 	return {
 		define: this.define(),
@@ -13874,7 +13880,6 @@ var _id = 0;
 
 var Serif = function Serif(args) {
 	this.id = m.prop(++_id);
-	this.define = m.prop(args.define);
 	this.pos = m.prop(args.pos);
 	this.exp = m.prop(args.exp || exp_list[0].value);
 	this.chara = m.prop(args.chara || chara_list[0].value);
@@ -13889,6 +13894,9 @@ var Serif = function Serif(args) {
 	}
 
 	this.value = m.prop(args.serif || "");
+};
+Serif.prototype.define = function () {
+	return "serif";
 };
 Serif.prototype.toGameData = function () {
 	return {
