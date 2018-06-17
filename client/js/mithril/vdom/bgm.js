@@ -15,9 +15,12 @@ for (var key in bgm_map) {
 
 var Bgm = function (args) {
 	var bgm = args.option && args.option.bgm ? args.option.bgm : bgm_list[0].value;
-	this.define = m.prop(args.define);
 	this.value = m.prop(bgm);
 };
+Bgm.prototype.define = function () {
+	return "bgm";
+};
+
 Bgm.prototype.toGameData = function () {
 	return {
 		define: this.define(),
