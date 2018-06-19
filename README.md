@@ -1,6 +1,7 @@
 # RenmeriMaker
 ```
-go get github.com/codegangsta/gin
+go get github.com/oxequa/realize
 brew install dep
+dep ensure
 npm start
 ```
