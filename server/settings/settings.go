@@ -33,7 +33,7 @@ var settings Settings = nil
 
 func LoadSetting() Setting {
 	if settings == nil {
-		buf, err := ioutil.ReadFile("../config/database.yml")
+		buf, err := ioutil.ReadFile("./config/database.yml")
 		if err != nil {
 			panic(err)
 		}

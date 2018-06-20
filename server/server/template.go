@@ -7,7 +7,7 @@ import (
 
 func (s *Server) SetupTemplate() {
 	r := s.Engine
-	templatesDir := "../template"
+	templatesDir := "./template"
 	r.HTMLRender = loadTemplates(
 		templatesDir,
 		filepath.Join(templatesDir, "include"),

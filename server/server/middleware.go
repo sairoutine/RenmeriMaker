@@ -30,8 +30,8 @@ func (s *Server) SetupMiddleware() {
 	r.Use(middleware.ConnectDB())
 
 	// 静的ファイル
-	r.Use(static.Serve("/bgm", static.LocalFile("../public/bgm", true)))
-	r.Use(static.Serve("/image", static.LocalFile("../public/image", true)))
-	r.Use(static.Serve("/js", static.LocalFile("../public/js", true)))
-	r.Use(static.Serve("/sound", static.LocalFile("../public/sound", true)))
+	r.Use(static.Serve("/bgm", static.LocalFile("./public/bgm", true)))
+	r.Use(static.Serve("/image", static.LocalFile("./public/image", true)))
+	r.Use(static.Serve("/js", static.LocalFile("./public/js", true)))
+	r.Use(static.Serve("/sound", static.LocalFile("./public/sound", true)))
 }
