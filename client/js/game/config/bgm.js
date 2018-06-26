@@ -1,6 +1,13 @@
 'use strict';
 
 module.exports = {
+	muon: {
+		name: "無音",
+		path: "/bgm/muon.wav",
+		loopStart: 0*60 + 0 + 0.000,
+		//loopEnd: 1*60 + 47 + 0.027,
+		volume: 1.0,
+	},
 	nc13447: {
 		name: "しんみり",
 		path: "/bgm/nc13447.mp3",
