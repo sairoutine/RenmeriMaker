@@ -44,9 +44,6 @@ SceneTalk.prototype.init = function(){
 	// 背景遷移時のトランジション
 	this.transition_count = 0;
 
-	// シーン遷移前の BGM 止める
-	this.core.audio_loader.stopBGM();
-
 	this._afterSerifChanged();
 };
 
@@ -284,7 +281,7 @@ SceneTalk.prototype._afterSerifChanged = function() {
 	while (!this.serif.isEnd() && this.serif.getCurrentMaxLengthLetters() === 0) {
 		// BGM 再生
 		if (this.serif.getCurrentOption().bgm) {
-			this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
+			this.core.audio_loader.changeBGM(this.serif.getCurrentOption().bgm);
 		}
 
 		this.serif.next();
