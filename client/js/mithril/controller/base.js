@@ -79,8 +79,8 @@ Controller.prototype.down = function (vdom) {
 
 	return false;
 };
-Controller.prototype.addVdom = function () {
-	this.vm.addVdomByCurrentSelectedIndex();
+Controller.prototype.addVdom = function (index) {
+	this.vm.addVdomByCurrentSelectedIndex(index);
 };
 Controller.prototype.addEmoji = function (type) {
 	this.vm.addEmoji(type)

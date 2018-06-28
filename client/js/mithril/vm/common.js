@@ -108,9 +108,9 @@ ViewModel.prototype.toPostData = function () {
 	});
 };
 
-ViewModel.prototype.addVdomByCurrentSelectedIndex = function () {
+ViewModel.prototype.addVdomByCurrentSelectedIndex = function (index) {
 	var vdomconfig = VdomList[this.currentAddVdomSelectedIndex()];
-	this.vdom.push(new vdomconfig.Klass({type: vdomconfig.value}));
+	this.vdom.splice(index, 0, new vdomconfig.Klass({type: vdomconfig.value}));
 };
 
 ViewModel.prototype.create = function () {

@@ -77,8 +77,11 @@ module.exports = function(ctrl, args) {
 						for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
 							var vdom = ctrl.vm.vdom[i];
 
-							(function (vdom) {
+							(function (vdom, i) {
 								vdomlist.push(<tr>
+									<td class="mdl-data-table__cell--non-numeric">
+										{ i+1 }
+									</td>
 									<td class="mdl-data-table__cell--non-numeric">
 									<button onclick={function () {
 										if(ctrl.delete(vdom)) {
@@ -106,33 +109,35 @@ module.exports = function(ctrl, args) {
 									{vdom.toComponent(ctrl)}
 									</td>
 								</tr>);
-							})(vdom);
+
+								vdomlist.push(
+								<tr>
+									<td class="mdl-data-table__cell--non-numeric" colspan="2">ここにスクリプトを挿入</td>
+									<td>
+										<div class="mdl-textfield mdl-js-textfield">
+											<select class="mdl-textfield__input" onchange={m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex)}>
+											{(function () {
+												var list = [];
+												for (var i = 0, len = VdomList.length; i < len; i++) {
+													var vdomconfig = VdomList[i];
+													list.push(<option value={vdomconfig.value} selected={i === ctrl.vm.currentAddVdomSelectedIndex()}>{vdomconfig.name}</option>);
+												}
+												return list;
+											})()}
+											</select>
+										</div>
+										<button onclick={function () {
+											ctrl.addVdom(i + 1);
+											ctrl.reload();
+										}} class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
+											<i class="material-icons">add</i>
+										</button>
+									</td>
+								</tr>);
+							})(vdom, i);
 						}
 						return vdomlist;
 					})()}
-						<tr>
-							<td class="mdl-data-table__cell--non-numeric">スクリプト追加</td>
-							<td>
-								<div class="mdl-textfield mdl-js-textfield">
-									<select class="mdl-textfield__input" onchange={m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex)}>
-									{(function () {
-										var list = [];
-										for (var i = 0, len = VdomList.length; i < len; i++) {
-											var vdomconfig = VdomList[i];
-											list.push(<option value={vdomconfig.value} selected={i === ctrl.vm.currentAddVdomSelectedIndex()}>{vdomconfig.name}</option>);
-										}
-										return list;
-									})()}
-									</select>
-								</div>
-								<button onclick={function () {
-									ctrl.addVdom();
-									ctrl.reload();
-								}} class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
-									<i class="material-icons">add</i>
-								</button>
-							</td>
-						</tr>
 					</tbody>
 					</table>
 				</div>
