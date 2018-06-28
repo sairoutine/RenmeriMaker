@@ -32,10 +32,20 @@ var Serif = function (args) {
 		}
 	}
 
-	this.value = m.prop(args.serif || "");
+	this._value1 = m.prop("");
+	this._value2 = m.prop("");
+
+	if (args.serif) {
+		var serif_lines = args.serif.split(/\n/);
+		this._value1(serif_lines[0] || "");
+		this._value2(serif_lines[1] || "");
+	}
 };
 Serif.prototype.define = function () {
 	return "serif";
+};
+Serif.prototype.value = function () {
+	return this._value1() + "\n" + this._value2();
 };
 Serif.prototype.toGameData = function () {
 	return {
@@ -96,7 +106,7 @@ Serif.prototype.toComponent = function (ctrl) {
 
 		<br />
 
-		<div class="mdl-textfield mdl-js-textfield" style="display: block;width:100%;" config={function (element, isInitialized, context) {
+		<div config={function (element, isInitialized, context) {
 			if(isInitialized) return;
 			window.componentHandler.upgradeElement(element);
 
@@ -104,11 +114,21 @@ Serif.prototype.toComponent = function (ctrl) {
 				window.componentHandler.downgradeElements(element);
 			};
 		}}>
-			<textarea class="mdl-textfield__input" rows= "3" id={self.id()} value={self.value()} onchange={m.withAttr("value", function (value) {
-				self.value(value);
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input class="mdl-textfield__input" type="text" maxlength="32" id={String(self.id()) + "_1"} value={self._value1()} onchange={m.withAttr("value", function (value) {
+				self._value1(value);
 				ctrl.reload();
-			})}></textarea>
-			<label class="mdl-textfield__label" for={self.id()}>セリフ</label>
+				})} />
+				<label class="mdl-textfield__label" for={String(self.id()) + "_1"}>セリフ1行目</label>
+			</div>
+			<br />
+			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
+				<input class="mdl-textfield__input" type="text" maxlength="32" id={String(self.id()) + "_2"} value={self._value2()} onchange={m.withAttr("value", function (value) {
+				self._value2(value);
+				ctrl.reload();
+				})} />
+				<label class="mdl-textfield__label" for={String(self.id()) + "_2"}>セリフ2行目</label>
+			</div>
 		</div>
 	</span>;
 };
