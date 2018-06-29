@@ -57,6 +57,13 @@ module.exports = {
 'use strict';
 
 module.exports = {
+	muon: {
+		name: "無音",
+		path: "/bgm/muon.wav",
+		loopStart: 0 * 60 + 0 + 0.000,
+		//loopEnd: 1*60 + 47 + 0.027,
+		volume: 1.0
+	},
 	nc13447: {
 		name: "しんみり",
 		path: "/bgm/nc13447.mp3",
@@ -13225,9 +13232,6 @@ SceneTalk.prototype.init = function () {
 	// 背景遷移時のトランジション
 	this.transition_count = 0;
 
-	// シーン遷移前の BGM 止める
-	this.core.audio_loader.stopBGM();
-
 	this._afterSerifChanged();
 };
 
@@ -13434,7 +13438,7 @@ SceneTalk.prototype._afterSerifChanged = function () {
 	while (!this.serif.isEnd() && this.serif.getCurrentMaxLengthLetters() === 0) {
 		// BGM 再生
 		if (this.serif.getCurrentOption().bgm) {
-			this.core.audio_loader.playBGM(this.serif.getCurrentOption().bgm);
+			this.core.audio_loader.changeBGM(this.serif.getCurrentOption().bgm);
 		}
 
 		this.serif.next();
@@ -13598,8 +13602,8 @@ Controller.prototype.down = function (vdom) {
 
 	return false;
 };
-Controller.prototype.addVdom = function () {
-	this.vm.addVdomByCurrentSelectedIndex();
+Controller.prototype.addVdom = function (index) {
+	this.vm.addVdomByCurrentSelectedIndex(index);
 };
 Controller.prototype.addEmoji = function (type) {
 	this.vm.addEmoji(type).then(function () {
@@ -13893,10 +13897,20 @@ var Serif = function Serif(args) {
 		}
 	}
 
-	this.value = m.prop(args.serif || "");
+	this._value1 = m.prop("");
+	this._value2 = m.prop("");
+
+	if (args.serif) {
+		var serif_lines = args.serif.split(/\n/);
+		this._value1(serif_lines[0] || "");
+		this._value2(serif_lines[1] || "");
+	}
 };
 Serif.prototype.define = function () {
 	return "serif";
+};
+Serif.prototype.value = function () {
+	return this._value1() + "\n" + this._value2();
 };
 Serif.prototype.toGameData = function () {
 	return {
@@ -13977,17 +13991,17 @@ Serif.prototype.toComponent = function (ctrl) {
 		}, {
 			tag: 'div',
 			children: [{
-				tag: 'textarea',
-				attrs: { className: 'mdl-textfield__input', rows: '3', id: self.id(), value: self.value(), onchange: m.withAttr("value", function (value) {
-						self.value(value);
+				tag: 'input',
+				attrs: { className: 'mdl-textfield__input', type: 'text', maxlength: '32', id: String(self.id()) + "_1", value: self._value1(), onchange: m.withAttr("value", function (value) {
+						self._value1(value);
 						ctrl.reload();
 					}) }
 			}, {
 				tag: 'label',
-				children: ['\u30BB\u30EA\u30D5'],
-				attrs: { className: 'mdl-textfield__label', 'for': self.id() }
+				children: ['\u30BB\u30EA\u30D51\u884C\u76EE'],
+				attrs: { className: 'mdl-textfield__label', 'for': String(self.id()) + "_1" }
 			}],
-			attrs: { className: 'mdl-textfield mdl-js-textfield', style: 'display: block;width:100%;', config: function config(element, isInitialized, context) {
+			attrs: { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label', config: function config(element, isInitialized, context) {
 					if (isInitialized) return;
 					window.componentHandler.upgradeElement(element);
 
@@ -13995,7 +14009,31 @@ Serif.prototype.toComponent = function (ctrl) {
 						window.componentHandler.downgradeElements(element);
 					};
 				} }
-		}]
+		}, {
+			tag: 'br'
+		}, {
+			tag: 'div',
+			children: [{
+				tag: 'input',
+				attrs: { className: 'mdl-textfield__input', type: 'text', maxlength: '32', id: String(self.id()) + "_2", value: self._value2(), onchange: m.withAttr("value", function (value) {
+						self._value2(value);
+						ctrl.reload();
+					}) }
+			}, {
+				tag: 'label',
+				children: ['\u30BB\u30EA\u30D52\u884C\u76EE'],
+				attrs: { className: 'mdl-textfield__label', 'for': String(self.id()) + "_2" }
+			}],
+			attrs: { className: 'mdl-textfield mdl-js-textfield mdl-textfield--floating-label', config: function config(element, isInitialized, context) {
+					if (isInitialized) return;
+					window.componentHandler.upgradeElement(element);
+
+					context.onunload = function () {
+						window.componentHandler.downgradeElements(element);
+					};
+				} }
+		}],
+		attrs: { key: self.id() }
 	};
 };
 
@@ -14148,10 +14186,14 @@ module.exports = function (ctrl, args) {
 								for (var i = 0, len = ctrl.vm.vdom.length; i < len; i++) {
 									var vdom = ctrl.vm.vdom[i];
 
-									(function (vdom) {
+									(function (vdom, i) {
 										vdomlist.push({
 											tag: 'tr',
 											children: [{
+												tag: 'td',
+												children: [i + 1],
+												attrs: { className: 'mdl-data-table__cell--non-numeric' }
+											}, {
 												tag: 'td',
 												children: [{
 													tag: 'button',
@@ -14196,50 +14238,52 @@ module.exports = function (ctrl, args) {
 												children: [vdom.toComponent(ctrl)]
 											}]
 										});
-									})(vdom);
+
+										vdomlist.push({
+											tag: 'tr',
+											children: [{
+												tag: 'td',
+												children: ['\u3053\u3053\u306B\u30B9\u30AF\u30EA\u30D7\u30C8\u3092\u633F\u5165'],
+												attrs: { className: 'mdl-data-table__cell--non-numeric', colspan: '2' }
+											}, {
+												tag: 'td',
+												children: [{
+													tag: 'div',
+													children: [{
+														tag: 'select',
+														children: [function () {
+															var list = [];
+															for (var i = 0, len = VdomList.length; i < len; i++) {
+																var vdomconfig = VdomList[i];
+																list.push({
+																	tag: 'option',
+																	children: [vdomconfig.name],
+																	attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
+																});
+															}
+															return list;
+														}()],
+														attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
+													}],
+													attrs: { className: 'mdl-textfield mdl-js-textfield' }
+												}, {
+													tag: 'button',
+													children: [{
+														tag: 'i',
+														children: ['add'],
+														attrs: { className: 'material-icons' }
+													}],
+													attrs: { onclick: function onclick() {
+															ctrl.addVdom(i + 1);
+															ctrl.reload();
+														}, className: 'mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored' }
+												}]
+											}]
+										});
+									})(vdom, i);
 								}
 								return vdomlist;
-							}(), {
-								tag: 'tr',
-								children: [{
-									tag: 'td',
-									children: ['\u30B9\u30AF\u30EA\u30D7\u30C8\u8FFD\u52A0'],
-									attrs: { className: 'mdl-data-table__cell--non-numeric' }
-								}, {
-									tag: 'td',
-									children: [{
-										tag: 'div',
-										children: [{
-											tag: 'select',
-											children: [function () {
-												var list = [];
-												for (var i = 0, len = VdomList.length; i < len; i++) {
-													var vdomconfig = VdomList[i];
-													list.push({
-														tag: 'option',
-														children: [vdomconfig.name],
-														attrs: { value: vdomconfig.value, selected: i === ctrl.vm.currentAddVdomSelectedIndex() }
-													});
-												}
-												return list;
-											}()],
-											attrs: { className: 'mdl-textfield__input', onchange: m.withAttr("selectedIndex", ctrl.vm.currentAddVdomSelectedIndex) }
-										}],
-										attrs: { className: 'mdl-textfield mdl-js-textfield' }
-									}, {
-										tag: 'button',
-										children: [{
-											tag: 'i',
-											children: ['add'],
-											attrs: { className: 'material-icons' }
-										}],
-										attrs: { onclick: function onclick() {
-												ctrl.addVdom();
-												ctrl.reload();
-											}, className: 'mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored' }
-									}]
-								}]
-							}]
+							}()]
 						}],
 						attrs: { className: 'mdl-data-table mdl-js-data-table mdl-shadow--2dp' }
 					}],
@@ -14326,7 +14370,7 @@ module.exports = function (ctrl, args) {
 
 var m = require('mithril');
 var VdomList = require('../config/vdomlist');
-var DEFAULT_SCRIPT = '[{"define":"background","background":"nc4527"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"あら奇遇ね\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"こちらこそ\\n蓮子は授業の帰りかしら"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"まぁそんなところよ\\n"},{"define":"serif","pos":"right","exp":"smile","chara":"renko","serif":"このあとお茶でもいかがかしら？\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"あら、ぜひ\\n"}]';
+var DEFAULT_SCRIPT = '[{"define":"bgm","serif":"","option":{"bgm":"muon"}},{"define":"background","background":"nc4527"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"あら奇遇ね\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"こちらこそ\\n蓮子は授業の帰りかしら"},{"define":"serif","pos":"right","exp":"normal","chara":"renko","serif":"まぁそんなところよ\\n"},{"define":"serif","pos":"right","exp":"smile","chara":"renko","serif":"このあとお茶でもいかがかしら？\\n"},{"define":"serif","pos":"left","exp":"smile","chara":"merry","serif":"あら、ぜひ\\n"}]';
 
 var User = function User(args) {
 	args = args || {};
@@ -14431,9 +14475,9 @@ ViewModel.prototype.toPostData = function () {
 	});
 };
 
-ViewModel.prototype.addVdomByCurrentSelectedIndex = function () {
+ViewModel.prototype.addVdomByCurrentSelectedIndex = function (index) {
 	var vdomconfig = VdomList[this.currentAddVdomSelectedIndex()];
-	this.vdom.push(new vdomconfig.Klass({ type: vdomconfig.value }));
+	this.vdom.splice(index, 0, new vdomconfig.Klass({ type: vdomconfig.value }));
 };
 
 ViewModel.prototype.create = function () {
