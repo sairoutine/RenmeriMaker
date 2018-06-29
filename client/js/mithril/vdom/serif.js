@@ -59,7 +59,7 @@ Serif.prototype.toGameData = function () {
 
 Serif.prototype.toComponent = function (ctrl) {
 	var self = this;
-	return <span>
+	return <span key={self.id()}>
 		<b>セリフ</b><br />
 		<div class="mdl-textfield mdl-js-textfield">
 			<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
@@ -106,7 +106,7 @@ Serif.prototype.toComponent = function (ctrl) {
 
 		<br />
 
-		<div config={function (element, isInitialized, context) {
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" config={function (element, isInitialized, context) {
 			if(isInitialized) return;
 			window.componentHandler.upgradeElement(element);
 
@@ -114,21 +114,27 @@ Serif.prototype.toComponent = function (ctrl) {
 				window.componentHandler.downgradeElements(element);
 			};
 		}}>
-			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input class="mdl-textfield__input" type="text" maxlength="32" id={String(self.id()) + "_1"} value={self._value1()} onchange={m.withAttr("value", function (value) {
-				self._value1(value);
-				ctrl.reload();
-				})} />
-				<label class="mdl-textfield__label" for={String(self.id()) + "_1"}>セリフ1行目</label>
-			</div>
-			<br />
-			<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label">
-				<input class="mdl-textfield__input" type="text" maxlength="32" id={String(self.id()) + "_2"} value={self._value2()} onchange={m.withAttr("value", function (value) {
-				self._value2(value);
-				ctrl.reload();
-				})} />
-				<label class="mdl-textfield__label" for={String(self.id()) + "_2"}>セリフ2行目</label>
-			</div>
+			<input class="mdl-textfield__input" type="text" maxlength="32" id={String(self.id()) + "_1"} value={self._value1()} onchange={m.withAttr("value", function (value) {
+			self._value1(value);
+			ctrl.reload();
+			})} />
+			<label class="mdl-textfield__label" for={String(self.id()) + "_1"}>セリフ1行目</label>
+		</div>
+		<br />
+		<div class="mdl-textfield mdl-js-textfield mdl-textfield--floating-label" config={function (element, isInitialized, context) {
+			if(isInitialized) return;
+			window.componentHandler.upgradeElement(element);
+
+			context.onunload = function() {
+				window.componentHandler.downgradeElements(element);
+			};
+		}}>
+
+			<input class="mdl-textfield__input" type="text" maxlength="32" id={String(self.id()) + "_2"} value={self._value2()} onchange={m.withAttr("value", function (value) {
+			self._value2(value);
+			ctrl.reload();
+			})} />
+			<label class="mdl-textfield__label" for={String(self.id()) + "_2"}>セリフ2行目</label>
 		</div>
 	</span>;
 };
