@@ -83,30 +83,30 @@ module.exports = function(ctrl, args) {
 										{ i+1 }
 									</td>
 									<td class="mdl-data-table__cell--non-numeric">
-									<button onclick={function () {
+									<button onclick={function (e) {
 										if(ctrl.delete(vdom)) {
-											ctrl.reload();
+											reload(e, i);
 										}
 									}} class="mdl-button mdl-js-button mdl-button--icon">
 										<i class="material-icons">delete_forever</i>
 									</button>
-									<button onclick={function () {
+									<button onclick={function (e) {
 										if(ctrl.up(vdom)) {
-											ctrl.reload();
+											reload(e, i);
 										}
 									}} class="mdl-button mdl-js-button mdl-button--icon">
 										<i class="material-icons">keyboard_arrow_up</i>
 									</button>
-									<button onclick={function () {
+									<button onclick={function (e) {
 										if(ctrl.down(vdom)) {
-											ctrl.reload();
+											reload(e, i);
 										}
 									}} class="mdl-button mdl-js-button mdl-button--icon">
 										<i class="material-icons">keyboard_arrow_down</i>
 									</button>
 									</td>
 									<td>
-									{vdom.toComponent(ctrl)}
+									{vdom.toComponent(ctrl, i)}
 									</td>
 								</tr>);
 
@@ -128,7 +128,7 @@ module.exports = function(ctrl, args) {
 										</div>
 										<button onclick={function () {
 											ctrl.addVdom(i + 1);
-											ctrl.reload();
+											ctrl.reload(i);
 										}} class="mdl-button mdl-js-button mdl-button--fab mdl-button--mini-fab mdl-button--colored">
 											<i class="material-icons">add</i>
 										</button>

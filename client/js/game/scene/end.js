@@ -39,7 +39,7 @@ SceneTalk.prototype.draw = function(){
 	ctx.fillStyle = 'white';
 	ctx.font = "36px 'Migu'";
 	ctx.textAlign = 'center';
-	ctx.textBaseAlign = 'middle';
+	//ctx.textBaseline = 'middle';
 
 	ctx.fillText("END", this.width/2, this.height/2);
 

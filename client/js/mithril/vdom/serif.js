@@ -57,7 +57,7 @@ Serif.prototype.toGameData = function () {
 	};
 };
 
-Serif.prototype.toComponent = function (ctrl) {
+Serif.prototype.toComponent = function (ctrl, idx) {
 	var self = this;
 	return <span key={self.id()}>
 		<b>セリフ</b><br />
@@ -72,7 +72,7 @@ Serif.prototype.toComponent = function (ctrl) {
 				else {
 					self.pos("left");
 				}
-				ctrl.reload();
+				ctrl.reload(null, idx);
 			})}>
 				{(function () {
 					var list = [];
@@ -90,7 +90,7 @@ Serif.prototype.toComponent = function (ctrl) {
 		<div class="mdl-textfield mdl-js-textfield">
 			<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
 				self.exp(value);
-				ctrl.reload();
+				ctrl.reload(null, idx);
 			})}>
 				{(function () {
 					var list = [];
@@ -132,7 +132,7 @@ Serif.prototype.toComponent = function (ctrl) {
 
 			<input class="mdl-textfield__input" type="text" maxlength="32" id={String(self.id()) + "_2"} value={self._value2()} onchange={m.withAttr("value", function (value) {
 			self._value2(value);
-			ctrl.reload();
+			ctrl.reload(null, idx);
 			})} />
 			<label class="mdl-textfield__label" for={String(self.id()) + "_2"}>セリフ2行目</label>
 		</div>

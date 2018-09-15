@@ -8,12 +8,12 @@ var Controller = function (args) {
 	this.vm = new ViewModel();
 	this.load();
 };
-Controller.prototype.reload = function () {
+Controller.prototype.reload = function (idx) {
 	// ゲームのセリフ更新
 	this.game.setSerif(this.vm.toGameData());
 
 	// リロード
-	this.game.reload();
+	this.game.reload(idx);
 };
 Controller.prototype.togglePrivate = function () {
 	this.vm.togglePrivate();

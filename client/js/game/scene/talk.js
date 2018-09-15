@@ -36,10 +36,10 @@ var SceneTalk = function(game) {
 
 Util.inherit(SceneTalk, base_scene);
 
-SceneTalk.prototype.init = function(){
+SceneTalk.prototype.init = function(serif_idx){
 	base_scene.prototype.init.apply(this, arguments);
 	this.serif.init(this.core.serif);
-	this.serif.start();
+	this.serif.start(serif_idx || 0);
 
 	// 背景遷移時のトランジション
 	this.transition_count = 0;
@@ -252,7 +252,7 @@ SceneTalk.prototype._showMessage = function() {
 
 	ctx.font = "18px 'Migu'";
 	ctx.textAlign = 'left';
-	ctx.textBaseAlign = 'middle';
+	//ctx.textBaseline = 'middle';
 
 	var y;
 	// セリフ表示

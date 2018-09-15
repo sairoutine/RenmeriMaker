@@ -27,8 +27,8 @@ Game.prototype.init = function () {
 };
 
 // ゲームを読み込み直し
-Game.prototype.reload = function () {
-	this.scene_manager.changeScene("talk");
+Game.prototype.reload = function (event, serif_idx) {
+	this.scene_manager.changeScene("talk", serif_idx);
 };
 
 module.exports = Game;

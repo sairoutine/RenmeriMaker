@@ -26,14 +26,14 @@ Background.prototype.toGameData = function () {
 	};
 };
 
-Background.prototype.toComponent = function (ctrl) {
+Background.prototype.toComponent = function (ctrl, idx) {
 	var self = this;
 	return <span>
 		<b>背景変更</b><br />
 		<div class="mdl-textfield mdl-js-textfield">
 		<select class="mdl-textfield__input" onchange={m.withAttr("value", function (value) {
 			self.value(value);
-			ctrl.reload();
+			ctrl.reload(null, idx);
 		})}>
 		{(function () {
 			var list = [];
